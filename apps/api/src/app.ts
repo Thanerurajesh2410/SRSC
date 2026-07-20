@@ -1,13 +1,14 @@
 import express from "express";
+import authRoutes from "./modules/auth/auth.routes";
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 
-// Test Route
 app.get("/", (req, res) => {
-  res.send("🚀 Sri Rama Temple Management Platform API is running...");
+  res.send("🚀 Temple ERP API Running");
 });
+
+app.use("/api/v1/auth", authRoutes);
 
 export default app;
