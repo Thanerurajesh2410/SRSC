@@ -1,0 +1,20 @@
+{
+  "name": "srtmp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sri Rama Temple Management Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "echo \"Root workspace\"",
+    "build": "echo \"Build workspace\"",
+    "test": "echo \"Tests workspace\""
+  },
+  "author": "Rajesh",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
