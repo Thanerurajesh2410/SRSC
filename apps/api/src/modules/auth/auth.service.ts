@@ -57,4 +57,13 @@ export class AuthService {
       accessToken,
     };
   }
+  async getProfile(userId: string) {
+    const user = await repository.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user;
+  }
 }

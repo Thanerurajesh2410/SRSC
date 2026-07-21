@@ -11,6 +11,23 @@ export class AuthRepository {
     });
   }
 
+  async findById(id: string) {
+    return prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        roleId: true,
+        createdAt: true,
+      },
+    });
+  }
+
   async createUser(data: {
     firstName: string;
     lastName?: string;

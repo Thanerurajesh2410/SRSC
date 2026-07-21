@@ -50,4 +50,20 @@ export class AuthController {
       });
     }
   }
+  async me(req: Request, res: Response): Promise<Response> {
+    try {
+      const user = await this.service.getProfile(req.user!.userId);
+
+      return res.status(200).json({
+        success: true,
+        data: user,
+      });
+    } catch (error) {
+      return res.status(404).json({
+        success: false,
+        message:
+          error instanceof Error ? error.message : "User not found",
+      });
+    }
+  }
 };
