@@ -27,15 +27,19 @@ export class AuthController {
 
   async login(req: Request, res: Response): Promise<Response> {
     try {
-      const user = await this.service.login(req.body);
+      const result = await this.service.login(req.body);
 
       return res.status(200).json({
         success: true,
         message: "Login successful",
         data: {
-          id: user.id,
-          firstName: user.firstName,
-          email: user.email,
+          accessToken: result.accessToken,
+          user: {
+            id: result.user.id,
+            firstName: result.user.firstName,
+            email: result.user.email,
+            roleId: result.user.roleId,
+          },
         },
       });
     } catch (error) {
@@ -46,4 +50,4 @@ export class AuthController {
       });
     }
   }
-}
+};

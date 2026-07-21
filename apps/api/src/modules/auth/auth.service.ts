@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { AuthRepository } from "./auth.repository";
+import { generateAccessToken } from "../../utils/jwt";
 
 const repository = new AuthRepository();
 
@@ -45,6 +46,15 @@ export class AuthService {
       throw new Error("Invalid email or password");
     }
 
-    return user;
+    const accessToken = generateAccessToken({
+      userId: user.id,
+      email: user.email,
+      roleId: user.roleId,
+    });
+
+    return {
+      user,
+      accessToken,
+    };
   }
 }
