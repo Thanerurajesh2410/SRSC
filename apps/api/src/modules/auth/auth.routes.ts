@@ -1,15 +1,14 @@
 import { Router } from "express";
 import { AuthController } from "./auth.controller";
-import { validateRequest } from "../../middleware/validateRequest";
-import { registerSchema } from "./auth.schema";
 
 const router = Router();
+
 const controller = new AuthController();
 
-router.post(
-  "/register",
-  validateRequest(registerSchema),
-  controller.register.bind(controller)
-);
+// Hover over controller here
+console.log(controller);
+
+router.post("/register", controller.register.bind(controller));
+router.post("/login", controller.login.bind(controller));
 
 export default router;

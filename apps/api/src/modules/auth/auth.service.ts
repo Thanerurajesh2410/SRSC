@@ -25,4 +25,26 @@ export class AuthService {
       password: hashedPassword,
     });
   }
+
+  async login(data: {
+    email: string;
+    password: string;
+  }) {
+    const user = await repository.findByEmail(data.email);
+
+    if (!user) {
+      throw new Error("Invalid email or password");
+    }
+
+    const passwordMatched = await bcrypt.compare(
+      data.password,
+      user.password
+    );
+
+    if (!passwordMatched) {
+      throw new Error("Invalid email or password");
+    }
+
+    return user;
+  }
 }
