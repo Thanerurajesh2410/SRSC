@@ -6,7 +6,6 @@ export const content = {
       regd: "Regd No: 125/2026",
       home: "హోమ్",
       about: "ముఖ్య ఉద్దేశాలు",
-      timings: "పూజా సమయాలు",
       gallery: "ఆలయ నిర్మాణం",
       committee: "కమిటీ సభ్యులు",
       sevas: "సేవా పథకాలు",
@@ -25,30 +24,11 @@ export const content = {
       certAction: "కమిటీ రిజిస్ట్రేషన్ పత్రం",
     },
     ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • గ్రానైట్ రాతి గర్భగుడి నిర్మాణం వేగంగా జరుగుతోంది • అధికారిక సొసైటీ Regd No: 125 of 2026 • మీ విరాళాలను నేరుగా SBI బ్యాంక్ లేదా PhonePe UPI ద్వారా పంపగలరు",
-    timings: {
-      tag: "ఆధ్యాత్మిక సేవా కాలపట్టిక",
-      title: "ఆలయ రోజువారీ పూజా సమయాలు",
-      subtitle: "ప్రతిరోజూ శ్రీ రామాలయంలో నిర్వహించే దివ్య పూజలు మరియు దర్శన సమయాలు",
-      schedules: [
-        { time: "06:00 AM", title: "సుప్రభాత సేవ & మంగళ హారతి", desc: "స్వామివారి మేల్కొలుపు పవిత్ర స్తోత్ర పఠనం" },
-        { time: "08:00 AM", title: "నిత్య పూజ & రామాభిషేకం", desc: "మంత్రోచ్ఛారణలతో దివ్య కలశాభిషేకం" },
-        { time: "12:00 PM", title: "మధ్యాహ్న అర్చన & అన్నదానం", desc: "మధ్యాహ్న ధూప దీప నివేదన, భక్తులకు ప్రసాద వితరణ" },
-        { time: "06:30 PM", title: "సంధ్యా హారతి & భజనలు", desc: "గ్రామ ప్రజలతో భక్తిపూర్వక భజన కీర్తనలు" },
-        { time: "08:30 PM", title: "ఏకాంత సేవ & పవళింపు సేవ", desc: "రాత్రి నైవేద్యం మరియు మంగళ సేవ" }
-      ]
-    },
     sevas: {
       tag: "విరాళాల పథకాలు",
       title: "వివిధ శ్రీ రామ సేవా పథకాలు",
-      subtitle: "ఆలయ నిర్మాణం మరియు నిత్య అన్నదానం కోసం మీ పవిత్ర సహాయం అందించండి",
+      subtitle: "ఆలయ నిర్మాణం కోసం మీ పవిత్ర సహాయం అందించండి",
       items: [
-        {
-          id: "annadanam",
-          title: "నిత్య అన్నదాన సేవ",
-          amount: "₹ 1,008 / ₹ 5,008",
-          desc: "ఆలయానికి విచ్చేసే భక్తులకు నిత్య అన్నదాన కార్యక్రమానికి విరాళం.",
-          badge: "పుణ్య ఫలం"
-        },
         {
           id: "garbhagudi",
           title: "గర్భగుడి శీల నిర్మాణ సేవ",
@@ -281,7 +261,6 @@ export const content = {
       regd: "Regd No: 125/2026",
       home: "Home",
       about: "Objectives",
-      timings: "Puja Timings",
       gallery: "Construction Progress",
       committee: "Committee Members",
       sevas: "Seva Schemes",
@@ -300,30 +279,11 @@ export const content = {
       certAction: "View Govt Registration",
     },
     ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Sri Ramalayam Foundation Ceremony Completed in Paminivandla Vooru • Sanctum Sanctorum Granite Structure Construction Underway • Regd Society No: 125 of 2026 • Direct Online Donations Accepted via SBI & PhonePe UPI",
-    timings: {
-      tag: "DIVINE SCHEDULE",
-      title: "Daily Temple Rituals & Timings",
-      subtitle: "Daily sacred services and Darshan timings at Sri Rama Temple",
-      schedules: [
-        { time: "06:00 AM", title: "Suprabhata Seva & Mangala Harathi", desc: "Awakening of the deity with sacred morning chants" },
-        { time: "08:00 AM", title: "Nitya Pooja & Ramabhishekam", desc: "Holy Abhishekam with Vedic mantras" },
-        { time: "12:00 PM", title: "Noon Archana & Annadanam", desc: "Noon offerings and Prasad distribution for devotees" },
-        { time: "06:30 PM", title: "Sandhya Harathi & Devotional Bhajans", desc: "Evening Harathi with community devotional songs" },
-        { time: "08:30 PM", title: "Ekantha Seva & Night Closure", desc: "Night offering and closing rituals" }
-      ]
-    },
     sevas: {
       tag: "DONATION SCHEMES",
       title: "Temple Seva & Sponsorship Categories",
-      subtitle: "Participate in divine temple construction and feeding programs",
+      subtitle: "Participate in divine temple construction programs",
       items: [
-        {
-          id: "annadanam",
-          title: "Nitya Annadanam Seva",
-          amount: "₹ 1,008 / ₹ 5,008",
-          desc: "Sponsorship for daily free meal distribution to visiting devotees.",
-          badge: "Punya Seva"
-        },
         {
           id: "garbhagudi",
           title: "Granite Sanctum Stone Seva",

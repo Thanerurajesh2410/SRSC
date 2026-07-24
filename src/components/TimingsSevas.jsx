@@ -1,47 +1,11 @@
 import React from 'react';
-import { Clock, Sun, HeartHandshake, Flame, Sparkles, ArrowRight, ShieldAlert } from 'lucide-react';
+import { HeartHandshake, Sparkles, ArrowRight } from 'lucide-react';
 
 export default function TimingsSevas({ t }) {
   return (
-    <section id="timings" className="py-16 md:py-24 relative bg-[#090914]">
+    <section id="sevas" className="py-16 md:py-24 relative bg-[#090914]">
       <div className="container mx-auto px-4">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="section-tag">
-            <Clock className="w-4 h-4 text-[var(--primary-gold)]" />
-            {t.timings.tag}
-          </span>
-          <h2 className="section-title text-white heading-telugu">
-            <span className="heading-gold">{t.timings.title}</span>
-          </h2>
-          <p className="text-gray-300 text-base md:text-lg">
-            {t.timings.subtitle}
-          </p>
-        </div>
-
-        {/* Timings Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-20">
-          {t.timings.schedules.map((sched, idx) => (
-            <div key={idx} className="gold-card !p-5 text-center flex flex-col justify-between group hover:border-[var(--primary-saffron)]">
-              <div>
-                <div className="w-12 h-12 rounded-full bg-[var(--sacred-maroon)] border border-[var(--border-gold)] mx-auto flex items-center justify-center text-[var(--primary-saffron)] mb-3 group-hover:scale-110 transition-transform">
-                  <Flame className="w-5 h-5" />
-                </div>
-                <span className="text-xs font-mono font-bold text-[var(--primary-gold)] bg-[var(--primary-gold)]/10 px-2.5 py-1 rounded-full border border-[var(--primary-gold)]/20 inline-block mb-2">
-                  {sched.time}
-                </span>
-                <h3 className="text-sm font-bold text-white heading-telugu mb-1">
-                  {sched.title}
-                </h3>
-              </div>
-              <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
-                {sched.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-
         {/* Seva Packages & Schemes Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="section-tag">
@@ -57,7 +21,7 @@ export default function TimingsSevas({ t }) {
         </div>
 
         {/* Seva Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {t.sevas.items.map((seva, idx) => (
             <div key={idx} className="gold-card flex flex-col justify-between group">
               <div>
