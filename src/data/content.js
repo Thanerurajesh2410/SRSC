@@ -110,7 +110,7 @@ export const content = {
           father: "S/o T CHANDRASEKHAR",
           role: "PRESIDENT (అధ్యక్షులు)",
           occ: "Software Employee",
-          address: "5-11/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-11/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "Crown"
         },
         {
@@ -118,7 +118,7 @@ export const content = {
           father: "S/o T JAGANNADAMA",
           role: "VICE PRESIDENT (ఉపాధ్యక్షులు)",
           occ: "Self Employee",
-          address: "5-18, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-18, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "UserCheck"
         },
         {
@@ -126,7 +126,7 @@ export const content = {
           father: "S/o K GURU SWAMY",
           role: "SECRETARY (ప్రధాన కార్యదర్శి)",
           occ: "Software Employee",
-          address: "5-13/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-13/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "FileText"
         },
         {
@@ -134,7 +134,7 @@ export const content = {
           father: "S/o T RAJENDRA",
           role: "JOINT SECRETARY (సంయుక్త కార్యదర్శి)",
           occ: "Self Employee",
-          address: "5-33/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-33/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "UserPlus"
         },
         {
@@ -142,7 +142,7 @@ export const content = {
           father: "S/o HEMALATHA",
           role: "TREASURER (కోశాధికారి)",
           occ: "Student",
-          address: "5-10/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-10/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "Coins"
         },
         {
@@ -150,7 +150,7 @@ export const content = {
           father: "S/o G SUDHAKAR",
           role: "EXECUTIVE MEMBER (కమిటీ సభ్యుడు)",
           occ: "Business",
-          address: "5-25, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-25, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "User"
         },
         {
@@ -158,7 +158,7 @@ export const content = {
           father: "S/o RANGANADHAM",
           role: "EXECUTIVE MEMBER (కమిటీ సభ్యుడు)",
           occ: "Private Employee",
-          address: "5-8, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-8, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "User"
         }
       ]
@@ -195,7 +195,7 @@ export const content = {
         { name: "SHG Rajeshwari Mahila Mandali", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
         { name: "Sri Ganesh Mahila Mandali", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
         { name: "SHG Mahila Mandali Group", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
-        { name: "Sri Sai Mahila Mandali", city: "తంబుగానిపల్లె", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
+        { name: "Sri Sai Mahila Mandali", city: "మంగళపల్లె", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
         { name: "Jyoshna / Vanama", city: "పామినివాండ్లవూరు", amount: "₹ 5,000", seva: "స్వామివారి సేవ" },
         { name: "Thaneru (T. Haneru)", city: "పామినివాండ్లవూరు", amount: "₹ 5,000", seva: "రాతి గోడల నిర్మాణం" },
         { name: "P. Rishi", city: "పామినివాండ్లవూరు", amount: "₹ 2,101", seva: "అన్నదాన నిధి" },
@@ -218,7 +218,7 @@ export const content = {
       addressLines: [
         "శ్రీ రామా సేవా కమిటీ",
         "డోర్ నం: 5-233, పామినివాండ్లవూరు",
-        "తంబుగానిపల్లె పంచాయతీ, బంగారుపాళెం మండలం",
+        "మంగళపల్లె పంచాయతీ, బంగారుపాళెం మండలం",
         "చిత్తూరు జిల్లా, ఆంధ్రప్రదేశ్ - 517416"
       ],
       qrScanTitle: "లొకేషన్ కోసం స్కాన్ చేయండి",
@@ -365,7 +365,7 @@ export const content = {
           father: "S/o T CHANDRASEKHAR",
           role: "PRESIDENT",
           occ: "Software Employee",
-          address: "5-11/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-11/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "Crown"
         },
         {
@@ -373,7 +373,7 @@ export const content = {
           father: "S/o T JAGANNADAMA",
           role: "VICE PRESIDENT",
           occ: "Self Employee",
-          address: "5-18, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-18, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "UserCheck"
         },
         {
@@ -381,7 +381,7 @@ export const content = {
           father: "S/o K GURU SWAMY",
           role: "SECRETARY",
           occ: "Software Employee",
-          address: "5-13/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-13/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "FileText"
         },
         {
@@ -389,7 +389,7 @@ export const content = {
           father: "S/o T RAJENDRA",
           role: "JOINT SECRETARY",
           occ: "Self Employee",
-          address: "5-33/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-33/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "UserPlus"
         },
         {
@@ -397,7 +397,7 @@ export const content = {
           father: "S/o HEMALATHA",
           role: "TREASURER",
           occ: "Student",
-          address: "5-10/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-10/1, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "Coins"
         },
         {
@@ -405,7 +405,7 @@ export const content = {
           father: "S/o G SUDHAKAR",
           role: "EXECUTIVE MEMBER",
           occ: "Business",
-          address: "5-25, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-25, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "User"
         },
         {
@@ -413,7 +413,7 @@ export const content = {
           father: "S/o RANGANADHAM",
           role: "EXECUTIVE MEMBER",
           occ: "Private Employee",
-          address: "5-8, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          address: "5-8, Paminivandlavooru, Mangalapalli, Bangarupalem Mandal, Chittoor Dist",
           icon: "User"
         }
       ]
@@ -450,7 +450,7 @@ export const content = {
         { name: "SHG Rajeshwari Mahila Mandali", city: "Paminivandla Vooru", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
         { name: "Sri Ganesh Mahila Mandali", city: "Paminivandla Vooru", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
         { name: "SHG Mahila Mandali Group", city: "Paminivandla Vooru", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
-        { name: "Sri Sai Mahila Mandali", city: "Thambuganipalle", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
+        { name: "Sri Sai Mahila Mandali", city: "Mangalapalli", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
         { name: "Jyoshna / Vanama", city: "Paminivandla Vooru", amount: "₹ 5,000", seva: "Temple Seva Fund" },
         { name: "Thaneru (T. Haneru)", city: "Paminivandla Vooru", amount: "₹ 5,000", seva: "Stone Structure Fund" },
         { name: "P. Rishi", city: "Paminivandla Vooru", amount: "₹ 2,101", seva: "Annadanam Seva" },
@@ -469,16 +469,16 @@ export const content = {
       title: "Location & Directions",
       subtitle: "Visit Sri Ramalayam at Paminivandla Vooru",
       mapsUrl: "https://maps.app.goo.gl/FgyzQLz4rNMFhSY98",
-      addressTitle: "Temple Address:",
+      addressTitle: "ఆలయ చిరునామా:",
       addressLines: [
-        "Sri Rama Seva Committee",
-        "Door No: 5-233, Paminivandla Vooru",
-        "Thambuganipalle Panchayat, Bangarupalem Mandal",
-        "Chittoor District, Andhra Pradesh - 517416"
+        "శ్రీ రామా సేవా కమిటీ",
+        "డోర్ నం: 5-233, పామినివాండ్లవూరు",
+        "మంగళపల్లె పంచాయతీ, బంగారుపాళెం మండలం",
+        "చిత్తూరు జిల్లా, ఆంధ్రప్రదేశ్ - 517416"
       ],
-      qrScanTitle: "Scan for GPS Location",
-      openMapsBtn: "Open in Google Maps",
-      contactTitle: "Send a Message",
+      qrScanTitle: "లొకేషన్ కోసం స్కాన్ చేయండి",
+      openMapsBtn: "Google Maps లో మార్గం చూడండి",
+      contactTitle: "మమ్మల్ని సంప్రదించండి",
       formName: "Full Name",
       formPhone: "Phone Number",
       formMessage: "Your Message",
