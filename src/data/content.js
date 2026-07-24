@@ -1,0 +1,552 @@
+export const content = {
+  te: {
+    nav: {
+      title: "శ్రీ రామా సేవా కమిటీ",
+      subtitle: "పామినివాండ్లవూరు",
+      regd: "Regd No: 125/2026",
+      home: "హోమ్",
+      about: "ముఖ్య ఉద్దేశాలు",
+      timings: "పూజా సమయాలు",
+      gallery: "ఆలయ నిర్మాణం",
+      committee: "కమిటీ సభ్యులు",
+      sevas: "సేవా పథకాలు",
+      bank: "విరాళాలు",
+      location: "ఆలయ ప్రాంతం",
+      donateBtn: "విరాళం ఇవ్వండి",
+    },
+    hero: {
+      badge: "అధికారిక శ్రీ రామాలయ వెబ్‌సైట్ • REGD NO: 125 OF 2026",
+      title: "శ్రీ రామాలయం పామినివాండ్లవూరు",
+      slogan: "మన గ్రామం మన సంకల్పం, శ్రీ రామాలయమే మన లక్ష్యం.",
+      subSlogan: "మన గ్రామ అభివృద్ధి, మన చేతుల్లోనే...",
+      desc: "మన ఊరిలో శ్రీ రామాలయ నిర్మాణం మరియు సేవా కార్యక్రమాలను నిర్వహించుటయే మా లక్ష్యం. ఈ పవిత్ర కార్యక్రమంలో ప్రతి ఒక్కరూ భాగస్వాములు కావాలని మనస్పూర్తిగా కోరుతున్నాము.",
+      donateAction: "స్వామివారికి విరాళం ఇవ్వండి",
+      progressAction: "నిర్మాణ చిత్రాలు చూడండి",
+      certAction: "కమిటీ రిజిస్ట్రేషన్ పత్రం",
+    },
+    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • గ్రానైట్ రాతి గర్భగుడి నిర్మాణం వేగంగా జరుగుతోంది • అధికారిక సొసైటీ Regd No: 125 of 2026 • మీ విరాళాలను నేరుగా SBI బ్యాంక్ లేదా PhonePe UPI ద్వారా పంపగలరు",
+    timings: {
+      tag: "ఆధ్యాత్మిక సేవా కాలపట్టిక",
+      title: "ఆలయ రోజువారీ పూజా సమయాలు",
+      subtitle: "ప్రతిరోజూ శ్రీ రామాలయంలో నిర్వహించే దివ్య పూజలు మరియు దర్శన సమయాలు",
+      schedules: [
+        { time: "06:00 AM", title: "సుప్రభాత సేవ & మంగళ హారతి", desc: "స్వామివారి మేల్కొలుపు పవిత్ర స్తోత్ర పఠనం" },
+        { time: "08:00 AM", title: "నిత్య పూజ & రామాభిషేకం", desc: "మంత్రోచ్ఛారణలతో దివ్య కలశాభిషేకం" },
+        { time: "12:00 PM", title: "మధ్యాహ్న అర్చన & అన్నదానం", desc: "మధ్యాహ్న ధూప దీప నివేదన, భక్తులకు ప్రసాద వితరణ" },
+        { time: "06:30 PM", title: "సంధ్యా హారతి & భజనలు", desc: "గ్రామ ప్రజలతో భక్తిపూర్వక భజన కీర్తనలు" },
+        { time: "08:30 PM", title: "ఏకాంత సేవ & పవళింపు సేవ", desc: "రాత్రి నైవేద్యం మరియు మంగళ సేవ" }
+      ]
+    },
+    sevas: {
+      tag: "విరాళాల పథకాలు",
+      title: "వివిధ శ్రీ రామ సేవా పథకాలు",
+      subtitle: "ఆలయ నిర్మాణం మరియు నిత్య అన్నదానం కోసం మీ పవిత్ర సహాయం అందించండి",
+      items: [
+        {
+          id: "annadanam",
+          title: "నిత్య అన్నదాన సేవ",
+          amount: "₹ 1,008 / ₹ 5,008",
+          desc: "ఆలయానికి విచ్చేసే భక్తులకు నిత్య అన్నదాన కార్యక్రమానికి విరాళం.",
+          badge: "పుణ్య ఫలం"
+        },
+        {
+          id: "garbhagudi",
+          title: "గర్భగుడి శీల నిర్మాణ సేవ",
+          amount: "₹ 5,008 / ₹ 10,008",
+          desc: "దివ్య గ్రానైట్ రాతితో నిర్మిస్తున్న గర్భగుడి కిటికీలు మరియు గోడల నిర్మాణ నిధి.",
+          badge: "శాశ్వత నిధి"
+        },
+        {
+          id: "gopuram",
+          title: "శిఖర గోపురం & కలశ సేవ",
+          amount: "₹ 25,000 / ₹ 50,000",
+          desc: "ఆలయ ప్రధాన గోపురం మరియు బంగారు వర్ణ ధ్వజస్తంభ స్థాపన సేవ.",
+          badge: "మహా సేవా"
+        },
+        {
+          id: "general",
+          title: "సాధారణ నిర్మాణ విరాళం",
+          amount: "మీ శక్తి కొలది (Any Amount)",
+          desc: "ఆలయ ప్రాంగణం మరియు సిమెంట్, కంకర, విద్యుత్ వసతుల కల్పనకు సహాయం.",
+          badge: "స్వేచ్ఛా సేవ"
+        }
+      ]
+    },
+    objectives: {
+      tag: "లక్ష్యాలు & సేవ",
+      title: "ముఖ్య ఉద్దేశాలు",
+      subtitle: "శ్రీ రామా సేవా కమిటీ ఆధ్వర్యంలో నిర్వహించే పవిత్ర కార్యక్రమాలు",
+      items: [
+        {
+          title: "శ్రీ రామాలయ నిర్మాణం",
+          desc: "పామినివాండ్లవూరు గ్రామంలో దివ్యమైన గ్రానైట్ రాతితో శ్రీ రామాలయ నిర్మాణం వేగంగా జరుగుతోంది.",
+          icon: "Building"
+        },
+        {
+          title: "నిత్య పూజలు & మంగళ కార్యక్రమాలు",
+          desc: "ఆలయ ఆవరణలో రోజూ నిత్య పూజలు, సుప్రభాతం, భజనలు మరియు పండుగల వేడుకల నిర్వహణ.",
+          icon: "Flame"
+        },
+        {
+          title: "అన్నదానం & విద్యాదానం",
+          desc: "భక్తులకు నిత్య అన్నదానం మరియు గ్రామంలోని నిరుపేద విద్యార్థులకు విద్యా సహాయం పంపిణీ.",
+          icon: "Heart"
+        },
+        {
+          title: "గ్రామాభివృద్ధి & సామాజిక సంక్షేమం",
+          desc: "గ్రామ పారిశుధ్యం, మౌలిక వసతులు మరియు సామాజిక సంక్షేమ కార్యక్రమాలలో క్రియాశీల భాగస్వామ్యం.",
+          icon: "Users"
+        },
+        {
+          title: "ధార్మిక, సాంస్కృతిక & యువజన కార్యక్రమాలు",
+          desc: "సనాతన ధర్మ ప్రచారం, సాంస్కృతిక ప్రదర్శనలు మరియు యువతలో ఆధ్యాత్మిక స్పూర్తిని నింపడం.",
+          icon: "Sparkles"
+        }
+      ]
+    },
+    gallery: {
+      tag: "ఆలయ ప్రగతి",
+      title: "శ్రీ రామాలయ నిర్మాణ చిత్రాలు",
+      subtitle: "పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ పనుల తాజా ఫోటోలు",
+      statusTitle: "ప్రస్తుత నిర్మాణ దశ: శంకుస్థాపన & గ్రానైట్ గోడల నిర్మాణం పూర్తవుతోంది",
+      viewOriginalBanner: "అధికారిక ఫ్లెక్సి బ్యానర్ చూడండి",
+      photos: [
+        { id: 1, title: "ఆలయ ఆవరణ మరియు చుట్టుపక్కల దృశ్యం", src: "/assets/construction_1.jpg" },
+        { id: 2, title: "శ్రీ రామాలయం గ్రానైట్ రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg" },
+        { id: 3, title: "ఆలయ ద్వార బంధాలు మరియు కిటికీల అమరిక", src: "/assets/construction_3.jpg" },
+        { id: 4, title: "గర్భగుడి ద్వార ద్వార బంధం మరియు అంతర్భాగం", src: "/assets/construction_4.jpg" }
+      ]
+    },
+    committee: {
+      tag: "పాలక వర్గం",
+      title: "శ్రీ రామా సేవా కమిటీ సభ్యులు",
+      subtitle: "ఆంధ్రప్రదేశ్ ప్రభుత్వం చేత నమోదైన (Regd No: 125 of 2026) అధికారిక పాలక వర్గ సభ్యులు",
+      certTab: "రిజిస్ట్రేషన్ సర్టిఫికెట్",
+      membersTab: "కమిటీ సభ్యుల జాబితా",
+      viewCertBtn: "ప్రభుత్వ రిజిస్ట్రేషన్ పత్రం చూడండి",
+      members: [
+        {
+          name: "RAJESH T (రాజేష్ టి)",
+          father: "S/o T CHANDRASEKHAR",
+          role: "PRESIDENT (అధ్యక్షులు)",
+          occ: "Software Employee",
+          address: "5-11/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "Crown"
+        },
+        {
+          name: "PRATHAP T (ప్రతాప్ టి)",
+          father: "S/o T JAGANNADAMA",
+          role: "VICE PRESIDENT (ఉపాధ్యక్షులు)",
+          occ: "Self Employee",
+          address: "5-18, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "UserCheck"
+        },
+        {
+          name: "SANDEEP K (సందీప్ కే)",
+          father: "S/o K GURU SWAMY",
+          role: "SECRETARY (ప్రధాన కార్యదర్శి)",
+          occ: "Software Employee",
+          address: "5-13/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "FileText"
+        },
+        {
+          name: "KARTHEEK T (కార్తీక్ టి)",
+          father: "S/o T RAJENDRA",
+          role: "JOINT SECRETARY (సంయుక్త కార్యదర్శి)",
+          occ: "Self Employee",
+          address: "5-33/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "UserPlus"
+        },
+        {
+          name: "SAGAR T (సాగర్ టి)",
+          father: "S/o HEMALATHA",
+          role: "TREASURER (కోశాధికారి)",
+          occ: "Student",
+          address: "5-10/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "Coins"
+        },
+        {
+          name: "BHASKAR G (భాస్కర్ జి)",
+          father: "S/o G SUDHAKAR",
+          role: "EXECUTIVE MEMBER (కమిటీ సభ్యుడు)",
+          occ: "Business",
+          address: "5-25, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "User"
+        },
+        {
+          name: "PRADEEP P (ప్రదీప్ పి)",
+          father: "S/o RANGANADHAM",
+          role: "EXECUTIVE MEMBER (కమిటీ సభ్యుడు)",
+          occ: "Private Employee",
+          address: "5-8, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "User"
+        }
+      ]
+    },
+    donation: {
+      tag: "పవిత్ర సేవ",
+      title: "విరాళాలు & బ్యాంకు వివరాలు",
+      subtitle: "ఆలయ అభివృద్ధి కోసం మీ వంతు సహాయం అందించి శ్రీ రాముని కృపకు పాత్రులు కాగలరని కోరుతున్నాము.",
+      slogan: "మీ సహకారం - శ్రీ రామ సేవలో భాగస్వామ్యం.",
+      bankTitle: "అధికారిక బ్యాంకు ఖాతా వివరాలు",
+      accountName: "Sri Rama Seva Committee Paminivandlavooru",
+      accountNo: "45274946370",
+      ifsc: "SBIN0005691",
+      bankName: "State Bank of India (SBI)",
+      branch: "ACB K G SATRAM",
+      upiId: "8431806098@ibl",
+      scanQr: "PhonePe QR కోడ్ స్కాన్ చేసి నేరుగా విరాళం చెల్లించండి",
+      copyBtn: "కాపీ చేయి",
+      copiedMsg: "కాపీ చేయబడింది!",
+      generateReceipt: "ఆన్‌లైన్ విరాళం రశీదు పొందండి",
+      donorName: "మీ పేరు",
+      donorAmount: "విరాళం మొత్తం (₹)",
+      donorPhone: "ఫోన్ నంబర్",
+      donorCity: "గ్రామం / నగరం",
+      getReceiptBtn: "రశీదు రూపొందించు",
+      presetAmounts: [501, 1008, 2500, 5000, 10008]
+    },
+    donorWall: {
+      tag: "దాతల పట్టిక",
+      title: "అధికారిక దాతల జాబితా",
+      subtitle: "శ్రీ రామాలయ నిర్మాణానికి మహోన్నత సహాయం అందించిన భక్తులు (బ్యాంక్ ఖాతా స్టేట్‌మెంట్ వివరాలు)",
+      donors: [
+        { name: "Thaneru Munirathnam & Neelamma family", city: "పామినివాండ్లవూరు", amount: "₹ 50,000", seva: "ఆలయ నిర్మాణ నిధి" },
+        { name: "SHG Rajeshwari Mahila Mandali", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
+        { name: "Sri Ganesh Mahila Mandali", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
+        { name: "SHG Mahila Mandali Group", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
+        { name: "Sri Sai Mahila Mandali", city: "తంబుగానిపల్లె", amount: "₹ 10,000", seva: "మహిళా మండలి విరాళం" },
+        { name: "Jyoshna / Vanama", city: "పామినివాండ్లవూరు", amount: "₹ 5,000", seva: "స్వామివారి సేవ" },
+        { name: "Thaneru (T. Haneru)", city: "పామినివాండ్లవూరు", amount: "₹ 5,000", seva: "రాతి గోడల నిర్మాణం" },
+        { name: "P. Rishi", city: "పామినివాండ్లవూరు", amount: "₹ 2,101", seva: "అన్నదాన నిధి" },
+        { name: "Cash Deposit Self", city: "ఆలయ నిధి", amount: "₹ 1,116", seva: "నగదు జమ" },
+        { name: "Thaneru (T. Hanneru)", city: "పామినివాండ్లవూరు", amount: "₹ 505", seva: "విరాళం" },
+        { name: "P. Sandeep", city: "పామినివాండ్లవూరు", amount: "₹ 116", seva: "విరాళం" },
+        { name: "T. Murali", city: "పామినివాండ్లవూరు", amount: "₹ 116", seva: "విరాళం" },
+        { name: "T. Chandra", city: "పామినివాండ్లవూరు", amount: "₹ 51", seva: "విరాళం" },
+        { name: "T. Chandr", city: "పామినివాండ్లవూరు", amount: "₹ 50", seva: "విరాళం" },
+        { name: "T. Karthi", city: "పామినివాండ్లవూరు", amount: "₹ 30", seva: "విరాళం" },
+        { name: "P. Naveen", city: "పామినివాండ్లవూరు", amount: "₹ 11", seva: "విరాళం" }
+      ]
+    },
+    location: {
+      tag: "ఆలయ మార్గం",
+      title: "ఆలయ ప్రాంతం & దిశలు",
+      subtitle: "పామినివాండ్లవూరు శ్రీ రామాలయానికి విచ్చేయండి",
+      mapsUrl: "https://maps.app.goo.gl/FgyzQLz4rNMFhSY98",
+      addressTitle: "ఆలయ చిరునామా:",
+      addressLines: [
+        "శ్రీ రామా సేవా కమిటీ",
+        "డోర్ నం: 5-233, పామినివాండ్లవూరు",
+        "తంబుగానిపల్లె పంచాయతీ, బంగారుపాళెం మండలం",
+        "చిత్తూరు జిల్లా, ఆంధ్రప్రదేశ్ - 517416"
+      ],
+      qrScanTitle: "లొకేషన్ కోసం స్కాన్ చేయండి",
+      openMapsBtn: "Google Maps లో మార్గం చూడండి",
+      contactTitle: "మమ్మల్ని సంప్రదించండి",
+      formName: "పేరు",
+      formPhone: "ఫోన్ నంబర్",
+      formMessage: "మీ సందేశం",
+      formSubmit: "సందేశం పంపండి"
+    },
+    faq: {
+      tag: "సందేహాలు",
+      title: "తరచుగా అడిగే ప్రశ్నలు (FAQ)",
+      items: [
+        {
+          q: "బ్యాంక్ ట్రాన్స్‌ఫర్ చేసిన తర్వాత విరాళం రశీదు ఎలా పొందాలి?",
+          a: "మీరు ఆన్‌లైన్‌లో విరాళం పంపిన తర్వాత, మా 'రశీదు రూపొందించు' ఆప్షన్ ద్వారా డిజిటల్ రశీదును పొందవచ్చు లేదా మీ వివరాలను 8431806098 వాట్సాప్ నంబర్‌కు పంపగలరు."
+        },
+        {
+          q: "శ్రీ రామా సేవా కమిటీ ప్రభుత్వ గుర్తింపు పొందిందా?",
+          a: "అవును, శ్రీ రామా సేవా కమిటీ ఆంధ్రప్రదేశ్ ప్రభుత్వ సొసైటీల రిజిస్ట్రేషన్ చట్టం 2001 ప్రకారం Regd No: 125 of 2026 ద్వారా రిజిస్టర్ కాబడింది."
+        },
+        {
+          q: "విరాళంగా సామాగ్రినే (సిమెంట్, గ్రానైట్ రాళ్ళు) ఇవ్వవచ్చా?",
+          a: "ఖచ్చితంగా ఇవ్వవచ్చు! ఆలయ నిర్మాణానికి అవసరమైన రాళ్ళు, గ్రానైట్ ద్వారబంధాలు మరియు సిమెంట్ అందజేయాలనుకునేవారు నేరుగా కమిటీ సభ్యులను సంప్రదించగలరు."
+        }
+      ]
+    },
+    footer: {
+      slogan: "|| జై శ్రీ రామ్ || సేవే మా సంకల్పం, శ్రీ రాముడు మా దైవం...",
+      thanks: "ధన్యవాదాలు!",
+      rights: "శ్రీ రామా సేవా కమిటీ, పామినివాండ్లవూరు. సర్వ హక్కులూ ప్రత్యేకించబడ్డాయి.",
+      regdNotice: "రిజిస్టర్డ్ సొసైటీ నం: 125 of 2026 (ఆంధ్రప్రదేశ్ ప్రభుత్వం)"
+    }
+  },
+  en: {
+    nav: {
+      title: "Sri Rama Seva Committee",
+      subtitle: "Paminivandla Vooru",
+      regd: "Regd No: 125/2026",
+      home: "Home",
+      about: "Objectives",
+      timings: "Puja Timings",
+      gallery: "Construction Progress",
+      committee: "Committee Members",
+      sevas: "Seva Schemes",
+      bank: "Donation Details",
+      location: "Location",
+      donateBtn: "Donate Now",
+    },
+    hero: {
+      badge: "OFFICIAL TEMPLE WEBSITE • REGD NO: 125 OF 2026",
+      title: "Sri Ramalayam Paminivandla Vooru",
+      slogan: "Our Village, Our Resolve — Sri Rama Temple is Our Sacred Goal.",
+      subSlogan: "Our Village Development Lies in Our Hands...",
+      desc: "Our sole resolution is the successful construction of Sri Rama Temple and noble community services in Paminivandla Vooru. We heartfully invite every devotee to join hands in this divine cause.",
+      donateAction: "Donate for Temple Construction",
+      progressAction: "View Construction Progress",
+      certAction: "View Govt Registration",
+    },
+    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Sri Ramalayam Foundation Ceremony Completed in Paminivandla Vooru • Sanctum Sanctorum Granite Structure Construction Underway • Regd Society No: 125 of 2026 • Direct Online Donations Accepted via SBI & PhonePe UPI",
+    timings: {
+      tag: "DIVINE SCHEDULE",
+      title: "Daily Temple Rituals & Timings",
+      subtitle: "Daily sacred services and Darshan timings at Sri Rama Temple",
+      schedules: [
+        { time: "06:00 AM", title: "Suprabhata Seva & Mangala Harathi", desc: "Awakening of the deity with sacred morning chants" },
+        { time: "08:00 AM", title: "Nitya Pooja & Ramabhishekam", desc: "Holy Abhishekam with Vedic mantras" },
+        { time: "12:00 PM", title: "Noon Archana & Annadanam", desc: "Noon offerings and Prasad distribution for devotees" },
+        { time: "06:30 PM", title: "Sandhya Harathi & Devotional Bhajans", desc: "Evening Harathi with community devotional songs" },
+        { time: "08:30 PM", title: "Ekantha Seva & Night Closure", desc: "Night offering and closing rituals" }
+      ]
+    },
+    sevas: {
+      tag: "DONATION SCHEMES",
+      title: "Temple Seva & Sponsorship Categories",
+      subtitle: "Participate in divine temple construction and feeding programs",
+      items: [
+        {
+          id: "annadanam",
+          title: "Nitya Annadanam Seva",
+          amount: "₹ 1,008 / ₹ 5,008",
+          desc: "Sponsorship for daily free meal distribution to visiting devotees.",
+          badge: "Punya Seva"
+        },
+        {
+          id: "garbhagudi",
+          title: "Granite Sanctum Stone Seva",
+          amount: "₹ 5,008 / ₹ 10,008",
+          desc: "Contribution towards carved granite stones and pillars for Garbhagudi.",
+          badge: "Permanent Fund"
+        },
+        {
+          id: "gopuram",
+          title: "Gopuram & Kalasam Seva",
+          amount: "₹ 25,000 / ₹ 50,000",
+          desc: "Sponsorship for main temple tower spire and golden Kalasam installation.",
+          badge: "Grand Seva"
+        },
+        {
+          id: "general",
+          title: "General Temple Construction Fund",
+          amount: "Any Amount",
+          desc: "Support for general building materials, electrification, and grounds.",
+          badge: "Open Contribution"
+        }
+      ]
+    },
+    objectives: {
+      tag: "VISION & SERVICE",
+      title: "Key Objectives",
+      subtitle: "Sacred activities managed by Sri Rama Seva Committee",
+      items: [
+        {
+          title: "Sri Rama Temple Construction",
+          desc: "Construction of magnificent granite stone Sri Rama Temple is in active progress in Paminivandla Vooru.",
+          icon: "Building"
+        },
+        {
+          title: "Daily Pujas & Sacred Rituals",
+          desc: "Conducting daily Pujas, Suprabhatam, Bhajans, and festive celebrations at the temple premises.",
+          icon: "Flame"
+        },
+        {
+          title: "Annadanam & Education Aid",
+          desc: "Free meal distribution (Annadanam) for devotees and educational support for underprivileged students.",
+          icon: "Heart"
+        },
+        {
+          title: "Village Development & Social Welfare",
+          desc: "Active participation in village sanitation, infrastructure improvement, and community welfare.",
+          icon: "Users"
+        },
+        {
+          title: "Religious, Cultural & Youth Programs",
+          desc: "Promoting Sanatana Dharma, traditional arts, and inspiring youth towards spiritual values.",
+          icon: "Sparkles"
+        }
+      ]
+    },
+    gallery: {
+      tag: "TEMPLE PROGRESS",
+      title: "Construction Progress Gallery",
+      subtitle: "Recent photos of Sri Rama Temple construction in Paminivandla Vooru",
+      statusTitle: "Current Phase: Foundation & Granite Stone Outer Structure Construction",
+      viewOriginalBanner: "View Official Flexi Banner",
+      photos: [
+        { id: 1, title: "Temple Grounds & Surrounding Landscape", src: "/assets/construction_1.jpg" },
+        { id: 2, title: "Granite Stone Walls Construction View", src: "/assets/construction_2.jpg" },
+        { id: 3, title: "Temple Window Frames & Wall Elevation", src: "/assets/construction_3.jpg" },
+        { id: 4, title: "Sanctum Sanctorum (Garbhagudi) Door Frame & Interior", src: "/assets/construction_4.jpg" }
+      ]
+    },
+    committee: {
+      tag: "GOVERNING BODY",
+      title: "Committee Office Bearers",
+      subtitle: "Official Office Bearers registered under Govt of AP (Regd No: 125 of 2026)",
+      certTab: "Govt Registration Certificate",
+      membersTab: "Office Bearers Directory",
+      viewCertBtn: "View Official Registration Certificate",
+      members: [
+        {
+          name: "RAJESH T",
+          father: "S/o T CHANDRASEKHAR",
+          role: "PRESIDENT",
+          occ: "Software Employee",
+          address: "5-11/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "Crown"
+        },
+        {
+          name: "PRATHAP T",
+          father: "S/o T JAGANNADAMA",
+          role: "VICE PRESIDENT",
+          occ: "Self Employee",
+          address: "5-18, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "UserCheck"
+        },
+        {
+          name: "SANDEEP K",
+          father: "S/o K GURU SWAMY",
+          role: "SECRETARY",
+          occ: "Software Employee",
+          address: "5-13/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "FileText"
+        },
+        {
+          name: "KARTHEEK T",
+          father: "S/o T RAJENDRA",
+          role: "JOINT SECRETARY",
+          occ: "Self Employee",
+          address: "5-33/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "UserPlus"
+        },
+        {
+          name: "SAGAR T",
+          father: "S/o HEMALATHA",
+          role: "TREASURER",
+          occ: "Student",
+          address: "5-10/1, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "Coins"
+        },
+        {
+          name: "BHASKAR G",
+          father: "S/o G SUDHAKAR",
+          role: "EXECUTIVE MEMBER",
+          occ: "Business",
+          address: "5-25, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "User"
+        },
+        {
+          name: "PRADEEP P",
+          father: "S/o RANGANADHAM",
+          role: "EXECUTIVE MEMBER",
+          occ: "Private Employee",
+          address: "5-8, Paminivandlavooru, Bangarupalem Mandal, Chittoor Dist",
+          icon: "User"
+        }
+      ]
+    },
+    donation: {
+      tag: "DIVINE CONTRIBUTIONS",
+      title: "Donations & Bank Account Details",
+      subtitle: "Support the noble temple construction and receive Lord Sri Rama's divine blessings.",
+      slogan: "Your Contribution is Your Partnership in Sri Rama Seva.",
+      bankTitle: "Official Bank Account Details",
+      accountName: "Sri Rama Seva Committee Paminivandlavooru",
+      accountNo: "45274946370",
+      ifsc: "SBIN0005691",
+      bankName: "State Bank of India (SBI)",
+      branch: "ACB K G SATRAM",
+      upiId: "8431806098@ibl",
+      scanQr: "Scan PhonePe QR Code to Donate directly",
+      copyBtn: "Copy",
+      copiedMsg: "Copied!",
+      generateReceipt: "Generate Digital Donation Receipt",
+      donorName: "Your Full Name",
+      donorAmount: "Donation Amount (₹)",
+      donorPhone: "Phone Number",
+      donorCity: "City / Village",
+      getReceiptBtn: "Generate Receipt",
+      presetAmounts: [501, 1008, 2500, 5000, 10008]
+    },
+    donorWall: {
+      tag: "HONOR ROLL",
+      title: "Official Devotee Donors Ledger",
+      subtitle: "Verified bank statement records of noble contributions for Sri Rama Temple Construction",
+      donors: [
+        { name: "Thaneru Munirathnam & Neelamma family", city: "Paminivandla Vooru", amount: "₹ 50,000", seva: "Temple Construction Fund" },
+        { name: "SHG Rajeshwari Mahila Mandali", city: "Paminivandla Vooru", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
+        { name: "Sri Ganesh Mahila Mandali", city: "Paminivandla Vooru", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
+        { name: "SHG Mahila Mandali Group", city: "Paminivandla Vooru", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
+        { name: "Sri Sai Mahila Mandali", city: "Thambuganipalle", amount: "₹ 10,000", seva: "Mahila Mandali Donation" },
+        { name: "Jyoshna / Vanama", city: "Paminivandla Vooru", amount: "₹ 5,000", seva: "Temple Seva Fund" },
+        { name: "Thaneru (T. Haneru)", city: "Paminivandla Vooru", amount: "₹ 5,000", seva: "Stone Structure Fund" },
+        { name: "P. Rishi", city: "Paminivandla Vooru", amount: "₹ 2,101", seva: "Annadanam Seva" },
+        { name: "Cash Deposit Self", city: "Temple Account", amount: "₹ 1,116", seva: "Cash Deposit" },
+        { name: "Thaneru (T. Hanneru)", city: "Paminivandla Vooru", amount: "₹ 505", seva: "Devotional Contribution" },
+        { name: "P. Sandeep", city: "Paminivandla Vooru", amount: "₹ 116", seva: "Devotional Contribution" },
+        { name: "T. Murali", city: "Paminivandla Vooru", amount: "₹ 116", seva: "Devotional Contribution" },
+        { name: "T. Chandra", city: "Paminivandla Vooru", amount: "₹ 51", seva: "Devotional Contribution" },
+        { name: "T. Chandr", city: "Paminivandla Vooru", amount: "₹ 50", seva: "Devotional Contribution" },
+        { name: "T. Karthi", city: "Paminivandla Vooru", amount: "₹ 30", seva: "Devotional Contribution" },
+        { name: "P. Naveen", city: "Paminivandla Vooru", amount: "₹ 11", seva: "Devotional Contribution" }
+      ]
+    },
+    location: {
+      tag: "TEMPLE LOCATION",
+      title: "Location & Directions",
+      subtitle: "Visit Sri Ramalayam at Paminivandla Vooru",
+      mapsUrl: "https://maps.app.goo.gl/FgyzQLz4rNMFhSY98",
+      addressTitle: "Temple Address:",
+      addressLines: [
+        "Sri Rama Seva Committee",
+        "Door No: 5-233, Paminivandla Vooru",
+        "Thambuganipalle Panchayat, Bangarupalem Mandal",
+        "Chittoor District, Andhra Pradesh - 517416"
+      ],
+      qrScanTitle: "Scan for GPS Location",
+      openMapsBtn: "Open in Google Maps",
+      contactTitle: "Send a Message",
+      formName: "Full Name",
+      formPhone: "Phone Number",
+      formMessage: "Your Message",
+      formSubmit: "Send Message"
+    },
+    faq: {
+      tag: "FAQS",
+      title: "Frequently Asked Questions",
+      items: [
+        {
+          q: "How can I get an official donation receipt after online bank transfer?",
+          a: "After transferring funds online, you can immediately generate your digital receipt on our website or share your transaction reference on WhatsApp to +91 8431806098."
+        },
+        {
+          q: "Is Sri Rama Seva Committee officially registered?",
+          a: "Yes, Sri Rama Seva Committee is a legally recognized society registered under the AP Societies Registration Act (Regd No: 125 of 2026)."
+        },
+        {
+          q: "Can we donate building materials directly?",
+          a: "Yes! Devotees who wish to contribute granite stones, cement, or electrical fixtures are welcome to contact committee office bearers."
+        }
+      ]
+    },
+    footer: {
+      slogan: "|| JAI SRI RAM || Service is Our Resolve, Lord Rama is Our Divine Guide...",
+      thanks: "Thank You / ధన్యవాదాలు!",
+      rights: "Sri Rama Seva Committee, Paminivandla Vooru. All Rights Reserved.",
+      regdNotice: "Registered Society No: 125 of 2026 (Govt of Andhra Pradesh)"
+    }
+  }
+};

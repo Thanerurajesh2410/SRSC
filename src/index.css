@@ -1,0 +1,403 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-gold: #FFD700;
+  --primary-gold-light: #FFF5C0;
+  --primary-gold-dark: #B8860B;
+  --primary-saffron: #FF9933;
+  --primary-saffron-dark: #E65100;
+  --sacred-crimson: #900C3F;
+  --sacred-maroon: #5C121E;
+  --font-heading: 'Cinzel', serif;
+  --font-telugu: 'Noto Sans Telugu', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* =========================================================
+   THEME 1: Sacred Royal Maroon & Gold (Default)
+   ========================================================= */
+body, body.theme-maroon {
+  font-family: var(--font-body), var(--font-telugu), sans-serif;
+  background-color: #2A060B;
+  color: #FFFFFF;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(255, 153, 51, 0.35) 0%, transparent 45%),
+    radial-gradient(circle at 20% 25%, rgba(255, 215, 0, 0.22) 0%, transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(255, 153, 51, 0.22) 0%, transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(144, 12, 63, 0.4) 0%, transparent 50%),
+    linear-gradient(180deg, #4A0E17 0%, #2A060B 40%, #3B0A11 70%, #230408 100%),
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFD700' fill-opacity='0.08'%3E%3Cpath d='M50 5 C 25 5, 5 25, 5 50 C 5 75, 25 95, 50 95 C 75 95, 95 75, 95 50 C 95 25, 75 5, 50 5 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+
+body.theme-maroon .gold-card {
+  background: linear-gradient(180deg, rgba(74, 14, 23, 0.95) 0%, rgba(45, 8, 14, 0.98) 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.5);
+  color: #FFFFFF;
+}
+
+/* =========================================================
+   THEME 2: Divine Sandalwood Cream / Ivory (Light Theme)
+   ========================================================= */
+body.theme-cream {
+  background-color: #FFFDF0;
+  color: #2D080E;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(255, 153, 51, 0.18) 0%, transparent 50%),
+    linear-gradient(180deg, #FFFDF0 0%, #FFF5E1 50%, #FFECD0 100%),
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.06'%3E%3Cpath d='M50 5 C 25 5, 5 25, 5 50 C 5 75, 25 95, 50 95 C 75 95, 95 75, 95 50 Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+body.theme-cream .gold-card {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(184, 134, 11, 0.4);
+  color: #2D080E;
+  box-shadow: 0 10px 30px rgba(92, 18, 30, 0.1);
+}
+
+body.theme-cream h1, body.theme-cream h2, body.theme-cream h3, body.theme-cream h4 {
+  color: #4A0E17 !important;
+}
+
+body.theme-cream p, body.theme-cream span, body.theme-cream td, body.theme-cream div {
+  color: #330A10;
+}
+
+body.theme-cream .text-white {
+  color: #4A0E17 !important;
+}
+
+body.theme-cream .text-gray-200, body.theme-cream .text-gray-300, body.theme-cream .text-gray-400 {
+  color: #4A151D !important;
+}
+
+body.theme-cream header {
+  background: linear-gradient(90deg, #5C121E, #4A0E17, #5C121E);
+  color: #FFFFFF;
+}
+
+body.theme-cream header h1, body.theme-cream header a, body.theme-cream header p {
+  color: #FFFFFF !important;
+}
+
+/* =========================================================
+   THEME 3: Radiant Golden Saffron Sunset
+   ========================================================= */
+body.theme-saffron {
+  background-color: #3D1000;
+  color: #FFFFFF;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.35) 0%, transparent 50%),
+    linear-gradient(180deg, #6B1B00 0%, #4D1300 40%, #300C00 100%),
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFD700' fill-opacity='0.08'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+body.theme-saffron .gold-card {
+  background: linear-gradient(180deg, rgba(80, 22, 0, 0.95) 0%, rgba(50, 14, 0, 0.98) 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.6);
+  color: #FFFFFF;
+}
+
+/* =========================================================
+   THEME 4: Sacred Midnight Blue & Gold
+   ========================================================= */
+body.theme-navy {
+  background-color: #0A1128;
+  color: #FFFFFF;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.25) 0%, transparent 45%),
+    linear-gradient(180deg, #1C2541 0%, #0A1128 50%, #050914 100%),
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFD700' fill-opacity='0.08'%3E%3Cpolygon points='50,10 60,40 90,50 60,60 50,90 40,60 10,50 40,40'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+body.theme-navy .gold-card {
+  background: linear-gradient(180deg, rgba(28, 37, 65, 0.95) 0%, rgba(10, 17, 40, 0.98) 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.5);
+  color: #FFFFFF;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #1A0306;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF9933, #FFD700);
+  border-radius: 5px;
+}
+
+/* Container */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Typography */
+.heading-telugu {
+  font-family: 'Noto Sans Telugu', 'Cinzel', sans-serif;
+}
+
+.heading-gold {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF5C0 40%, #FFD700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heading-saffron {
+  background: linear-gradient(135deg, #FFE082 0%, #FF9933 50%, #E65100 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Section Tags */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.4rem;
+  background: linear-gradient(135deg, rgba(92, 18, 30, 0.9), rgba(58, 10, 17, 0.9));
+  border: 1.5px solid rgba(255, 215, 0, 0.6);
+  border-radius: 50px;
+  color: #FFD700;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.section-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 2.85rem;
+  }
+}
+
+/* Cards */
+.gold-card {
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 2rem;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #FF9933, #FFD700, transparent);
+  transition: left 0.7s ease;
+}
+
+.gold-card:hover {
+  transform: translateY(-6px);
+  border-color: #FFD700;
+  box-shadow: 0 15px 45px rgba(255, 215, 0, 0.35);
+}
+
+.gold-card:hover::before {
+  left: 100%;
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #FF9933 0%, #E65100 100%);
+  color: #FFF;
+  font-weight: 800;
+  padding: 0.9rem 1.8rem;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 6px 25px rgba(230, 81, 0, 0.6);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 35px rgba(230, 81, 0, 0.8);
+  background: linear-gradient(135deg, #FFB74D 0%, #FF9933 100%);
+}
+
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+  color: #1A0306;
+  font-weight: 800;
+  padding: 0.9rem 1.8rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.45);
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 35px rgba(255, 215, 0, 0.7);
+  background: linear-gradient(135deg, #FFF5C0 0%, #FFD700 100%);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: rgba(92, 18, 30, 0.6);
+  color: #FFF;
+  font-weight: 700;
+  padding: 0.85rem 1.6rem;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255, 215, 0, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 215, 0, 0.22);
+  border-color: #FFD700;
+  color: #FFF5C0;
+  transform: translateY(-2px);
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, #5C121E, #2A060B);
+  border: 2px solid #FFD700;
+  color: #FFF5C0;
+  padding: 1rem 1.6rem;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-weight: 800;
+  animation: slideUp 0.35s ease forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: linear-gradient(180deg, #3A0A11 0%, #1D0407 100%);
+  border: 2px solid #FFD700;
+  border-radius: 24px;
+  max-width: 650px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2.25rem;
+  position: relative;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #FFF;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: #900C3F;
+  transform: rotate(90deg);
+}
+
+/* Live Ticker Marquee */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  background: linear-gradient(90deg, #5C121E, #2A060B, #5C121E);
+  border-bottom: 1.5px solid rgba(255, 215, 0, 0.6);
+  padding: 0.65rem 0;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
