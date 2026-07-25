@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { Lock, LogOut, Plus, Trash2, Receipt, Users, ShieldCheck, MessageSquare, Mail, Smartphone, Share2, UserCheck, X } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Lock, LogOut, Plus, Trash2, Receipt, Users, ShieldCheck, Download, Share2, UserCheck, FileText, Image as ImageIcon, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 export default function AdminDashboard({ t, showToast, donorList, setDonorList, committeeList, setCommitteeList, onClose }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [passError, setPassError] = useState('');
   const [activeTab, setActiveTab] = useState('receipts');
+  const receiptRef = useRef(null);
 
-  // Receipt Generator State
+  // Receipt Generator Dropdown & Form State
   const [selectedDonorId, setSelectedDonorId] = useState('');
   const [receiptName, setReceiptName] = useState('');
   const [receiptAmount, setReceiptAmount] = useState('');
@@ -16,6 +19,29 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
   const [receiptCity, setReceiptCity] = useState('');
   const [receiptSeva, setReceiptSeva] = useState('రాతి గోడల నిర్మాణం');
   const [generatedReceipt, setGeneratedReceipt] = useState(null);
+  const [isGeneratingMedia, setIsGeneratingMedia] = useState(false);
+
+  // Seva Categories List for Dropdown
+  const sevaCategories = [
+    "రాతి గోడల నిర్మాణం",
+    "గర్భగుడి రాతి గోడల సేవ",
+    "శిఖర గోపురం & కలశ సేవ",
+    "ఈ-హుండి పవిత్ర కానుక",
+    "మహిళా మండలి విరాళం",
+    "ఆలయ నిర్మాణ నిధి",
+    "స్వామివారి సేవ"
+  ];
+
+  // Preset Amounts List for Dropdown
+  const presetAmounts = [
+    { label: "₹ 501", val: 501 },
+    { label: "₹ 1,008", val: 1008 },
+    { label: "₹ 2,101", val: 2101 },
+    { label: "₹ 5,000", val: 5000 },
+    { label: "₹ 10,000", val: 10000 },
+    { label: "₹ 25,000", val: 25000 },
+    { label: "₹ 50,000", val: 50000 }
+  ];
 
   // New Donor Form State
   const [newDonorName, setNewDonorName] = useState('');
@@ -59,12 +85,11 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
     const donor = donorList.find(d => String(d.id) === String(donorId));
     if (donor) {
       setReceiptName(donor.name);
-      // Extract numeric digits from amount string like "₹ 5,000" -> "5000"
       const numericAmt = donor.amount ? donor.amount.replace(/[^0-9]/g, '') : '';
       setReceiptAmount(numericAmt);
       setReceiptCity(donor.city || 'పామినివాండ్లవూరు');
       setReceiptSeva(donor.seva || 'రాతి గోడల నిర్మాణం');
-      showToast(`${donor.name} వివరాలు ఎంచుకోబడ్డాయి.`);
+      showToast(`${donor.name} వివరాలు ఆటోమేటిక్‌గా నమోదు కాబడ్డాయి.`);
     }
   };
 
@@ -124,45 +149,118 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
     showToast("అధికారిక డిజిటల్ రశీదు రూపొందించబడింది!");
   };
 
-  // Receipt Share Functions
-  const getReceiptShareText = () => {
-    if (!generatedReceipt) return '';
-    return (
-      `🚩 *శ్రీ రామా సేవా కమిటీ - పామినివాండ్లవూరు*\n` +
-      `*అధికారిక ఈ-హుండి కానుక రశీదు*\n` +
-      `----------------------------------------\n` +
-      `🧾 *రశీదు నం:* ${generatedReceipt.receiptNo}\n` +
-      `📅 *తేదీ:* ${generatedReceipt.date}\n` +
-      `👤 *దాత పేరు:* ${generatedReceipt.name}\n` +
-      `💰 *కానుక మొత్తం:* ₹ ${parseInt(generatedReceipt.amount).toLocaleString()}\n` +
-      `🕉️ *సేవా విభాగం:* ${generatedReceipt.seva}\n` +
-      `📍 *గ్రామం:* ${generatedReceipt.city}\n` +
-      `----------------------------------------\n` +
-      `"శ్రీ సీతా సమేత శ్రీ రామచంద్రస్వామి వారి దివ్య అనుగ్రహం మీకు ఎల్లప్పుడూ కలుగుగాక!"\n\n` +
-      `🌐 వెబ్‌సైట్: https://thanerurajesh2410.github.io/sri-rama-seva-committee/`
-    );
+  // 🖼️ Export Receipt as Image (PNG)
+  const downloadReceiptImage = async () => {
+    if (!receiptRef.current) return;
+    setIsGeneratingMedia(true);
+    showToast("రశీదు ఇమేజ్ (PNG) సిద్ధమవుతోంది...");
+
+    try {
+      const canvas = await html2canvas(receiptRef.current, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: '#FFFDF0'
+      });
+
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `Sri_Rama_Temple_Receipt_${generatedReceipt.receiptNo}.png`;
+      link.click();
+
+      showToast("రశీదు ఇమేజ్ (PNG) విజయవంతంగా డౌన్‌లోడ్ అయింది!");
+    } catch (err) {
+      console.error(err);
+      showToast("ఇమేజ్ జనరేట్ చేయడంలో పొరపాటు జరిగింది.");
+    } finally {
+      setIsGeneratingMedia(false);
+    }
   };
 
-  const shareViaWhatsApp = () => {
-    const text = encodeURIComponent(getReceiptShareText());
-    const phoneNum = generatedReceipt.phone.replace(/\D/g, '');
-    const url = phoneNum ? `https://wa.me/91${phoneNum}?text=${text}` : `https://api.whatsapp.com/send?text=${text}`;
-    window.open(url, '_blank');
-    showToast("WhatsApp లో రశీదు షేర్ చేయబడుతోంది...");
+  // 📄 Export Receipt as PDF Document
+  const downloadReceiptPDF = async () => {
+    if (!receiptRef.current) return;
+    setIsGeneratingMedia(true);
+    showToast("రశీదు PDF డాక్యుమెంట్ సిద్ధమవుతోంది...");
+
+    try {
+      const canvas = await html2canvas(receiptRef.current, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: '#FFFDF0'
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
+
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.save(`Sri_Rama_Temple_Receipt_${generatedReceipt.receiptNo}.pdf`);
+
+      showToast("రశీదు PDF విజయవంతంగా డౌన్‌లోడ్ అయింది!");
+    } catch (err) {
+      console.error(err);
+      showToast("PDF జనరేట్ చేయడంలో పొరపాటు జరిగింది.");
+    } finally {
+      setIsGeneratingMedia(false);
+    }
   };
 
-  const shareViaEmail = () => {
-    const subject = encodeURIComponent(`శ్రీ రామా సేవా కమిటీ రశీదు - ${generatedReceipt.receiptNo}`);
-    const body = encodeURIComponent(getReceiptShareText());
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
-    showToast("ఇమెయిల్ క్లయింట్ తెరవబడుతోంది...");
-  };
+  // 💬 Share Receipt Image File directly via Native Share / WhatsApp
+  const shareReceiptImage = async () => {
+    if (!receiptRef.current) return;
+    setIsGeneratingMedia(true);
+    showToast("రశీదు ఇమేజ్ షేర్ చేయడానికి సిద్ధమవుతోంది...");
 
-  const shareViaSMS = () => {
-    const body = encodeURIComponent(getReceiptShareText());
-    const phoneNum = generatedReceipt.phone.replace(/\D/g, '');
-    window.location.href = `sms:${phoneNum}?body=${body}`;
-    showToast("SMS యాప్ తెరవబడుతోంది...");
+    try {
+      const canvas = await html2canvas(receiptRef.current, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: '#FFFDF0'
+      });
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          showToast("ఇమేజ్ ఫైల్ రూపకల్పనలో సమస్య జరిగింది.");
+          return;
+        }
+
+        const file = new File([blob], `Sri_Rama_Receipt_${generatedReceipt.receiptNo}.png`, { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: `శ్రీ రామా సేవా కమిటీ రశీదు - ${generatedReceipt.receiptNo}`,
+            text: `🚩 శ్రీ రామా సేవా కమిటీ పామినివాండ్లవూరు - పవిత్ర ఈ-హుండి రశీదు (${generatedReceipt.name})`,
+            files: [file]
+          });
+          showToast("రశీదు ఇమేజ్ విజయవంతంగా షేర్ చేయబడింది!");
+        } else {
+          // Fallback if direct file sharing is unsupported on browser: auto-download and prompt user
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `Sri_Rama_Receipt_${generatedReceipt.receiptNo}.png`;
+          link.click();
+
+          const shareText = encodeURIComponent(
+            `🚩 శ్రీ రామా సేవా కమిటీ - పామినివాండ్లవూరు రశీదు (${generatedReceipt.name} - ₹ ${parseInt(generatedReceipt.amount).toLocaleString()})`
+          );
+          const phoneNum = generatedReceipt.phone.replace(/\D/g, '');
+          const waUrl = phoneNum ? `https://wa.me/91${phoneNum}?text=${shareText}` : `https://api.whatsapp.com/send?text=${shareText}`;
+          
+          window.open(waUrl, '_blank');
+          showToast("రశీదు ఇమేజ్ డౌన్‌లోడ్ అయింది. వాట్సాప్‌లో షేర్ చేయగలరు!");
+        }
+      }, 'image/png');
+
+    } catch (err) {
+      console.error(err);
+      showToast("ఇమేజ్ షేర్ చేయడంలో సమస్య జరిగింది.");
+    } finally {
+      setIsGeneratingMedia(false);
+    }
   };
 
   // Add Member
@@ -271,7 +369,7 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                 }`}
               >
                 <Receipt className="w-4 h-4" />
-                <span>రశీదుల జారీ & షేరింగ్ (Receipts)</span>
+                <span>రశీదుల జారీ & ఇమేజ్ / PDF షేరింగ్</span>
               </button>
 
               <button
@@ -299,7 +397,7 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
               </button>
             </div>
 
-            {/* TAB 1: Admin Receipt Generator with Dropdown Selection */}
+            {/* TAB 1: Admin Receipt Generator with Dropdowns & Image/PDF Export */}
             {activeTab === 'receipts' && (
               <div className="space-y-6">
                 <form onSubmit={handleGenerateReceipt} className="bg-[#1A0306] p-5 rounded-2xl border border-white/10 space-y-4">
@@ -308,11 +406,11 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                     <span>అధికారిక భక్తుడి రశీదు సృష్టించు (Generate Official Donor Receipt)</span>
                   </h4>
 
-                  {/* 🌟 Donor Dropdown Selector from Donation List */}
+                  {/* 🌟 1. Donor Dropdown Selector from Donation List */}
                   <div className="bg-[#3A0A11]/60 p-3 rounded-xl border border-[#FFD700]/40">
                     <label className="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1.5">
                       <UserCheck className="w-4 h-4 text-[#FFD700]" />
-                      <span>దాతల జాబితా నుండి ఎంచుకోండి (Select Donor from Donation List):</span>
+                      <span>1. దాతల జాబితా నుండి ఎంచుకోండి (Select Donor from Donation List):</span>
                     </label>
 
                     <select
@@ -335,23 +433,36 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                       <input
                         type="text"
                         required
-                        placeholder="భక్తుడి పేరు"
+                        placeholder="భక్తుడి పేరు నమోదు చేయండి"
                         value={receiptName}
                         onChange={(e) => setReceiptName(e.target.value)}
                         className="w-full bg-[#3A0A11] border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-[#FFD700]"
                       />
                     </div>
 
+                    {/* 🌟 2. Amount Dropdown & Custom Input */}
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 mb-1">విరాళం మొత్తం (Amount ₹) *</label>
-                      <input
-                        type="number"
-                        required
-                        placeholder="ఉదా: 5008"
-                        value={receiptAmount}
-                        onChange={(e) => setReceiptAmount(e.target.value)}
-                        className="w-full bg-[#3A0A11] border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-[#FFD700] font-mono"
-                      />
+                      <label className="block text-xs font-bold text-gray-300 mb-1">2. విరాళం మొత్తం (Select Amount ₹) *</label>
+                      <div className="flex gap-2">
+                        <select
+                          onChange={(e) => setReceiptAmount(e.target.value)}
+                          className="bg-[#3A0A11] border border-white/20 rounded-xl p-2 text-xs text-amber-300 font-bold focus:outline-none"
+                        >
+                          <option value="">మొత్తం డ్రాప్‌డౌన్</option>
+                          {presetAmounts.map((amt) => (
+                            <option key={amt.val} value={amt.val}>{amt.label}</option>
+                          ))}
+                        </select>
+
+                        <input
+                          type="number"
+                          required
+                          placeholder="మొత్తం (₹)"
+                          value={receiptAmount}
+                          onChange={(e) => setReceiptAmount(e.target.value)}
+                          className="w-full bg-[#3A0A11] border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-[#FFD700] font-mono"
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -378,105 +489,137 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                       />
                     </div>
 
+                    {/* 🌟 3. Seva Dropdown Selector */}
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 mb-1">సేవా విభాగం (Seva Category)</label>
-                      <input
-                        type="text"
-                        placeholder="రాతి గోడల నిర్మాణం"
+                      <label className="block text-xs font-bold text-gray-300 mb-1">3. సేవా విభాగం (Select Seva Dropdown)</label>
+                      <select
                         value={receiptSeva}
                         onChange={(e) => setReceiptSeva(e.target.value)}
-                        className="w-full bg-[#3A0A11] border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-[#FFD700]"
-                      />
+                        className="w-full bg-[#3A0A11] border border-white/20 rounded-xl p-2.5 text-sm text-amber-300 font-bold focus:outline-none focus:border-[#FFD700]"
+                      >
+                        {sevaCategories.map((s, idx) => (
+                          <option key={idx} value={s}>{s}</option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
-                  <button type="submit" className="btn-gold w-full py-2.5 text-sm font-extrabold">
-                    <span>డిజిటల్ రశీదు రూపొందించు (Create Receipt)</span>
+                  <button type="submit" className="btn-gold w-full py-2.5 text-sm font-extrabold shadow-xl">
+                    <span>డిజిటల్ రశీదు రూపొందించు (Create Digital Receipt)</span>
                   </button>
                 </form>
 
-                {/* Rendered Receipt Card with WhatsApp, Email, & SMS 1-Click Sharing */}
+                {/* 🌟 Rendered Official Receipt Card (Targeted for HTML2Canvas Image/PDF Export) */}
                 {generatedReceipt && (
                   <div className="space-y-4 animate-fadeIn">
-                    <div className="bg-[#FFFDF0] text-[#2D080E] p-6 rounded-2xl border-4 border-[#FFD700] shadow-2xl relative">
-                      <div className="flex items-center justify-between border-b-2 border-[#5C121E]/30 pb-3 mb-4">
-                        <div className="flex items-center gap-2">
-                          <img src="/assets/logo.jpg" alt="Logo" className="w-10 h-10 rounded-full border border-amber-600" />
+                    
+                    {/* Visual Receipt DOM Element */}
+                    <div
+                      ref={receiptRef}
+                      id="receipt-card-node"
+                      className="bg-[#FFFDF0] text-[#2D080E] p-6 sm:p-8 rounded-2xl border-4 border-[#FFD700] shadow-2xl relative overflow-hidden"
+                    >
+                      {/* Watermark Background */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+                        <img src="/assets/logo.jpg" alt="Watermark" className="w-96 h-96 object-contain" />
+                      </div>
+
+                      <div className="flex items-center justify-between border-b-2 border-[#5C121E]/30 pb-4 mb-5 relative z-10">
+                        <div className="flex items-center gap-3">
+                          <img src="/assets/logo.jpg" alt="Logo" className="w-14 h-14 rounded-full border-2 border-amber-600 shadow-md" />
                           <div>
-                            <h4 className="text-base font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ</h4>
-                            <p className="text-[10px] font-bold text-amber-800">పామినివాండ్లవూరు • అధికారిక రశీదు</p>
+                            <h4 className="text-lg md:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ</h4>
+                            <p className="text-xs font-bold text-amber-900">పామినివాండ్లవూరు, బంగారుపాళెం మండలం, చిత్తూరు జిల్లా</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <span className="text-[10px] font-bold text-gray-600 block">రశీదు నం:</span>
-                          <span className="text-xs font-mono font-black text-[#5C121E]">{generatedReceipt.receiptNo}</span>
+                          <span className="text-xs font-black text-[#5C121E] bg-amber-200 px-3 py-1 rounded-full border border-amber-400 block mb-1">
+                            అధికారిక ఈ-హుండి రశీదు
+                          </span>
+                          <span className="text-xs font-mono font-black text-[#5C121E]">రశీదు నం: {generatedReceipt.receiptNo}</span>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4 text-xs mb-4">
-                        <div>
-                          <span className="text-gray-600 block text-[10px]">దాత పేరు:</span>
-                          <span className="font-bold text-sm text-[#5C121E] heading-telugu">{generatedReceipt.name}</span>
+                      <div className="grid grid-cols-2 gap-4 text-xs md:text-sm mb-5 relative z-10">
+                        <div className="bg-amber-100/60 p-3 rounded-xl border border-amber-300/60">
+                          <span className="text-gray-700 block text-[11px] font-bold">దాత పేరు (Devotee Name):</span>
+                          <span className="font-extrabold text-base text-[#5C121E] heading-telugu">{generatedReceipt.name}</span>
                         </div>
-                        <div>
-                          <span className="text-gray-600 block text-[10px]">తేదీ:</span>
-                          <span className="font-mono font-bold text-gray-800">{generatedReceipt.date}</span>
+
+                        <div className="bg-amber-100/60 p-3 rounded-xl border border-amber-300/60">
+                          <span className="text-gray-700 block text-[11px] font-bold">నమోదు తేదీ (Date):</span>
+                          <span className="font-mono font-bold text-gray-900 text-sm">{generatedReceipt.date}</span>
                         </div>
-                        <div>
-                          <span className="text-gray-600 block text-[10px]">గ్రామం:</span>
-                          <span className="font-bold text-gray-800">{generatedReceipt.city}</span>
+
+                        <div className="bg-amber-100/60 p-3 rounded-xl border border-amber-300/60">
+                          <span className="text-gray-700 block text-[11px] font-bold">గ్రామం / స్థలం (City):</span>
+                          <span className="font-bold text-gray-900 text-sm">{generatedReceipt.city}</span>
                         </div>
-                        <div>
-                          <span className="text-gray-600 block text-[10px]">సేవ:</span>
-                          <span className="font-bold text-gray-800">{generatedReceipt.seva}</span>
+
+                        <div className="bg-amber-100/60 p-3 rounded-xl border border-amber-300/60">
+                          <span className="text-gray-700 block text-[11px] font-bold">పవిత్ర సేవా విభాగం (Seva):</span>
+                          <span className="font-bold text-amber-900 text-sm">{generatedReceipt.seva}</span>
                         </div>
                       </div>
 
-                      <div className="bg-[#5C121E] text-white p-3 rounded-xl flex items-center justify-between">
-                        <span className="text-xs font-bold">ఈ-హుండి పవిత్ర కానుక:</span>
-                        <span className="text-xl font-black font-mono text-[#FFD700]">₹ {parseInt(generatedReceipt.amount).toLocaleString()}</span>
+                      <div className="bg-gradient-to-r from-[#5C121E] to-[#3A0A11] text-white p-4 rounded-xl flex items-center justify-between shadow-xl relative z-10">
+                        <span className="text-xs md:text-sm font-black text-amber-200">ఈ-హుండి పవిత్ర కానుక మొత్తం:</span>
+                        <span className="text-2xl md:text-3xl font-black font-mono text-[#FFD700]">₹ {parseInt(generatedReceipt.amount).toLocaleString()}</span>
+                      </div>
+
+                      <div className="mt-4 text-center text-xs font-extrabold text-[#5C121E] italic border-t border-amber-300 pt-3 relative z-10">
+                        "శ్రీ సీతా సమేత లక్ష్మణ హనుమత్ సమేత శ్రీ రామచంద్రస్వామి వారి దివ్య అనుగ్రహం మీకు ఎల్లప్పుడూ కలుగుగాక!"
                       </div>
                     </div>
 
-                    {/* 🚀 Instant 1-Click Receipt Sharing Options */}
+                    {/* 🚀 Image (PNG), PDF, and Direct Image Sharing Action Controls */}
                     <div className="bg-black/60 p-4 rounded-2xl border border-white/20">
-                      <div className="flex items-center gap-2 mb-3 text-xs font-bold text-amber-300">
-                        <Share2 className="w-4 h-4 text-[#FFD700]" />
-                        <span>భక్తుడికి రశీదు పంపండి (Share Generated Receipt):</span>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                          <Share2 className="w-4 h-4 text-[#FFD700]" />
+                          <span>రశీదును ఇమేజ్ (PNG) లేదా PDF రూపంలో షేర్ చేయండి:</span>
+                        </span>
+                        {isGeneratingMedia && (
+                          <span className="text-xs font-bold text-amber-400 animate-pulse">జనరేట్ అవుతోంది...</span>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {/* 💬 WhatsApp Share Button */}
+                        {/* 🖼️ Share Image (PNG File) */}
                         <button
                           type="button"
-                          onClick={shareViaWhatsApp}
-                          className="px-4 py-2.5 rounded-xl text-xs font-black bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-2 shadow-lg transition-all"
+                          disabled={isGeneratingMedia}
+                          onClick={shareReceiptImage}
+                          className="px-4 py-3 rounded-xl text-xs font-black bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-2 shadow-lg transition-all border border-emerald-300/40"
                         >
-                          <MessageSquare className="w-4 h-4 fill-white" />
-                          <span>WhatsApp లో పంపు</span>
+                          <Share2 className="w-4 h-4" />
+                          <span>రశీదు ఇమేజ్‌గా షేర్ చేయి (WhatsApp Image)</span>
                         </button>
 
-                        {/* 📧 Email Share Button */}
+                        {/* 📥 Download Image (PNG) */}
                         <button
                           type="button"
-                          onClick={shareViaEmail}
-                          className="px-4 py-2.5 rounded-xl text-xs font-black bg-sky-600 hover:bg-sky-500 text-white flex items-center justify-center gap-2 shadow-lg transition-all"
+                          disabled={isGeneratingMedia}
+                          onClick={downloadReceiptImage}
+                          className="px-4 py-3 rounded-xl text-xs font-black bg-[#5C121E] hover:bg-amber-600 text-[#FFD700] flex items-center justify-center gap-2 shadow-lg transition-all border border-[#FFD700]/40"
                         >
-                          <Mail className="w-4 h-4" />
-                          <span>ఇమెయిల్ ద్వారా పంపు</span>
+                          <ImageIcon className="w-4 h-4" />
+                          <span>ఇమేజ్ (PNG) డౌన్‌లోడ్</span>
                         </button>
 
-                        {/* 📱 SMS Share Button */}
+                        {/* 📄 Download PDF */}
                         <button
                           type="button"
-                          onClick={shareViaSMS}
-                          className="px-4 py-2.5 rounded-xl text-xs font-black bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center gap-2 shadow-lg transition-all"
+                          disabled={isGeneratingMedia}
+                          onClick={downloadReceiptPDF}
+                          className="px-4 py-3 rounded-xl text-xs font-black bg-purple-700 hover:bg-purple-600 text-white flex items-center justify-center gap-2 shadow-lg transition-all border border-purple-300/40"
                         >
-                          <Smartphone className="w-4 h-4" />
-                          <span>SMS ద్వారా పంపు</span>
+                          <FileText className="w-4 h-4" />
+                          <span>PDF డౌన్‌లోడ్</span>
                         </button>
                       </div>
                     </div>
+
                   </div>
                 )}
               </div>
