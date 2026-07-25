@@ -1,42 +1,60 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX, Music } from 'lucide-react';
+import { Volume2, VolumeX, Music, Play } from 'lucide-react';
 
 export default function DevotionalAudio({ lang }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(false);
   const audioCtxRef = useRef(null);
   const isPlayingRef = useRef(false);
 
-  // Auto-play Sri Rama Devotional Chant / Music on site load
+  // Auto-play Sri Rama Chanting Audio when website opens
   useEffect(() => {
-    const startAudio = () => {
-      if (!isPlayingRef.current) {
-        isPlayingRef.current = true;
-        setIsPlaying(true);
-        playSriRamaAudio();
+    let started = false;
+
+    const startAudio = async () => {
+      if (started) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!audioCtxRef.current) {
+          audioCtxRef.current = new AudioContext();
+        }
+        
+        if (audioCtxRef.current.state === 'suspended') {
+          await audioCtxRef.current.resume();
+        }
+
+        if (audioCtxRef.current.state === 'running') {
+          started = true;
+          isPlayingRef.current = true;
+          setIsPlaying(true);
+          setShowPrompt(false);
+          playSriRamaChanting();
+        } else {
+          setShowPrompt(true);
+        }
+      } catch (e) {
+        setShowPrompt(true);
       }
     };
 
-    // Attempt instant autoplay
+    // Attempt instant auto-play
     startAudio();
 
-    // Listen for any user click/touch anywhere on the window to fulfill browser autoplay policy
-    const handleFirstInteraction = () => {
+    // Browser Autoplay Policy Handler (Triggers on first click/scroll/touch)
+    const handleUserInteraction = () => {
       if (!isPlayingRef.current) {
         startAudio();
       }
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('scroll', handleFirstInteraction);
     };
 
-    window.addEventListener('click', handleFirstInteraction);
-    window.addEventListener('touchstart', handleFirstInteraction);
-    window.addEventListener('scroll', handleFirstInteraction);
+    window.addEventListener('click', handleUserInteraction);
+    window.addEventListener('touchstart', handleUserInteraction);
+    window.addEventListener('scroll', handleUserInteraction);
 
     return () => {
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('scroll', handleFirstInteraction);
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      window.removeEventListener('scroll', handleUserInteraction);
     };
   }, []);
 
@@ -44,85 +62,122 @@ export default function DevotionalAudio({ lang }) {
     if (isPlaying) {
       isPlayingRef.current = false;
       setIsPlaying(false);
+      setShowPrompt(false);
       if (audioCtxRef.current) {
         audioCtxRef.current.suspend();
       }
     } else {
       isPlayingRef.current = true;
       setIsPlaying(true);
-      playSriRamaAudio();
+      setShowPrompt(false);
+      playSriRamaChanting();
     }
   };
 
-  const playSriRamaAudio = () => {
+  // High-Quality Audible Sri Rama Chanting & Tanpura Melody Synthesizer
+  const playSriRamaChanting = () => {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!audioCtxRef.current) {
         audioCtxRef.current = new AudioContext();
-      } else if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
+      }
+      
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') {
+        ctx.resume();
       }
 
-      const ctx = audioCtxRef.current;
-      
-      // Sri Ramadasu Divine Scale Frequencies (Carnatic Mohanam / Bowli Sri Rama Raga)
-      const ragaNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25]; // C D E G A C
+      // Sacred Raga Frequencies: "Sri Rama Jaya Rama Jaya Jaya Rama"
+      // Frequencies for S-R-G-P-D-S (Mohanam Raga Chanting)
+      const chantingNotes = [
+        { freq: 261.63, duration: 0.6, label: "Sri" },     // C4
+        { freq: 329.63, duration: 0.6, label: "Rama" },    // E4
+        { freq: 392.00, duration: 0.8, label: "Jaya" },    // G4
+        { freq: 329.63, duration: 0.6, label: "Rama" },    // E4
+        { freq: 440.00, duration: 0.6, label: "Jaya" },    // A4
+        { freq: 392.00, duration: 0.6, label: "Jaya" },    // G4
+        { freq: 523.25, duration: 1.2, label: "Rama" },    // C5
+      ];
+
       let noteIdx = 0;
 
-      const playNextNote = () => {
+      const playNextChantNote = () => {
         if (!isPlayingRef.current || !audioCtxRef.current) return;
 
+        const note = chantingNotes[noteIdx];
         const osc = ctx.createOscillator();
+        const oscHarmonic = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        // Warm Divine Bell & Sitar Tone
+        // Main Chant Bell Tone (Loud and Clear Volume)
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(ragaNotes[noteIdx], ctx.currentTime);
-        
-        gain.gain.setValueAtTime(0.01, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.15);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.8);
+        osc.frequency.setValueAtTime(note.freq, ctx.currentTime);
+
+        // Tanpura Harmonic Warmth
+        oscHarmonic.type = 'triangle';
+        oscHarmonic.frequency.setValueAtTime(note.freq * 0.5, ctx.currentTime);
+
+        // Rich, audible gain envelope
+        gain.gain.setValueAtTime(0.02, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.08); // Clear audible volume
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + note.duration + 0.4);
 
         osc.connect(gain);
+        oscHarmonic.connect(gain);
         gain.connect(ctx.destination);
 
         osc.start();
-        osc.stop(ctx.currentTime + 1.9);
+        oscHarmonic.start();
+        osc.stop(ctx.currentTime + note.duration + 0.5);
+        oscHarmonic.stop(ctx.currentTime + note.duration + 0.5);
 
-        noteIdx = (noteIdx + 1) % ragaNotes.length;
+        noteIdx = (noteIdx + 1) % chantingNotes.length;
 
-        setTimeout(playNextNote, 1200);
+        // Schedule next note smoothly
+        setTimeout(playNextChantNote, note.duration * 1000 + 150);
       };
 
-      playNextNote();
+      playNextChantNote();
     } catch (e) {
-      console.log('Autoplay listener active', e);
+      console.log('Chanting playback error:', e);
     }
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-2 relative">
+      {/* Primary Audio Toggle Button */}
       <button
         onClick={togglePlay}
-        className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 shadow-lg border ${
+        className={`px-3.5 py-1.5 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 shadow-xl border ${
           isPlaying
-            ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-300 animate-pulse shadow-amber-500/50'
+            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-amber-300 animate-pulse shadow-amber-500/60 scale-105'
             : 'bg-white/10 text-amber-300 border-amber-400/40 hover:bg-white/20'
         }`}
-        title={isPlaying ? "పాజ్ చేయి (Pause Music)" : "ప్లే చేయి (Play Music)"}
+        title={isPlaying ? "పాజ్ చేయి (Pause Sri Rama Chanting)" : "శ్రీరామదాసు జప గానం వినండి (Play Sri Rama Chanting)"}
       >
-        <Music className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
-        <span>
+        <Music className={`w-4 h-4 ${isPlaying ? 'animate-spin text-yellow-200' : 'text-amber-400'}`} />
+        <span className="tracking-wide">
           {isPlaying
-            ? (lang === 'te' ? '॥ శ్రీరామ గానం వినపడుతోంది ॥' : '॥ Sri Rama Chants Playing ॥')
-            : (lang === 'te' ? '॥ శ్రీరామదాసు భక్తి గానం ॥' : '॥ Sri Rama Devotional Audio ॥')}
+            ? (lang === 'te' ? '॥ శ్రీ రామ జప గానం వినపడుతోంది 🔊 ॥' : '॥ Sri Rama Chanting Active 🔊 ॥')
+            : (lang === 'te' ? '॥ శ్రీ రామ జప గానం వినండి 🔊 ॥' : '॥ Play Sri Rama Chanting 🔊 ॥')}
         </span>
         {isPlaying ? (
-          <Volume2 className="w-3.5 h-3.5 text-amber-200" />
+          <Volume2 className="w-4 h-4 text-yellow-200" />
         ) : (
-          <VolumeX className="w-3.5 h-3.5 text-gray-400" />
+          <VolumeX className="w-4 h-4 text-gray-400" />
         )}
       </button>
+
+      {/* Auto-Play Unmute Banner if Browser Autoplay Policy Paused */}
+      {showPrompt && !isPlaying && (
+        <button
+          onClick={togglePlay}
+          className="absolute top-12 left-0 z-50 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-black px-4 py-2 rounded-xl shadow-2xl border-2 border-yellow-300 flex items-center gap-2 animate-bounce whitespace-nowrap"
+        >
+          <Play className="w-4 h-4 fill-white" />
+          <span>శ్రీ రామ నామ జప గానం వినడానికి ఇక్కడ క్లిక్ చేయండి (Click to Listen Sri Rama Chant)</span>
+        </button>
+      )}
     </div>
   );
 }
