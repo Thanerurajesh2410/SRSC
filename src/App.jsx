@@ -11,7 +11,7 @@ import DonationSection from './components/DonationSection';
 import DonorWallFaq from './components/DonorWallFaq';
 import LocationContact from './components/LocationContact';
 import Footer from './components/Footer';
-import { CheckCircle, Palette } from 'lucide-react';
+import { CheckCircle, Palette, MessageSquare } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState('te');
@@ -29,8 +29,13 @@ export default function App() {
     setTimeout(() => setToastMessage(''), 3000);
   };
 
+  const openWhatsApp = () => {
+    const text = encodeURIComponent("జై శ్రీరామ్! పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ సేవా వివరాలకై సంప్రదిస్తున్నాను.");
+    window.open("https://wa.me/919866125609?text=" + text, '_blank');
+  };
+
   return (
-    <div className="min-h-screen flex flex-col font-sans transition-colors duration-500">
+    <div className="min-h-screen flex flex-col font-sans transition-colors duration-500 relative">
       
       {/* Dynamic Theme Selector Toolbar for User Selection */}
       <div className="bg-[#1A0306] border-b border-[var(--primary-gold)]/40 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 z-50">
@@ -110,6 +115,16 @@ export default function App() {
 
       {/* Footer */}
       <Footer t={t} />
+
+      {/* Floating WhatsApp Action Button (+91 9866125609) */}
+      <button
+        onClick={openWhatsApp}
+        className="fixed bottom-6 left-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-full shadow-[0_0_25px_rgba(16,185,129,0.7)] border-2 border-white flex items-center gap-2 font-black text-xs transition-all transform hover:scale-105 animate-bounce"
+        title="WhatsApp Support (+91 9866125609)"
+      >
+        <MessageSquare className="w-5 h-5 fill-white text-emerald-500" />
+        <span className="hidden sm:inline">WhatsApp Contact (+91 9866125609)</span>
+      </button>
 
       {/* Floating Toast Notification */}
       {toastMessage && (

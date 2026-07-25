@@ -9,7 +9,7 @@ export const content = {
       committee: "కమిటీ సభ్యులు",
       sevas: "సేవా పథకాలు",
       bank: "ఈ-హుండి / విరాళాలు",
-      location: "ఆలయ ప్రాంతం",
+      location: "ఆలయ ప్రాంతం & సంప్రదించండి",
       donateBtn: "🚩 ఈ-హుండి విరాళం",
     },
     hero: {
@@ -21,7 +21,7 @@ export const content = {
       eHundiBtn: "💰 ఈ-హుండి ద్వారా సమర్పించండి",
       galleryBtn: "🖼️ ఆలయ ప్రగతి చిత్రాలు",
     },
-    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • రాతి గోడల నిర్మాణం వేగంగా జరుగుతోంది • శ్రీ రామ పవిత్ర ఈ-హుండి (E-Hundi) ద్వారా మీ విరాళాలను PhonePe QR లేదా SBI బ్యాంక్ ఖాతా ద్వారా పంపగలరు",
+    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • రాతి గోడల నిర్మాణం వేగంగా జరుగుతోంది • శ్రీ రామ పవిత్ర ఈ-హుండి (E-Hundi) వివరాలకై వాట్సాప్ (+91 9866125609) లేదా ఇమెయిల్ (sriramasevacommitteepvv@gmail.com) ద్వారా సంప్రదించగలరు",
     sevas: {
       tag: "విరాళాల పథకాలు",
       title: "వివిధ శ్రీ రామ సేవా పథకాలు",
@@ -203,10 +203,13 @@ export const content = {
       ]
     },
     location: {
-      tag: "ఆలయ మార్గం",
-      title: "ఆలయ ప్రాంతం & దిశలు",
-      subtitle: "పామినివాండ్లవూరు శ్రీ రామాలయానికి విచ్చేయండి",
+      tag: "సంప్రదించండి & ఆలయ మార్గం",
+      title: "ఆలయ చిరునామా & సంప్రదింపు వివరాలు",
+      subtitle: "శ్రీ రామా సేవా కమిటీకి ఇమెయిల్ లేదా వాట్సాప్ ద్వారా నేరుగా సందేశం పంపండి",
       mapsUrl: "https://maps.app.goo.gl/FgyzQLz4rNMFhSY98",
+      email: "sriramasevacommitteepvv@gmail.com",
+      whatsapp: "+91 9866125609",
+      whatsappRaw: "919866125609",
       addressTitle: "ఆలయ చిరునామా:",
       addressLines: [
         "శ్రీ రామా సేవా కమిటీ",
@@ -216,11 +219,12 @@ export const content = {
       ],
       qrScanTitle: "లొకేషన్ కోసం స్కాన్ చేయండి",
       openMapsBtn: "Google Maps లో మార్గం చూడండి",
-      contactTitle: "మమ్మల్ని సంప్రదించండి",
-      formName: "పేరు",
+      contactTitle: "మమ్మల్ని సంప్రదించండి (Contact Us)",
+      formName: "మీ పేరు",
       formPhone: "ఫోన్ నంబర్",
+      formEmail: "ఇమెయిల్ ఐడీ",
       formMessage: "మీ సందేశం",
-      formSubmit: "సందేశం పంపండి"
+      formSubmit: "📧 సబ్‌మిట్ చేయండి (Send Email)"
     },
     faq: {
       tag: "సందేహాలు",
@@ -231,8 +235,8 @@ export const content = {
           a: "మా శ్రీ రామ ఈ-హుండి PhonePe QR కోడ్ స్కాన్ చేసి లేదా SBI బ్యాంక్ ఖాతాకు గూగుల్ పే / నిఫ్ట్ ద్వారా నేరుగా విరాళం పంపవచ్చు."
         },
         {
-          q: "బ్యాంక్ ట్రాన్స్‌ఫర్ చేసిన తర్వాత విరాళం రశీదు ఎలా పొందాలి?",
-          a: "మీరు ఆన్‌లైన్‌లో విరాళం పంపిన తర్వాత, మా 'రశీదు రూపొందించు' ఆప్షన్ ద్వారా డిజిటల్ రశీదును పొందవచ్చు లేదా మీ వివరాలను 8431806098 వాట్సాప్ నంబర్‌కు పంపగలరు."
+          q: "కమిటీని వాట్సాప్ లేదా ఇమెయిల్ ద్వారా ఎలా సంప్రదించాలి?",
+          a: "మీరు నేరుగా వాట్సాప్ +91 9866125609 లేదా ఇమెయిల్ sriramasevacommitteepvv@gmail.com ద్వారా కమిటీ సభ్యులను సంప్రదించవచ్చు."
         },
         {
           q: "విరాళంగా సామాగ్రినే (సిమెంట్, రాళ్ళు) ఇవ్వవచ్చా?",
@@ -256,7 +260,7 @@ export const content = {
       committee: "Committee Members",
       sevas: "Seva Schemes",
       bank: "E-Hundi / Donations",
-      location: "Location",
+      location: "Location & Contact",
       donateBtn: "🚩 E-Hundi Donation",
     },
     hero: {
@@ -268,7 +272,7 @@ export const content = {
       eHundiBtn: "💰 Donate via E-Hundi",
       galleryBtn: "🖼️ View Construction Photos",
     },
-    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Official Sri Rama E-Hundi Activated • Sri Ramalayam Foundation Completed in Paminivandla Vooru • Stone Walls Construction Underway • Direct Online E-Hundi Donations Accepted via SBI & PhonePe UPI",
+    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Official Sri Rama E-Hundi Activated • For Inquiries Contact WhatsApp: +91 9866125609 or Email: sriramasevacommitteepvv@gmail.com",
     sevas: {
       tag: "DONATION SCHEMES",
       title: "Temple Seva & Sponsorship Categories",
@@ -335,7 +339,7 @@ export const content = {
         { id: 2, title: "Temple Grounds & Foundation Site", src: "/assets/construction_1.jpg", tag: "Phase 1 - Ground View" },
         { id: 3, title: "Sri Ramalayam Stone Walls Construction", src: "/assets/construction_2.jpg", tag: "Phase 2 - Stone Walls" },
         { id: 4, title: "Temple Window Frames & Carvings", src: "/assets/construction_3.jpg", tag: "Phase 3 - Window Frames" },
-        { id: 5, title: "Sanctum Sanctorum (Garbhagudi) Door Frame & Interior", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
+        { id: 5, title: "Sanctum Sanctorum (Garbhagudi) Entrance", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
       ]
     },
     committee: {
@@ -449,10 +453,13 @@ export const content = {
       ]
     },
     location: {
-      tag: "TEMPLE LOCATION",
-      title: "Location & Directions",
-      subtitle: "Visit Sri Ramalayam at Paminivandla Vooru",
+      tag: "LOCATION & CONTACT",
+      title: "Temple Address & Contact Details",
+      subtitle: "Send a direct message via Email or WhatsApp to Sri Rama Seva Committee",
       mapsUrl: "https://maps.app.goo.gl/FgyzQLz4rNMFhSY98",
+      email: "sriramasevacommitteepvv@gmail.com",
+      whatsapp: "+91 9866125609",
+      whatsappRaw: "919866125609",
       addressTitle: "Temple Address:",
       addressLines: [
         "Sri Rama Seva Committee",
@@ -462,11 +469,12 @@ export const content = {
       ],
       qrScanTitle: "Scan for GPS Location",
       openMapsBtn: "Open in Google Maps",
-      contactTitle: "Send a Message",
+      contactTitle: "Send a Message (Contact Us)",
       formName: "Full Name",
       formPhone: "Phone Number",
+      formEmail: "Email Address",
       formMessage: "Your Message",
-      formSubmit: "Send Message"
+      formSubmit: "📧 Send Email to Committee"
     },
     faq: {
       tag: "FAQS",
@@ -477,8 +485,8 @@ export const content = {
           a: "You can scan our PhonePe E-Hundi QR code or use SBI Bank details via Google Pay / PhonePe / NEFT for direct contributions."
         },
         {
-          q: "How can I get an official donation receipt after online bank transfer?",
-          a: "After transferring funds online, you can immediately generate your digital receipt on our website or share your transaction reference on WhatsApp to +91 8431806098."
+          q: "How to contact the committee via WhatsApp or Email?",
+          a: "You can directly message us on WhatsApp at +91 9866125609 or send an email to sriramasevacommitteepvv@gmail.com."
         },
         {
           q: "Can we donate building materials directly?",
