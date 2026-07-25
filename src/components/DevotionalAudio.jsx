@@ -7,7 +7,7 @@ export default function DevotionalAudio({ lang }) {
   const audioCtxRef = useRef(null);
   const isPlayingRef = useRef(false);
 
-  // Auto-play Sri Rama Chanting Audio when website opens
+  // Auto-play Jagadanandakaraka Devotional Song when website opens
   useEffect(() => {
     let started = false;
 
@@ -28,7 +28,7 @@ export default function DevotionalAudio({ lang }) {
           isPlayingRef.current = true;
           setIsPlaying(true);
           setShowPrompt(false);
-          playSriRamaChanting();
+          playJagadanandakarakaSong();
         } else {
           setShowPrompt(true);
         }
@@ -70,12 +70,12 @@ export default function DevotionalAudio({ lang }) {
       isPlayingRef.current = true;
       setIsPlaying(true);
       setShowPrompt(false);
-      playSriRamaChanting();
+      playJagadanandakarakaSong();
     }
   };
 
-  // High-Quality Audible Sri Rama Chanting & Tanpura Melody Synthesizer
-  const playSriRamaChanting = () => {
+  // High-Quality Audible Jagadanandakaraka (Nattai Raga) Pancharatna Krithi Synthesizer
+  const playJagadanandakarakaSong = () => {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!audioCtxRef.current) {
@@ -87,40 +87,45 @@ export default function DevotionalAudio({ lang }) {
         ctx.resume();
       }
 
-      // Sacred Raga Frequencies: "Sri Rama Jaya Rama Jaya Jaya Rama"
-      // Frequencies for S-R-G-P-D-S (Mohanam Raga Chanting)
-      const chantingNotes = [
-        { freq: 261.63, duration: 0.6, label: "Sri" },     // C4
-        { freq: 329.63, duration: 0.6, label: "Rama" },    // E4
-        { freq: 392.00, duration: 0.8, label: "Jaya" },    // G4
-        { freq: 329.63, duration: 0.6, label: "Rama" },    // E4
-        { freq: 440.00, duration: 0.6, label: "Jaya" },    // A4
-        { freq: 392.00, duration: 0.6, label: "Jaya" },    // G4
-        { freq: 523.25, duration: 1.2, label: "Rama" },    // C5
+      // Nattai Raga Notes for "Jagadanandakaraka Surasevita":
+      // S - R3 - G3 - M1 - P - D3 - N3 - S (Swara notes)
+      const songNotes = [
+        { freq: 261.63, duration: 0.5, label: "Ja" },      // C4
+        { freq: 311.13, duration: 0.5, label: "ga" },     // D#4
+        { freq: 329.63, duration: 0.6, label: "da" },     // E4
+        { freq: 392.00, duration: 0.6, label: "nan" },    // G4
+        { freq: 493.88, duration: 0.7, label: "da" },     // B4
+        { freq: 523.25, duration: 0.8, label: "ka" },     // C5
+        { freq: 493.88, duration: 0.5, label: "ra" },     // B4
+        { freq: 392.00, duration: 0.7, label: "ka" },     // G4
+        { freq: 349.23, duration: 0.6, label: "Su" },     // F4
+        { freq: 329.63, duration: 0.6, label: "ra" },     // E4
+        { freq: 311.13, duration: 0.6, label: "se" },     // D#4
+        { freq: 261.63, duration: 1.2, label: "vita" },    // C4
       ];
 
       let noteIdx = 0;
 
-      const playNextChantNote = () => {
+      const playNextSongNote = () => {
         if (!isPlayingRef.current || !audioCtxRef.current) return;
 
-        const note = chantingNotes[noteIdx];
+        const note = songNotes[noteIdx];
         const osc = ctx.createOscillator();
         const oscHarmonic = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        // Main Chant Bell Tone (Loud and Clear Volume)
-        osc.type = 'sine';
+        // Veena / Temple Flute Tone
+        osc.type = 'triangle';
         osc.frequency.setValueAtTime(note.freq, ctx.currentTime);
 
-        // Tanpura Harmonic Warmth
-        oscHarmonic.type = 'triangle';
-        oscHarmonic.frequency.setValueAtTime(note.freq * 0.5, ctx.currentTime);
+        // Flute Harmonic Resonance
+        oscHarmonic.type = 'sine';
+        oscHarmonic.frequency.setValueAtTime(note.freq * 2, ctx.currentTime);
 
-        // Rich, audible gain envelope
+        // Audible volume envelope
         gain.gain.setValueAtTime(0.02, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.08); // Clear audible volume
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + note.duration + 0.4);
+        gain.gain.exponentialRampToValueAtTime(0.38, ctx.currentTime + 0.06); // Rich audible sound
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + note.duration + 0.3);
 
         osc.connect(gain);
         oscHarmonic.connect(gain);
@@ -128,18 +133,18 @@ export default function DevotionalAudio({ lang }) {
 
         osc.start();
         oscHarmonic.start();
-        osc.stop(ctx.currentTime + note.duration + 0.5);
-        oscHarmonic.stop(ctx.currentTime + note.duration + 0.5);
+        osc.stop(ctx.currentTime + note.duration + 0.4);
+        oscHarmonic.stop(ctx.currentTime + note.duration + 0.4);
 
-        noteIdx = (noteIdx + 1) % chantingNotes.length;
+        noteIdx = (noteIdx + 1) % songNotes.length;
 
-        // Schedule next note smoothly
-        setTimeout(playNextChantNote, note.duration * 1000 + 150);
+        // Schedule next melody note
+        setTimeout(playNextSongNote, note.duration * 1000 + 100);
       };
 
-      playNextChantNote();
+      playNextSongNote();
     } catch (e) {
-      console.log('Chanting playback error:', e);
+      console.log('Jagadanandakaraka playback error:', e);
     }
   };
 
@@ -153,13 +158,13 @@ export default function DevotionalAudio({ lang }) {
             ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-amber-300 animate-pulse shadow-amber-500/60 scale-105'
             : 'bg-white/10 text-amber-300 border-amber-400/40 hover:bg-white/20'
         }`}
-        title={isPlaying ? "పాజ్ చేయి (Pause Sri Rama Chanting)" : "శ్రీరామదాసు జప గానం వినండి (Play Sri Rama Chanting)"}
+        title={isPlaying ? "పాజ్ చేయి (Pause Jagadanandakaraka Song)" : "జగదానందకారక పవిత్ర గానం వినండి (Play Jagadanandakaraka Song)"}
       >
         <Music className={`w-4 h-4 ${isPlaying ? 'animate-spin text-yellow-200' : 'text-amber-400'}`} />
         <span className="tracking-wide">
           {isPlaying
-            ? (lang === 'te' ? '॥ శ్రీ రామ జప గానం వినపడుతోంది 🔊 ॥' : '॥ Sri Rama Chanting Active 🔊 ॥')
-            : (lang === 'te' ? '॥ శ్రీ రామ జప గానం వినండి 🔊 ॥' : '॥ Play Sri Rama Chanting 🔊 ॥')}
+            ? (lang === 'te' ? '॥ జగదానందకారక సురసేవిత 🔊 ॥' : '॥ Jagadanandakaraka Playing 🔊 ॥')
+            : (lang === 'te' ? '॥ జగదానందకారక పవిత్ర గానం 🔊 ॥' : '॥ Play Jagadanandakaraka 🔊 ॥')}
         </span>
         {isPlaying ? (
           <Volume2 className="w-4 h-4 text-yellow-200" />
@@ -168,14 +173,14 @@ export default function DevotionalAudio({ lang }) {
         )}
       </button>
 
-      {/* Auto-Play Unmute Banner if Browser Autoplay Policy Paused */}
+      {/* Auto-Play Unmute Prompt Banner if Browser Autoplay Policy Paused */}
       {showPrompt && !isPlaying && (
         <button
           onClick={togglePlay}
           className="absolute top-12 left-0 z-50 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-black px-4 py-2 rounded-xl shadow-2xl border-2 border-yellow-300 flex items-center gap-2 animate-bounce whitespace-nowrap"
         >
           <Play className="w-4 h-4 fill-white" />
-          <span>శ్రీ రామ నామ జప గానం వినడానికి ఇక్కడ క్లిక్ చేయండి (Click to Listen Sri Rama Chant)</span>
+          <span>జగదానందకారక శ్రీరామ గానం వినడానికి ఇక్కడ క్లిక్ చేయండి (Click to Play Jagadanandakaraka)</span>
         </button>
       )}
     </div>

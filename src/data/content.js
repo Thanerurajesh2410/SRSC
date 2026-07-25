@@ -21,7 +21,7 @@ export const content = {
       donateAction: "స్వామివారికి విరాళం ఇవ్వండి",
       progressAction: "నిర్మాణ చిత్రాలు చూడండి",
     },
-    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • శ్రీరామదాసు భక్తి సంకీర్తనల రామాలయం • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • రాతి గోడల నిర్మాణం వేగంగా జరుగుతోంది • మీ విరాళాలను నేరుగా SBI బ్యాంక్ లేదా PhonePe UPI ద్వారా పంపగలరు",
+    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • జగదానందకారక సురసేవిత దివ్య గానం • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • రాతి గోడల నిర్మాణం వేగంగా జరుగుతోంది • మీ విరాళాలను నేరుగా SBI బ్యాంక్ లేదా PhonePe UPI ద్వారా పంపగలరు",
     sevas: {
       tag: "విరాళాల పథకాలు",
       title: "వివిధ శ్రీ రామ సేవా పథకాలు",
@@ -269,7 +269,7 @@ export const content = {
       donateAction: "Donate for Temple Construction",
       progressAction: "View Construction Progress",
     },
-    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Inspired by Bhakta Ramadasu Devotional Keerthanas • Sri Ramalayam Foundation Ceremony Completed in Paminivandla Vooru • Stone Walls Construction Underway • Direct Online Donations Accepted via SBI & PhonePe UPI",
+    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Jagadanandakaraka Surasevita Devotional Song • Sri Ramalayam Foundation Ceremony Completed in Paminivandla Vooru • Stone Walls Construction Underway • Direct Online Donations Accepted via SBI & PhonePe UPI",
     sevas: {
       tag: "DONATION SCHEMES",
       title: "Temple Seva & Sponsorship Categories",
