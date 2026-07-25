@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, LogOut, Plus, Trash2, Receipt, Users, ShieldCheck, MessageSquare, Mail, Smartphone, Share2, X } from 'lucide-react';
+import { Lock, LogOut, Plus, Trash2, Receipt, Users, ShieldCheck, MessageSquare, Mail, Smartphone, Share2, UserCheck, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function AdminDashboard({ t, showToast, donorList, setDonorList, committeeList, setCommitteeList, onClose }) {
@@ -9,6 +9,7 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
   const [activeTab, setActiveTab] = useState('receipts');
 
   // Receipt Generator State
+  const [selectedDonorId, setSelectedDonorId] = useState('');
   const [receiptName, setReceiptName] = useState('');
   const [receiptAmount, setReceiptAmount] = useState('');
   const [receiptPhone, setReceiptPhone] = useState('');
@@ -39,6 +40,31 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
       showToast("అడ్మిన్ పోర్టల్‌లోకి విజయవంతంగా లాగిన్ అయ్యారు!");
     } else {
       setPassError("తప్పు పాస్‌కోడ్! దయచేసి సరైన అడ్మిన్ పిన్ ఎంటర్ చేయండి.");
+    }
+  };
+
+  // Handle Dropdown Selection from Donors List
+  const handleSelectDonorFromDropdown = (e) => {
+    const donorId = e.target.value;
+    setSelectedDonorId(donorId);
+
+    if (!donorId) {
+      setReceiptName('');
+      setReceiptAmount('');
+      setReceiptCity('పామినివాండ్లవూరు');
+      setReceiptSeva('రాతి గోడల నిర్మాణం');
+      return;
+    }
+
+    const donor = donorList.find(d => String(d.id) === String(donorId));
+    if (donor) {
+      setReceiptName(donor.name);
+      // Extract numeric digits from amount string like "₹ 5,000" -> "5000"
+      const numericAmt = donor.amount ? donor.amount.replace(/[^0-9]/g, '') : '';
+      setReceiptAmount(numericAmt);
+      setReceiptCity(donor.city || 'పామినివాండ్లవూరు');
+      setReceiptSeva(donor.seva || 'రాతి గోడల నిర్మాణం');
+      showToast(`${donor.name} వివరాలు ఎంచుకోబడ్డాయి.`);
     }
   };
 
@@ -273,7 +299,7 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
               </button>
             </div>
 
-            {/* TAB 1: Admin Receipt Generator & Multi-Platform Sharing */}
+            {/* TAB 1: Admin Receipt Generator with Dropdown Selection */}
             {activeTab === 'receipts' && (
               <div className="space-y-6">
                 <form onSubmit={handleGenerateReceipt} className="bg-[#1A0306] p-5 rounded-2xl border border-white/10 space-y-4">
@@ -282,9 +308,30 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                     <span>అధికారిక భక్తుడి రశీదు సృష్టించు (Generate Official Donor Receipt)</span>
                   </h4>
 
+                  {/* 🌟 Donor Dropdown Selector from Donation List */}
+                  <div className="bg-[#3A0A11]/60 p-3 rounded-xl border border-[#FFD700]/40">
+                    <label className="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1.5">
+                      <UserCheck className="w-4 h-4 text-[#FFD700]" />
+                      <span>దాతల జాబితా నుండి ఎంచుకోండి (Select Donor from Donation List):</span>
+                    </label>
+
+                    <select
+                      value={selectedDonorId}
+                      onChange={handleSelectDonorFromDropdown}
+                      className="w-full bg-[#1A0306] border border-[#FFD700] rounded-xl p-2.5 text-sm text-white focus:outline-none font-bold"
+                    >
+                      <option value="">-- క్రొత్త దాత / డ్రాప్‌డౌన్ నుండి ఎంచుకోండి (Choose Donor) --</option>
+                      {donorList.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {d.name} — {d.amount} ({d.seva || 'విరాళం'}) • {d.date}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 mb-1">దాత పేరు *</label>
+                      <label className="block text-xs font-bold text-gray-300 mb-1">దాత పేరు (Donor Name) *</label>
                       <input
                         type="text"
                         required
@@ -296,7 +343,7 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 mb-1">విరాళం మొత్తం (₹) *</label>
+                      <label className="block text-xs font-bold text-gray-300 mb-1">విరాళం మొత్తం (Amount ₹) *</label>
                       <input
                         type="number"
                         required
@@ -332,7 +379,7 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 mb-1">సేవా విభాగం</label>
+                      <label className="block text-xs font-bold text-gray-300 mb-1">సేవా విభాగం (Seva Category)</label>
                       <input
                         type="text"
                         placeholder="రాతి గోడల నిర్మాణం"
