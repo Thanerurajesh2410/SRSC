@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
-import { QrCode, Copy, Check, Sparkles, Building, Phone, MapPin, User, Receipt, ShieldCheck, Wallet } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { QrCode, Copy, Check, Sparkles, Building, ShieldCheck, Wallet } from 'lucide-react';
 
 export default function DonationSection({ t, showToast }) {
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [copiedIfsc, setCopiedIfsc] = useState(false);
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
-  
-  // Receipt Generator Form State
-  const [donorName, setDonorName] = useState('');
-  const [donorAmount, setDonorAmount] = useState('');
-  const [donorPhone, setDonorPhone] = useState('');
-  const [donorCity, setDonorCity] = useState('');
-  const [generatedReceipt, setGeneratedReceipt] = useState(null);
 
   const copyToClipboard = (text, type) => {
     navigator.clipboard.writeText(text);
@@ -28,38 +20,6 @@ export default function DonationSection({ t, showToast }) {
       setTimeout(() => setCopiedUpi(false), 2500);
     }
     showToast(t.donation.copiedMsg);
-  };
-
-  const handleGenerateReceipt = (e) => {
-    e.preventDefault();
-    if (!donorName || !donorAmount) return;
-
-    const receiptNo = 'SRS-' + Math.floor(100000 + Math.random() * 900000);
-    const currentDate = new Date().toLocaleDateString('te-IN', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-
-    setGeneratedReceipt({
-      receiptNo,
-      date: currentDate,
-      name: donorName,
-      amount: donorAmount,
-      phone: donorPhone || 'N/A',
-      city: donorCity || 'పామినివాండ్లవూరు'
-    });
-
-    // Celebratory Confetti Animation
-    try {
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
-    } catch (err) {}
-
-    showToast("పవిత్ర ఈ-హుండి రశీదు విజయవంతంగా రూపొందించబడింది!");
   };
 
   return (
@@ -82,7 +42,7 @@ export default function DonationSection({ t, showToast }) {
         </div>
 
         {/* 🚩 Highlighted E-Hundi Card & Bank Account Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-8">
           
           {/* E-Hundi & QR Scanner Card */}
           <div className="gold-card border-2 border-[#FFD700] shadow-[0_0_40px_rgba(255,215,0,0.35)] bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#200407] flex flex-col justify-between">
@@ -217,156 +177,6 @@ export default function DonationSection({ t, showToast }) {
               </p>
             </div>
           </div>
-
-        </div>
-
-        {/* Digital E-Hundi Receipt Generator Form */}
-        <div className="max-w-3xl mx-auto gold-card border-2 border-[var(--primary-gold)]/60 !p-8 shadow-2xl">
-          <div className="text-center mb-8">
-            <span className="section-tag">
-              <Receipt className="w-4 h-4 text-[var(--primary-saffron)]" />
-              డిజిటల్ రశీదు (DIGITAL RECEIPT)
-            </span>
-            <h3 className="text-2xl font-black text-white heading-telugu">
-              {t.donation.generateReceipt}
-            </h3>
-          </div>
-
-          <form onSubmit={handleGenerateReceipt} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-gray-300 mb-1">{t.donation.donorName} *</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    required
-                    placeholder="మీ పూర్తి పేరు నమోదు చేయండి"
-                    value={donorName}
-                    onChange={(e) => setDonorName(e.target.value)}
-                    className="w-full bg-[#1A0306] border border-white/20 rounded-xl py-2.5 px-3.5 pl-10 text-sm text-white focus:outline-none focus:border-[var(--primary-gold)]"
-                  />
-                  <User className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-300 mb-1">{t.donation.donorAmount} *</label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    required
-                    placeholder="ఉదా: 5008"
-                    value={donorAmount}
-                    onChange={(e) => setDonorAmount(e.target.value)}
-                    className="w-full bg-[#1A0306] border border-white/20 rounded-xl py-2.5 px-3.5 pl-10 text-sm text-white focus:outline-none focus:border-[var(--primary-gold)] font-mono"
-                  />
-                  <span className="text-amber-400 font-bold absolute left-3.5 top-1/2 -translate-y-1/2 text-sm">₹</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-gray-300 mb-1">{t.donation.donorPhone}</label>
-                <div className="relative">
-                  <input
-                    type="tel"
-                    placeholder="ఫోన్ నంబర్ (Optional)"
-                    value={donorPhone}
-                    onChange={(e) => setDonorPhone(e.target.value)}
-                    className="w-full bg-[#1A0306] border border-white/20 rounded-xl py-2.5 px-3.5 pl-10 text-sm text-white focus:outline-none focus:border-[var(--primary-gold)]"
-                  />
-                  <Phone className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-300 mb-1">{t.donation.donorCity}</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="పామినివాండ్లవూరు"
-                    value={donorCity}
-                    onChange={(e) => setDonorCity(e.target.value)}
-                    className="w-full bg-[#1A0306] border border-white/20 rounded-xl py-2.5 px-3.5 pl-10 text-sm text-white focus:outline-none focus:border-[var(--primary-gold)]"
-                  />
-                  <MapPin className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Preset Buttons */}
-            <div className="flex flex-wrap items-center gap-2 pt-2">
-              <span className="text-xs text-gray-400 font-bold">మొత్తం ఎంచుకోండి:</span>
-              {t.donation.presetAmounts.map((amt) => (
-                <button
-                  key={amt}
-                  type="button"
-                  onClick={() => setDonorAmount(amt.toString())}
-                  className="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-amber-300 hover:bg-[#5C121E] hover:text-[#FFD700] border border-amber-400/40 transition-colors"
-                >
-                  ₹ {amt.toLocaleString()}
-                </button>
-              ))}
-            </div>
-
-            <button type="submit" className="btn-gold w-full py-3 text-sm mt-4 shadow-xl">
-              <Receipt className="w-4 h-4" />
-              <span>{t.donation.getReceiptBtn}</span>
-            </button>
-          </form>
-
-          {/* Rendered Digital E-Hundi Receipt Preview Card */}
-          {generatedReceipt && (
-            <div className="mt-8 pt-6 border-t-2 border-dashed border-[#FFD700]/60 animate-fadeIn">
-              <div className="bg-[#FFFDF0] text-[#2D080E] p-6 rounded-2xl border-4 border-[#FFD700] shadow-2xl relative">
-                
-                <div className="flex items-center justify-between border-b-2 border-[#5C121E]/30 pb-3 mb-4">
-                  <div className="flex items-center gap-2">
-                    <img src="/assets/logo.jpg" alt="Logo" className="w-10 h-10 rounded-full border border-amber-600" />
-                    <div>
-                      <h4 className="text-base font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ</h4>
-                      <p className="text-[10px] font-bold text-amber-800">పామినివాండ్లవూరు • ఈ-హుండి రశీదు</p>
-                    </div>
-                  </div>
-
-                  <div className="text-right">
-                    <span className="text-[10px] font-bold text-gray-600 block">రశీదు నం:</span>
-                    <span className="text-xs font-mono font-black text-[#5C121E]">{generatedReceipt.receiptNo}</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 text-xs mb-4">
-                  <div>
-                    <span className="text-gray-600 block text-[10px]">దాత పేరు:</span>
-                    <span className="font-bold text-sm text-[#5C121E] heading-telugu">{generatedReceipt.name}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 block text-[10px]">తేదీ:</span>
-                    <span className="font-mono font-bold text-gray-800">{generatedReceipt.date}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 block text-[10px]">గ్రామం / ఊరు:</span>
-                    <span className="font-bold text-gray-800">{generatedReceipt.city}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 block text-[10px]">ఫోన్ నంబర్:</span>
-                    <span className="font-mono font-bold text-gray-800">{generatedReceipt.phone}</span>
-                  </div>
-                </div>
-
-                <div className="bg-[#5C121E] text-white p-3 rounded-xl flex items-center justify-between">
-                  <span className="text-xs font-bold">ఈ-హుండి పవిత్ర కానుక మొత్తం:</span>
-                  <span className="text-xl font-black font-mono text-[#FFD700]">₹ {parseInt(generatedReceipt.amount).toLocaleString()}</span>
-                </div>
-
-                <div className="mt-4 text-center text-[10px] font-bold text-amber-900 italic border-t border-amber-200 pt-2">
-                  "శ్రీ సీతా సమేత లక్ష్మణ హనుమత్ సమేత శ్రీ రామచంద్రస్వామి వారి దివ్య అనుగ్రహం మీకు ఎల్లప్పుడూ కలుగుగాక!"
-                </div>
-
-              </div>
-            </div>
-          )}
 
         </div>
 

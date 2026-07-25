@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Navigation, Mail, Phone, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
+import { MapPin, Navigation, Mail, MessageSquare, Send } from 'lucide-react';
 
 export default function LocationContact({ t, showToast }) {
   const [name, setName] = useState('');
@@ -67,7 +67,7 @@ export default function LocationContact({ t, showToast }) {
                 ))}
               </div>
 
-              {/* Contact Email & WhatsApp Direct Links */}
+              {/* Contact Email & WhatsApp Direct Links (Phone Number Hidden) */}
               <div className="space-y-4 mb-8">
                 {/* Official Email */}
                 <a
@@ -85,24 +85,24 @@ export default function LocationContact({ t, showToast }) {
                   </div>
                 </a>
 
-                {/* WhatsApp Support Number */}
+                {/* WhatsApp Support Button (Text Phone Number Hidden) */}
                 <div
                   onClick={openWhatsApp}
-                  className="flex items-center justify-between p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 hover:border-emerald-400 transition-all cursor-pointer group"
+                  className="flex items-center justify-between p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-500/50 hover:border-emerald-400 transition-all cursor-pointer group shadow-lg"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 rounded-lg bg-emerald-600 text-white shadow-lg">
                       <MessageSquare className="w-5 h-5 fill-current" />
                     </div>
                     <div>
-                      <span className="text-[11px] text-emerald-300 font-bold block uppercase">వాట్సాప్ సంప్రదింపు (WhatsApp Support)</span>
-                      <span className="text-sm font-black text-white font-mono">
-                        +91 9866125609
+                      <span className="text-[11px] text-emerald-300 font-bold block uppercase">వాట్సాప్ సహాయక నిధి (WhatsApp Support)</span>
+                      <span className="text-sm font-extrabold text-white">
+                        వాట్సాప్‌లో నేరుగా సందేశం పంపండి (Chat on WhatsApp)
                       </span>
                     </div>
                   </div>
 
-                  <span className="text-xs font-extrabold text-emerald-400 bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-400/40 group-hover:bg-emerald-500 group-hover:text-black transition-colors">
+                  <span className="text-xs font-extrabold text-emerald-950 bg-emerald-400 px-3.5 py-1.5 rounded-full shadow-md group-hover:scale-105 transition-transform">
                     Chat Now 💬
                   </span>
                 </div>

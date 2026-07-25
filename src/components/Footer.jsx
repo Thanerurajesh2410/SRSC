@@ -1,7 +1,7 @@
 import React from 'react';
-import { ArrowUp, Heart } from 'lucide-react';
+import { ArrowUp, Heart, Lock } from 'lucide-react';
 
-export default function Footer({ t }) {
+export default function Footer({ t, onOpenAdmin }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -45,26 +45,39 @@ export default function Footer({ t }) {
             <ul className="space-y-2 text-xs font-semibold">
               <li><a href="#hero" className="hover:text-[var(--primary-gold)] transition-colors">హోమ్ (Home)</a></li>
               <li><a href="#about" className="hover:text-[var(--primary-gold)] transition-colors">ముఖ్య ఉద్దేశాలు (Objectives)</a></li>
-              <li><a href="#gallery" className="hover:text-[var(--primary-gold)] transition-colors">నిర్మాణ ప్రగతి (Progress Photos)</a></li>
+              <li><a href="#gallery" className="hover:text-[var(--primary-gold)] transition-colors">ఆలయ ప్రగతి చిత్రాలు (Photos)</a></li>
               <li><a href="#committee" className="hover:text-[var(--primary-gold)] transition-colors">కమిటీ సభ్యులు (Office Bearers)</a></li>
-              <li><a href="#donation" className="hover:text-[var(--primary-gold)] transition-colors">విరాళాల వివరాలు (Bank Details)</a></li>
+              <li><a href="#donation" className="hover:text-[var(--primary-gold)] transition-colors">ఈ-హుండి / విరాళాలు (E-Hundi)</a></li>
               <li><a href="#location" className="hover:text-[var(--primary-gold)] transition-colors">లొకేషన్ & మార్గం (Google Maps)</a></li>
             </ul>
           </div>
 
-          {/* Bank Summary */}
-          <div className="gold-card !p-5">
-            <h4 className="text-xs font-extrabold text-[var(--primary-gold)] uppercase tracking-wider mb-2">
-              బ్యాంక్ వివరాలు (SBI Account)
-            </h4>
-            <p className="text-xs text-white font-bold mb-1">Sri Rama Seva Committee Paminivandlavooru</p>
-            <p className="text-xs font-mono text-amber-200 mb-1">A/C: 45274946370</p>
-            <p className="text-xs font-mono text-amber-200 mb-3">IFSC: SBIN0005691 (State Bank of India)</p>
+          {/* Bank Summary & Admin Portal Trigger */}
+          <div className="gold-card !p-5 flex flex-col justify-between">
+            <div>
+              <h4 className="text-xs font-extrabold text-[var(--primary-gold)] uppercase tracking-wider mb-2">
+                బ్యాంక్ వివరాలు (SBI Account)
+              </h4>
+              <p className="text-xs text-white font-bold mb-1">Sri Rama Seva Committee Paminivandlavooru</p>
+              <p className="text-xs font-mono text-amber-200 mb-1">A/C: 45274946370</p>
+              <p className="text-xs font-mono text-amber-200 mb-3">IFSC: SBIN0005691 (State Bank of India)</p>
+            </div>
 
-            <a href="#donation" className="btn-gold w-full text-xs !py-1.5 justify-center">
-              <Heart className="w-3.5 h-3.5 fill-current" />
-              <span>విరాళం ఇవ్వండి</span>
-            </a>
+            <div className="space-y-2 mt-2">
+              <a href="#donation" className="btn-gold w-full text-xs !py-1.5 justify-center">
+                <Heart className="w-3.5 h-3.5 fill-current" />
+                <span>ఈ-హుండి విరాళం</span>
+              </a>
+
+              {/* Admin Portal Button */}
+              <button
+                onClick={onOpenAdmin}
+                className="w-full py-1.5 px-3 rounded-full text-[11px] font-bold bg-black/50 text-amber-300 hover:bg-white/10 border border-white/20 flex items-center justify-center gap-1.5 transition-colors"
+              >
+                <Lock className="w-3 h-3 text-amber-400" />
+                <span>అడ్మిన్ పోర్టల్ (Admin Login)</span>
+              </button>
+            </div>
           </div>
 
         </div>

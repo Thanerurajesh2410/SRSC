@@ -11,18 +11,31 @@ import DonationSection from './components/DonationSection';
 import DonorWallFaq from './components/DonorWallFaq';
 import LocationContact from './components/LocationContact';
 import Footer from './components/Footer';
+import AdminDashboard from './components/AdminDashboard';
 import { CheckCircle, Palette, MessageSquare } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState('te');
   const [theme, setTheme] = useState('theme-maroon');
   const [toastMessage, setToastMessage] = useState('');
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const t = content[lang] || content.te;
+
+  // Dynamic States for Admin Control (Donors & Committee)
+  const [donorList, setDonorList] = useState(t.donorWall.donors);
+  const [committeeList, setCommitteeList] = useState(t.committee.members);
 
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
+
+  // Keep state synchronized on language toggle
+  useEffect(() => {
+    const currentT = content[lang] || content.te;
+    setDonorList(currentT.donorWall.donors);
+    setCommitteeList(currentT.committee.members);
+  }, [lang]);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -32,6 +45,19 @@ export default function App() {
   const openWhatsApp = () => {
     const text = encodeURIComponent("జై శ్రీరామ్! పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ సేవా వివరాలకై సంప్రదిస్తున్నాను.");
     window.open("https://wa.me/919866125609?text=" + text, '_blank');
+  };
+
+  // Override content dictionary with dynamic admin state
+  const updatedT = {
+    ...t,
+    donorWall: {
+      ...t.donorWall,
+      donors: donorList
+    },
+    committee: {
+      ...t.committee,
+      members: committeeList
+    }
   };
 
   return (
@@ -96,35 +122,48 @@ export default function App() {
       </div>
 
       {/* Live Announcement Marquee Ticker */}
-      <TickerMarquee t={t} />
+      <TickerMarquee t={updatedT} />
 
       {/* Sticky Header */}
-      <Navbar lang={lang} setLang={setLang} t={t} />
+      <Navbar lang={lang} setLang={setLang} t={updatedT} />
 
       {/* Main Page Content */}
       <main className="flex-grow">
-        <HeroBanner t={t} />
-        <TimingsSevas t={t} />
-        <Objectives t={t} />
-        <ConstructionGallery t={t} />
-        <CommitteeMembers t={t} />
-        <DonationSection t={t} showToast={showToast} />
-        <DonorWallFaq t={t} />
-        <LocationContact t={t} showToast={showToast} />
+        <HeroBanner t={updatedT} />
+        <TimingsSevas t={updatedT} />
+        <Objectives t={updatedT} />
+        <ConstructionGallery t={updatedT} />
+        <CommitteeMembers t={updatedT} />
+        <DonationSection t={updatedT} showToast={showToast} />
+        <DonorWallFaq t={updatedT} />
+        <LocationContact t={updatedT} showToast={showToast} />
       </main>
 
       {/* Footer */}
-      <Footer t={t} />
+      <Footer t={updatedT} onOpenAdmin={() => setShowAdmin(true)} />
 
-      {/* Floating WhatsApp Action Button (+91 9866125609) */}
+      {/* Floating WhatsApp Action Button (Phone number hidden from text) */}
       <button
         onClick={openWhatsApp}
         className="fixed bottom-6 left-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-full shadow-[0_0_25px_rgba(16,185,129,0.7)] border-2 border-white flex items-center gap-2 font-black text-xs transition-all transform hover:scale-105 animate-bounce"
-        title="WhatsApp Support (+91 9866125609)"
+        title="WhatsApp Support"
       >
         <MessageSquare className="w-5 h-5 fill-white text-emerald-500" />
-        <span className="hidden sm:inline">WhatsApp Contact (+91 9866125609)</span>
+        <span className="hidden sm:inline">WhatsApp ద్వారా సంప్రదించండి</span>
       </button>
+
+      {/* Admin Dashboard Modal */}
+      {showAdmin && (
+        <AdminDashboard
+          t={updatedT}
+          showToast={showToast}
+          donorList={donorList}
+          setDonorList={setDonorList}
+          committeeList={committeeList}
+          setCommitteeList={setCommitteeList}
+          onClose={() => setShowAdmin(false)}
+        />
+      )}
 
       {/* Floating Toast Notification */}
       {toastMessage && (
