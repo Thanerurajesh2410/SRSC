@@ -17,7 +17,6 @@ export default function App() {
   const [lang, setLang] = useState('te');
   const [theme, setTheme] = useState('theme-maroon');
   const [toastMessage, setToastMessage] = useState('');
-  const [showCertModal, setShowCertModal] = useState(false);
 
   const t = content[lang] || content.te;
 
@@ -99,22 +98,18 @@ export default function App() {
 
       {/* Main Page Content */}
       <main className="flex-grow">
-        <HeroBanner t={t} onOpenCert={() => setShowCertModal(true)} />
+        <HeroBanner t={t} />
         <TimingsSevas t={t} />
         <Objectives t={t} />
         <ConstructionGallery t={t} />
-        <CommitteeMembers
-          t={t}
-          showCertModal={showCertModal}
-          setShowCertModal={setShowCertModal}
-        />
+        <CommitteeMembers t={t} />
         <DonationSection t={t} showToast={showToast} />
         <DonorWallFaq t={t} />
         <LocationContact t={t} showToast={showToast} />
       </main>
 
       {/* Footer */}
-      <Footer t={t} onOpenCert={() => setShowCertModal(true)} />
+      <Footer t={t} />
 
       {/* Floating Toast Notification */}
       {toastMessage && (

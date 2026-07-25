@@ -1,98 +1,90 @@
 import React from 'react';
-import { ArrowUp, ShieldCheck } from 'lucide-react';
+import { ArrowUp, Heart } from 'lucide-react';
 
-export default function Footer({ t, onOpenCert }) {
+export default function Footer({ t }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="bg-[#080811] border-t border-[var(--border-gold)] pt-12 pb-8 relative overflow-hidden">
+    <footer className="relative bg-gradient-to-b from-[#2A060B] via-[#1D0407] to-[#0A0103] border-t-2 border-[var(--primary-gold)]/60 pt-12 pb-8 text-gray-300">
       
-      {/* Devotional Banner Bar */}
-      <div className="bg-gradient-to-r from-[var(--sacred-maroon)] via-[#3D0C13] to-[var(--sacred-maroon)] py-4 border-y border-[var(--border-gold)] text-center mb-10 shadow-lg">
-        <p className="text-base md:text-xl font-bold text-[var(--primary-gold-light)] heading-telugu tracking-wide px-4">
+      {/* Top Slogan Banner Bar */}
+      <div className="bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-y border-[var(--primary-gold)]/50 py-4 px-4 text-center mb-12">
+        <p className="text-base md:text-xl font-extrabold text-[#FFD700] heading-telugu tracking-wide animate-pulse">
           {t.footer.slogan}
         </p>
       </div>
 
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           
-          {/* Brand Info (5 Cols) */}
-          <div className="md:col-span-5">
+          {/* Brand Col */}
+          <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-[var(--primary-saffron)] via-[var(--primary-gold)] to-[var(--primary-saffron-dark)] shadow-md shrink-0">
-                <img
-                  src="/assets/logo.jpg"
-                  alt="Sri Rama Seva Committee Logo"
-                  className="w-full h-full object-cover rounded-full border border-amber-300/40"
-                />
-              </div>
+              <img
+                src="/assets/logo.jpg"
+                alt="Sri Rama Seva Committee Logo"
+                className="w-12 h-12 rounded-full border-2 border-[var(--primary-gold)] object-cover shadow-lg"
+              />
               <div>
-                <h3 className="text-lg font-bold text-white heading-telugu">
-                  {t.nav.title}
-                </h3>
-                <p className="text-xs text-[var(--primary-gold)] font-medium">
-                  పామినివాండ్లవూరు • Paminivandla Vooru
-                </p>
+                <h3 className="text-lg font-black text-white heading-telugu">{t.nav.title}</h3>
+                <p className="text-xs text-[var(--primary-saffron)] font-bold">{t.nav.subtitle}</p>
               </div>
             </div>
-
-            <p className="text-xs text-gray-400 max-w-md leading-relaxed mb-4">
-              మన ఊరిలో శ్రీ రామాలయ నిర్మాణం మరియు సేవా కార్యక్రమాలను నిర్వహించుటయే మా లక్ష్యం. ఈ పవిత్ర కార్యక్రమంలో ప్రతి ఒక్కరూ భాగస్వాములు కావాలని మనస్పూర్తిగా కోరుతున్నాము.
+            <p className="text-xs text-gray-300 leading-relaxed mb-4">
+              పామినివాండ్లవూరు గ్రామంలో శ్రీ రామాలయ నిర్మాణం మరియు ధార్మిక కార్యక్రమాల నిర్వహణకై ఏర్పడిన అధికారిక కమిటీ.
             </p>
-
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-[var(--border-gold)] text-[11px] text-[var(--primary-gold-light)]">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              {t.footer.regdNotice}
-            </div>
           </div>
 
-          {/* Quick Links (4 Cols) */}
-          <div className="md:col-span-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
-              త్వరిత లింకులు (Quick Links)
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-[var(--primary-gold)]/40 pb-2 inline-block">
+              ముఖ్యమైన లింకులు (Quick Links)
             </h4>
-            <ul className="grid grid-cols-2 gap-2 text-xs">
-              <li><a href="#home" className="text-gray-300 hover:text-[var(--primary-gold)]">హోమ్ (Home)</a></li>
-              <li><a href="#timings" className="text-gray-300 hover:text-[var(--primary-gold)]">పూజా సమయాలు</a></li>
-              <li><a href="#objectives" className="text-gray-300 hover:text-[var(--primary-gold)]">ముఖ్య ఉద్దేశాలు</a></li>
-              <li><a href="#gallery" className="text-gray-300 hover:text-[var(--primary-gold)]">నిర్మాణ చిత్రాలు</a></li>
-              <li><a href="#committee" className="text-gray-300 hover:text-[var(--primary-gold)]">కమిటీ సభ్యులు</a></li>
-              <li><a href="#donation" className="text-gray-300 hover:text-[var(--primary-gold)]">విరాళాలు & బ్యాంకు</a></li>
-              <li><a href="#location" className="text-gray-300 hover:text-[var(--primary-gold)]">ఆలయ ప్రాంతం</a></li>
+            <ul className="space-y-2 text-xs font-semibold">
+              <li><a href="#hero" className="hover:text-[var(--primary-gold)] transition-colors">హోమ్ (Home)</a></li>
+              <li><a href="#about" className="hover:text-[var(--primary-gold)] transition-colors">ముఖ్య ఉద్దేశాలు (Objectives)</a></li>
+              <li><a href="#gallery" className="hover:text-[var(--primary-gold)] transition-colors">నిర్మాణ ప్రగతి (Progress Photos)</a></li>
+              <li><a href="#committee" className="hover:text-[var(--primary-gold)] transition-colors">కమిటీ సభ్యులు (Office Bearers)</a></li>
+              <li><a href="#donation" className="hover:text-[var(--primary-gold)] transition-colors">విరాళాల వివరాలు (Bank Details)</a></li>
+              <li><a href="#location" className="hover:text-[var(--primary-gold)] transition-colors">లొకేషన్ & మార్గం (Google Maps)</a></li>
             </ul>
           </div>
 
-          {/* Bank Summary (3 Cols) */}
-          <div className="md:col-span-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
-              బ్యాంకు సారాంశం
+          {/* Bank Summary */}
+          <div className="gold-card !p-5">
+            <h4 className="text-xs font-extrabold text-[var(--primary-gold)] uppercase tracking-wider mb-2">
+              బ్యాంక్ వివరాలు (SBI Account)
             </h4>
-            <div className="text-xs text-gray-300 space-y-1 font-mono bg-black/40 p-3 rounded-xl border border-white/5">
-              <p className="text-[var(--primary-gold-light)] font-bold">SBI Account</p>
-              <p>No: <strong className="text-white">45274946370</strong></p>
-              <p>IFSC: <strong className="text-white">SBIN0005691</strong></p>
-              <p>UPI: <strong className="text-[var(--primary-saffron)]">8431806098@ibl</strong></p>
-            </div>
+            <p className="text-xs text-white font-bold mb-1">Sri Rama Seva Committee Paminivandlavooru</p>
+            <p className="text-xs font-mono text-amber-200 mb-1">A/C: 45274946370</p>
+            <p className="text-xs font-mono text-amber-200 mb-3">IFSC: SBIN0005691 (State Bank of India)</p>
+
+            <a href="#donation" className="btn-gold w-full text-xs !py-1.5 justify-center">
+              <Heart className="w-3.5 h-3.5 fill-current" />
+              <span>విరాళం ఇవ్వండి</span>
+            </a>
           </div>
 
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
-          <p>{t.footer.rights}</p>
-          
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+          <p className="text-center md:text-left">
+            © 2026 {t.footer.rights}
+          </p>
+
           <button
             onClick={scrollToTop}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-[var(--primary-saffron)] text-white transition-colors"
-            title="Scroll to Top"
+            className="p-2.5 rounded-full bg-[#5C121E] text-[var(--primary-gold)] border border-[var(--primary-gold)]/50 hover:bg-[var(--primary-gold)] hover:text-black transition-all shadow-xl"
+            title="పైనకి వెళ్ళండి (Back to Top)"
           >
-            <ArrowUp className="w-4 h-4" />
+            <ArrowUp className="w-5 h-5" />
           </button>
         </div>
       </div>
+
     </footer>
   );
 }

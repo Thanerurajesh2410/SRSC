@@ -1,131 +1,132 @@
 import React, { useState } from 'react';
 import { Menu, X, Globe, Heart } from 'lucide-react';
+import DevotionalAudio from './DevotionalAudio';
 
 export default function Navbar({ lang, setLang, t }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleLanguage = () => {
-    setLang(prev => (prev === 'te' ? 'en' : 'te'));
+  const toggleLang = () => {
+    setLang(lang === 'te' ? 'en' : 'te');
   };
 
-  return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-[#4A0E17] via-[#2A060B] to-[#4A0E17] border-b-2 border-[var(--primary-gold)]/60 shadow-2xl">
-      <div className="container mx-auto px-4 py-2.5 flex items-center justify-between">
-        
-        {/* Top Left Corner: Official Temple Logo & Brand */}
-        <a href="#home" className="flex items-center gap-3 text-decoration-none group">
-          {/* Official Emblem Logo */}
-          <div className="relative w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-[var(--primary-saffron)] via-[var(--primary-gold)] to-[var(--primary-saffron-dark)] shadow-[0_0_20px_rgba(255,215,0,0.7)] transition-transform duration-300 group-hover:scale-105 shrink-0">
-            <img
-              src="/assets/logo.jpg"
-              alt="Sri Rama Seva Committee Emblem Logo"
-              className="w-full h-full object-cover rounded-full border border-amber-300/50"
-            />
-          </div>
+  const navLinks = [
+    { name: t.nav.home, href: "#hero" },
+    { name: t.nav.about, href: "#about" },
+    { name: t.nav.gallery, href: "#gallery" },
+    { name: t.nav.committee, href: "#committee" },
+    { name: t.nav.sevas, href: "#sevas" },
+    { name: t.nav.bank, href: "#donation" },
+    { name: t.nav.location, href: "#location" },
+  ];
 
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg md:text-xl font-extrabold text-white heading-telugu leading-tight group-hover:text-[var(--primary-gold-light)] transition-colors">
+  return (
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-b-2 border-[var(--primary-gold)]/60 backdrop-blur-md shadow-2xl">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          
+          {/* Logo & Brand Info */}
+          <a href="#hero" className="flex items-center gap-3 group">
+            <div className="relative">
+              <img
+                src="/assets/logo.jpg"
+                alt="Sri Rama Seva Committee Logo"
+                className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-[var(--primary-gold)] shadow-xl object-cover transform group-hover:scale-105 transition-transform"
+              />
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white" title="Official Verified Committee" />
+            </div>
+
+            <div>
+              <h1 className="text-base md:text-xl font-extrabold text-white heading-telugu leading-tight group-hover:text-[var(--primary-gold-light)] transition-colors">
                 {t.nav.title}
               </h1>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--sacred-maroon)] text-[var(--primary-gold)] font-bold border border-[var(--primary-gold)]/60 shadow-sm">
-                {t.nav.regd}
-              </span>
+              <p className="text-xs md:text-sm text-[var(--primary-saffron)] font-bold">
+                {t.nav.subtitle}
+              </p>
             </div>
-            <p className="text-xs text-[var(--primary-saffron)] font-bold tracking-wide">
-              {t.nav.subtitle}
-            </p>
+          </a>
+
+          {/* Desktop Navigation & Actions */}
+          <div className="hidden lg:flex items-center gap-6">
+            <nav className="flex items-center gap-5">
+              {navLinks.map((link, idx) => (
+                <a
+                  key={idx}
+                  href={link.href}
+                  className="text-xs font-bold text-gray-200 hover:text-[var(--primary-gold)] transition-colors py-1 border-b-2 border-transparent hover:border-[var(--primary-gold)]"
+                >
+                  {link.name}
+                </a>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-3 border-l border-white/20 pl-4">
+              {/* 🎶 Devotional Audio Player */}
+              <DevotionalAudio lang={lang} />
+
+              {/* Language Switcher */}
+              <button
+                onClick={toggleLang}
+                className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 text-[#FFD700] hover:bg-white/20 border border-[#FFD700]/40 flex items-center gap-1.5 transition-all"
+                title="తెలుగు / English"
+              >
+                <Globe className="w-3.5 h-3.5 text-amber-300" />
+                <span>{lang === 'te' ? 'English' : 'తెలుగు'}</span>
+              </button>
+
+              {/* Donate Button */}
+              <a href="#donation" className="btn-gold text-xs !py-2 !px-4">
+                <Heart className="w-3.5 h-3.5 fill-current" />
+                <span>{t.nav.donateBtn}</span>
+              </a>
+            </div>
           </div>
-        </a>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-6">
-          <a href="#home" className="text-sm font-bold text-gray-100 hover:text-[var(--primary-gold)] transition-colors">
-            {t.nav.home}
-          </a>
-          <a href="#timings" className="text-sm font-bold text-gray-100 hover:text-[var(--primary-gold)] transition-colors">
-            {t.nav.timings}
-          </a>
-          <a href="#objectives" className="text-sm font-bold text-gray-100 hover:text-[var(--primary-gold)] transition-colors">
-            {t.nav.about}
-          </a>
-          <a href="#gallery" className="text-sm font-bold text-gray-100 hover:text-[var(--primary-gold)] transition-colors">
-            {t.nav.gallery}
-          </a>
-          <a href="#committee" className="text-sm font-bold text-gray-100 hover:text-[var(--primary-gold)] transition-colors">
-            {t.nav.committee}
-          </a>
-          <a href="#donation" className="text-sm font-bold text-gray-100 hover:text-[var(--primary-gold)] transition-colors">
-            {t.nav.bank}
-          </a>
-          <a href="#location" className="text-sm font-bold text-gray-100 hover:text-[var(--primary-gold)] transition-colors">
-            {t.nav.location}
-          </a>
-        </nav>
+          {/* Mobile Menu Button */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <DevotionalAudio lang={lang} />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg text-white hover:bg-white/10"
+            >
+              {isOpen ? <X className="w-6 h-6 text-[#FFD700]" /> : <Menu className="w-6 h-6 text-[#FFD700]" />}
+            </button>
+          </div>
 
-        {/* Action Buttons & Lang Toggle */}
-        <div className="hidden xl:flex items-center gap-3">
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--primary-gold)]/60 bg-white/10 hover:bg-white/20 text-xs font-bold text-[var(--primary-gold-light)] transition-all"
-            title="Switch Language"
-          >
-            <Globe className="w-4 h-4 text-[var(--primary-saffron)]" />
-            <span>{lang === 'te' ? 'English' : 'తెలుగు'}</span>
-          </button>
-
-          <a href="#donation" className="btn-primary text-xs !py-2 !px-4">
-            <Heart className="w-4 h-4 fill-white" />
-            <span>{t.nav.donateBtn}</span>
-          </a>
-        </div>
-
-        {/* Mobile Hamburger Toggle */}
-        <div className="xl:hidden flex items-center gap-2">
-          <button
-            onClick={toggleLanguage}
-            className="px-2.5 py-1 rounded-full border border-[var(--primary-gold)] bg-white/10 text-xs text-[var(--primary-gold)] font-bold"
-          >
-            {lang === 'te' ? 'EN' : 'తె'}
-          </button>
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-gray-200 hover:text-white"
-          >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
-      {mobileOpen && (
-        <div className="xl:hidden bg-[#2A060B] border-b-2 border-[var(--primary-gold)] px-4 py-6 flex flex-col gap-4 animate-fadeIn">
-          <a href="#home" onClick={() => setMobileOpen(false)} className="text-base font-semibold text-gray-100 hover:text-[var(--primary-gold)] py-1">
-            {t.nav.home}
-          </a>
-          <a href="#timings" onClick={() => setMobileOpen(false)} className="text-base font-semibold text-gray-100 hover:text-[var(--primary-gold)] py-1">
-            {t.nav.timings}
-          </a>
-          <a href="#objectives" onClick={() => setMobileOpen(false)} className="text-base font-semibold text-gray-100 hover:text-[var(--primary-gold)] py-1">
-            {t.nav.about}
-          </a>
-          <a href="#gallery" onClick={() => setMobileOpen(false)} className="text-base font-semibold text-gray-100 hover:text-[var(--primary-gold)] py-1">
-            {t.nav.gallery}
-          </a>
-          <a href="#committee" onClick={() => setMobileOpen(false)} className="text-base font-semibold text-gray-100 hover:text-[var(--primary-gold)] py-1">
-            {t.nav.committee}
-          </a>
-          <a href="#donation" onClick={() => setMobileOpen(false)} className="text-base font-semibold text-gray-100 hover:text-[var(--primary-gold)] py-1">
-            {t.nav.bank}
-          </a>
-          <a href="#location" onClick={() => setMobileOpen(false)} className="text-base font-semibold text-gray-100 hover:text-[var(--primary-gold)] py-1">
-            {t.nav.location}
-          </a>
+      {/* Mobile Drawer Menu */}
+      {isOpen && (
+        <div className="lg:hidden bg-[#3A0A11] border-b border-[var(--primary-gold)]/50 px-4 py-4 space-y-3">
+          <nav className="flex flex-col space-y-2">
+            {navLinks.map((link, idx) => (
+              <a
+                key={idx}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="text-sm font-bold text-gray-200 hover:text-[var(--primary-gold)] py-2 border-b border-white/10"
+              >
+                {link.name}
+              </a>
+            ))}
+          </nav>
 
-          <a href="#donation" onClick={() => setMobileOpen(false)} className="btn-primary text-center mt-2">
-            <Heart className="w-4 h-4 fill-white inline mr-2" />
-            {t.nav.donateBtn}
-          </a>
+          <div className="flex items-center justify-between pt-3 border-t border-white/20">
+            <button
+              onClick={() => {
+                toggleLang();
+                setIsOpen(false);
+              }}
+              className="px-4 py-2 rounded-full text-xs font-bold bg-white/10 text-[#FFD700] border border-[#FFD700]/40 flex items-center gap-2"
+            >
+              <Globe className="w-4 h-4" />
+              <span>{lang === 'te' ? 'Switch to English' : 'తెలుగులోకి మార్చు'}</span>
+            </button>
+
+            <a href="#donation" onClick={() => setIsOpen(false)} className="btn-gold text-xs py-2 px-4">
+              {t.nav.donateBtn}
+            </a>
+          </div>
         </div>
       )}
     </header>
