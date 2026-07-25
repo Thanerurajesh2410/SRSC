@@ -5,12 +5,12 @@ export const content = {
       subtitle: "పామినివాండ్లవూరు",
       home: "హోమ్",
       about: "ముఖ్య ఉద్దేశాలు",
-      gallery: "ఆలయ నిర్మాణం",
+      gallery: "ఆలయ చిత్రాలు",
       committee: "కమిటీ సభ్యులు",
       sevas: "సేవా పథకాలు",
-      bank: "విరాళాలు",
+      bank: "ఈ-హుండి / విరాళాలు",
       location: "ఆలయ ప్రాంతం",
-      donateBtn: "విరాళం ఇవ్వండి",
+      donateBtn: "🚩 ఈ-హుండి విరాళం",
     },
     hero: {
       badge: "అధికారిక శ్రీ రామాలయ వెబ్‌సైట్ • పామినివాండ్లవూరు",
@@ -18,10 +18,10 @@ export const content = {
       slogan: "మన గ్రామం మన సంకల్పం, శ్రీ రామాలయమే మన లక్ష్యం.",
       subSlogan: "మన గ్రామ అభివృద్ధి, మన చేతుల్లోనే...",
       desc: "మన ఊరిలో శ్రీ రామాలయ రాతి గోడల నిర్మాణం మరియు సేవా కార్యక్రమాలను నిర్వహించుటయే మా లక్ష్యం. ఈ పవిత్ర కార్యక్రమంలో ప్రతి ఒక్కరూ భాగస్వాములు కావాలని మనస్పూర్తిగా కోరుతున్నాము.",
-      donateAction: "స్వామివారికి విరాళం ఇవ్వండి",
-      progressAction: "నిర్మాణ చిత్రాలు చూడండి",
+      eHundiBtn: "💰 ఈ-హుండి ద్వారా సమర్పించండి",
+      galleryBtn: "🖼️ ఆలయ ప్రగతి చిత్రాలు",
     },
-    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • రాతి గోడల నిర్మాణం వేగంగా జరుగుతోంది • మీ విరాళాలను నేరుగా SBI బ్యాంక్ లేదా PhonePe UPI ద్వారా పంపగలరు",
+    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • రాతి గోడల నిర్మాణం వేగంగా జరుగుతోంది • శ్రీ రామ పవిత్ర ఈ-హుండి (E-Hundi) ద్వారా మీ విరాళాలను PhonePe QR లేదా SBI బ్యాంక్ ఖాతా ద్వారా పంపగలరు",
     sevas: {
       tag: "విరాళాల పథకాలు",
       title: "వివిధ శ్రీ రామ సేవా పథకాలు",
@@ -77,24 +77,18 @@ export const content = {
         }
       ]
     },
-    slideshow: [
-      { id: 1, title: "శ్రీ రామాలయం పామినివాండ్లవూరు - అధికారిక బ్యానర్", src: "/assets/banner.jpg", tag: "Regd Sri Ramalayam" },
-      { id: 2, title: "శ్రీ రామాలయ శంకుస్థాపన & ఆవరణ దృశ్యం", src: "/assets/construction_1.jpg", tag: "Phase 1 - Ground View" },
-      { id: 3, title: "దివ్యమైన రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg", tag: "Phase 2 - Stone Walls" },
-      { id: 4, title: "ఆలయ కిటికీ ద్వారబంధాలు మరియు శిల్పకళ", src: "/assets/construction_3.jpg", tag: "Phase 3 - Window Frames" },
-      { id: 5, title: "గర్భగుడి ద్వారబంధం మరియు ప్రధాన అంతర్భాగం", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
-    ],
     gallery: {
-      tag: "ఆలయ ప్రగతి",
-      title: "శ్రీ రామాలయ నిర్మాణ చిత్రాలు",
-      subtitle: "పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ పనుల తాజా ఫోటోలు",
+      tag: "ఆలయ చిత్రాలు (గ్యాలరీ)",
+      title: "శ్రీ రామాలయ ప్రగతి చిత్రాలు",
+      subtitle: "పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ పనులు మరియు అధికారిక బ్యానర్ ఫోటోలు",
       statusTitle: "ప్రస్తుత నిర్మాణ దశ: శంకుస్థాపన & రాతి గోడల నిర్మాణం పూర్తవుతోంది",
       viewOriginalBanner: "అధికారిక ఫ్లెక్సి బ్యానర్ చూడండి",
       photos: [
-        { id: 1, title: "ఆలయ ఆవరణ మరియు చుట్టుపక్కల దృశ్యం", src: "/assets/construction_1.jpg" },
-        { id: 2, title: "శ్రీ రామాలయం రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg" },
-        { id: 3, title: "ఆలయ ద్వార బంధాలు మరియు కిటికీల అమరిక", src: "/assets/construction_3.jpg" },
-        { id: 4, title: "గర్భగుడి ద్వార ద్వార బంధం మరియు అంతర్భాగం", src: "/assets/construction_4.jpg" }
+        { id: 1, title: "శ్రీ రామాలయం పామినివాండ్లవూరు - అధికారిక బ్యానర్", src: "/assets/banner.jpg", tag: "Regd Sri Ramalayam Banner" },
+        { id: 2, title: "ఆలయ ఆవరణ మరియు చుట్టుపక్కల దృశ్యం", src: "/assets/construction_1.jpg", tag: "Phase 1 - Ground View" },
+        { id: 3, title: "శ్రీ రామాలయం రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg", tag: "Phase 2 - Stone Walls" },
+        { id: 4, title: "ఆలయ ద్వార బంధాలు మరియు కిటికీల అమరిక", src: "/assets/construction_3.jpg", tag: "Phase 3 - Window Frames" },
+        { id: 5, title: "గర్భగుడి ద్వార ద్వార బంధం మరియు అంతర్భాగం", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
       ]
     },
     committee: {
@@ -162,21 +156,22 @@ export const content = {
       ]
     },
     donation: {
-      tag: "పవిత్ర సేవ",
-      title: "విరాళాలు & బ్యాంకు వివరాలు",
-      subtitle: "ఆలయ అభివృద్ధి కోసం మీ వంతు సహాయం అందించి శ్రీ రాముని కృపకు పాత్రులు కాగలరని కోరుతున్నాము.",
-      slogan: "మీ సహకారం - శ్రీ రామ సేవలో భాగస్వామ్యం.",
-      bankTitle: "అధికారిక బ్యాంకు ఖాతా వివరాలు",
+      tag: "శ్రీ రామ ఈ-హుండి (E-HUNDI)",
+      title: "పవిత్ర ఈ-హుండి & బ్యాంకు వివరాలు",
+      subtitle: "శ్రీ రాముని గుడి నిర్మాణానికి మీ పవిత్ర కానుకలను డిజిటల్ ఈ-హుండి ద్వారా సమర్పించండి.",
+      slogan: "మీ పవిత్ర కానుక - శ్రీ రామ నిర్మాణ సేవా భాగస్వామ్యం.",
+      hundiBadge: "🚩 శ్రీ రామ పవిత్ర ఈ-హుండి (Official Digital E-Hundi)",
+      bankTitle: "అధికారిక బ్యాంకు ఖాతా వివరాలు (SBI Account)",
       accountName: "Sri Rama Seva Committee Paminivandlavooru",
       accountNo: "45274946370",
       ifsc: "SBIN0005691",
       bankName: "State Bank of India (SBI)",
       branch: "ACB K G SATRAM",
       upiId: "8431806098@ibl",
-      scanQr: "PhonePe QR కోడ్ స్కాన్ చేసి నేరుగా విరాళం చెల్లించండి",
+      scanQr: "PhonePe QR కోడ్ స్కాన్ చేసి నేరుగా ఈ-హుండి విరాళం చెల్లించండి",
       copyBtn: "కాపీ చేయి",
       copiedMsg: "కాపీ చేయబడింది!",
-      generateReceipt: "ఆన్‌లైన్ విరాళం రశీదు పొందండి",
+      generateReceipt: "ఆన్‌లైన్ ఈ-హుండి విరాళం రశీదు పొందండి",
       donorName: "మీ పేరు",
       donorAmount: "విరాళం మొత్తం (₹)",
       donorPhone: "ఫోన్ నంబర్",
@@ -186,7 +181,7 @@ export const content = {
     },
     donorWall: {
       tag: "దాతల పట్టిక",
-      title: "అధికారిక దాతల వరుస క్రమం (చేరిన తేదీ ప్రకారం)",
+      title: "అధికారిక ఈ-హుండి & దాతల జాబితా (చేరిన తేదీ ప్రకారం)",
       subtitle: "తొలి దాత నుండి క్రమానుగతంగా నమోదు కాబడిన భక్తుల పవిత్ర జాబితా (First Donor on Top)",
       donors: [
         { id: 1, name: "Cash Deposit Self", city: "ఆలయ నిధి", amount: "₹ 1,116", date: "12-06-2026", seva: "నగదు జమ" },
@@ -198,7 +193,7 @@ export const content = {
         { id: 7, name: "P. Sandeep", city: "పామినివాండ్లవూరు", amount: "₹ 116", date: "17-06-2026", seva: "విరాళం" },
         { id: 8, name: "Thaneru (T. Hanneru)", city: "పామినివాండ్లవూరు", amount: "₹ 505", date: "18-06-2026", seva: "విరాళం" },
         { id: 9, name: "P. Naveen", city: "పామినివాండ్లవూరు", amount: "₹ 11", date: "25-06-2026", seva: "విరాళం" },
-        { id: 10, name: "P. Rishi", city: "పామినివాండ్లవూరు", amount: "₹ 2,101", date: "04-07-2026", seva: "అన్నదాన నిధి" },
+        { id: 10, name: "P. Rishi", city: "పామినివాండ్లవూరు", amount: "₹ 2,101", date: "04-07-2026", seva: "ఈ-హుండి కానుక" },
         { id: 11, name: "Sri Sai Mahila Mandali", city: "మంగళపల్లె", amount: "₹ 10,000", date: "06-07-2026", seva: "మహిళా మండలి విరాళం" },
         { id: 12, name: "SHG Rajeshwari Mahila Mandali", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", date: "06-07-2026", seva: "మహిళా మండలి విరాళం" },
         { id: 13, name: "Sri Ganesh Mahila Mandali", city: "పామినివాండ్లవూరు", amount: "₹ 10,000", date: "06-07-2026", seva: "మహిళా మండలి విరాళం" },
@@ -232,6 +227,10 @@ export const content = {
       title: "తరచుగా అడిగే ప్రశ్నలు (FAQ)",
       items: [
         {
+          q: "ఈ-హుండి (E-Hundi) ద్వారా విరాళం ఎలా చెల్లించాలి?",
+          a: "మా శ్రీ రామ ఈ-హుండి PhonePe QR కోడ్ స్కాన్ చేసి లేదా SBI బ్యాంక్ ఖాతాకు గూగుల్ పే / నిఫ్ట్ ద్వారా నేరుగా విరాళం పంపవచ్చు."
+        },
+        {
           q: "బ్యాంక్ ట్రాన్స్‌ఫర్ చేసిన తర్వాత విరాళం రశీదు ఎలా పొందాలి?",
           a: "మీరు ఆన్‌లైన్‌లో విరాళం పంపిన తర్వాత, మా 'రశీదు రూపొందించు' ఆప్షన్ ద్వారా డిజిటల్ రశీదును పొందవచ్చు లేదా మీ వివరాలను 8431806098 వాట్సాప్ నంబర్‌కు పంపగలరు."
         },
@@ -253,12 +252,12 @@ export const content = {
       subtitle: "Paminivandla Vooru",
       home: "Home",
       about: "Objectives",
-      gallery: "Construction Progress",
+      gallery: "Temple Photos",
       committee: "Committee Members",
       sevas: "Seva Schemes",
-      bank: "Donation Details",
+      bank: "E-Hundi / Donations",
       location: "Location",
-      donateBtn: "Donate Now",
+      donateBtn: "🚩 E-Hundi Donation",
     },
     hero: {
       badge: "OFFICIAL TEMPLE WEBSITE • PAMINIVANDLAVOORU",
@@ -266,10 +265,10 @@ export const content = {
       slogan: "Our Village, Our Resolve — Sri Rama Temple is Our Sacred Goal.",
       subSlogan: "Our Village Development Lies in Our Hands...",
       desc: "Our sole resolution is the successful construction of Sri Rama Temple Stone Walls and noble community services in Paminivandla Vooru. We heartfully invite every devotee to join hands in this divine cause.",
-      donateAction: "Donate for Temple Construction",
-      progressAction: "View Construction Progress",
+      eHundiBtn: "💰 Donate via E-Hundi",
+      galleryBtn: "🖼️ View Construction Photos",
     },
-    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Sri Ramalayam Foundation Ceremony Completed in Paminivandla Vooru • Stone Walls Construction Underway • Direct Online Donations Accepted via SBI & PhonePe UPI",
+    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Official Sri Rama E-Hundi Activated • Sri Ramalayam Foundation Completed in Paminivandla Vooru • Stone Walls Construction Underway • Direct Online E-Hundi Donations Accepted via SBI & PhonePe UPI",
     sevas: {
       tag: "DONATION SCHEMES",
       title: "Temple Seva & Sponsorship Categories",
@@ -325,24 +324,18 @@ export const content = {
         }
       ]
     },
-    slideshow: [
-      { id: 1, title: "Sri Ramalayam Paminivandla Vooru Banner", src: "/assets/banner.jpg", tag: "Official Temple Banner" },
-      { id: 2, title: "Temple Grounds & Foundation Site", src: "/assets/construction_1.jpg", tag: "Phase 1 - Ground View" },
-      { id: 3, title: "Carved Stone Wall Construction View", src: "/assets/construction_2.jpg", tag: "Phase 2 - Stone Walls" },
-      { id: 4, title: "Temple Window Frames & Carvings", src: "/assets/construction_3.jpg", tag: "Phase 3 - Window Frames" },
-      { id: 5, title: "Sanctum Sanctorum (Garbhagudi) Entrance", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
-    ],
     gallery: {
-      tag: "TEMPLE PROGRESS",
-      title: "Construction Progress Gallery",
-      subtitle: "Recent photos of Sri Rama Temple construction in Paminivandla Vooru",
-      statusTitle: "ప్రస్తుత నిర్మాణ దశ: శంకుస్థాపన & రాతి గోడల నిర్మాణం పూర్తవుతోంది",
+      tag: "PHOTO GALLERY",
+      title: "Temple Progress Photo Gallery",
+      subtitle: "Official construction progress photos and flexi banner of Sri Rama Temple Paminivandla Vooru",
+      statusTitle: "Current Phase: Foundation & Stone Walls Outer Structure Construction",
       viewOriginalBanner: "View Official Flexi Banner",
       photos: [
-        { id: 1, title: "Temple Grounds & Surrounding Landscape", src: "/assets/construction_1.jpg" },
-        { id: 2, title: "Sri Ramalayam Stone Walls Construction", src: "/assets/construction_2.jpg" },
-        { id: 3, title: "Temple Window Frames & Wall Elevation", src: "/assets/construction_3.jpg" },
-        { id: 4, title: "Sanctum Sanctorum (Garbhagudi) Door Frame & Interior", src: "/assets/construction_4.jpg" }
+        { id: 1, title: "Sri Ramalayam Paminivandla Vooru Banner", src: "/assets/banner.jpg", tag: "Regd Sri Ramalayam Banner" },
+        { id: 2, title: "Temple Grounds & Foundation Site", src: "/assets/construction_1.jpg", tag: "Phase 1 - Ground View" },
+        { id: 3, title: "Sri Ramalayam Stone Walls Construction", src: "/assets/construction_2.jpg", tag: "Phase 2 - Stone Walls" },
+        { id: 4, title: "Temple Window Frames & Carvings", src: "/assets/construction_3.jpg", tag: "Phase 3 - Window Frames" },
+        { id: 5, title: "Sanctum Sanctorum (Garbhagudi) Door Frame & Interior", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
       ]
     },
     committee: {
@@ -409,21 +402,22 @@ export const content = {
       ]
     },
     donation: {
-      tag: "DIVINE CONTRIBUTIONS",
-      title: "Donations & Bank Account Details",
-      subtitle: "Support the noble temple construction and receive Lord Sri Rama's divine blessings.",
-      slogan: "Your Contribution is Your Partnership in Sri Rama Seva.",
-      bankTitle: "Official Bank Account Details",
+      tag: "SRI RAMA E-HUNDI",
+      title: "E-Hundi & Bank Account Details",
+      subtitle: "Offer your sacred contributions to Sri Rama Temple via digital E-Hundi.",
+      slogan: "Your E-Hundi Offering is Your Partnership in Sri Rama Seva.",
+      hundiBadge: "🚩 OFFICIAL DIGITAL E-HUNDI",
+      bankTitle: "Official Bank Account Details (SBI Account)",
       accountName: "Sri Rama Seva Committee Paminivandlavooru",
       accountNo: "45274946370",
       ifsc: "SBIN0005691",
       bankName: "State Bank of India (SBI)",
       branch: "ACB K G SATRAM",
       upiId: "8431806098@ibl",
-      scanQr: "Scan PhonePe QR Code to Donate directly",
+      scanQr: "Scan PhonePe QR Code for Direct E-Hundi Donation",
       copyBtn: "Copy",
       copiedMsg: "Copied!",
-      generateReceipt: "Generate Digital Donation Receipt",
+      generateReceipt: "Generate Digital E-Hundi Receipt",
       donorName: "Your Full Name",
       donorAmount: "Donation Amount (₹)",
       donorPhone: "Phone Number",
@@ -433,7 +427,7 @@ export const content = {
     },
     donorWall: {
       tag: "HONOR ROLL",
-      title: "Official Devotee Donors Ledger (Chronological Order)",
+      title: "Official E-Hundi Devotee Donors Ledger",
       subtitle: "First donor listed on top in exact order of contribution date (1st Donor on Top)",
       donors: [
         { id: 1, name: "Cash Deposit Self", city: "Temple Account", amount: "₹ 1,116", date: "12-06-2026", seva: "Cash Deposit" },
@@ -445,7 +439,7 @@ export const content = {
         { id: 7, name: "P. Sandeep", city: "Paminivandla Vooru", amount: "₹ 116", date: "17-06-2026", seva: "Devotional Contribution" },
         { id: 8, name: "Thaneru (T. Hanneru)", city: "Paminivandla Vooru", amount: "₹ 505", date: "18-06-2026", seva: "Devotional Contribution" },
         { id: 9, name: "P. Naveen", city: "Paminivandla Vooru", amount: "₹ 11", date: "25-06-2026", seva: "Devotional Contribution" },
-        { id: 10, name: "P. Rishi", city: "Paminivandla Vooru", amount: "₹ 2,101", date: "04-07-2026", seva: "Annadanam Seva" },
+        { id: 10, name: "P. Rishi", city: "Paminivandla Vooru", amount: "₹ 2,101", date: "04-07-2026", seva: "E-Hundi Offering" },
         { id: 11, name: "Sri Sai Mahila Mandali", city: "Mangalapalli", amount: "₹ 10,000", date: "06-07-2026", seva: "Mahila Mandali Donation" },
         { id: 12, name: "SHG Rajeshwari Mahila Mandali", city: "Paminivandla Vooru", amount: "₹ 10,000", date: "06-07-2026", seva: "Mahila Mandali Donation" },
         { id: 13, name: "Sri Ganesh Mahila Mandali", city: "Paminivandla Vooru", amount: "₹ 10,000", date: "06-07-2026", seva: "Mahila Mandali Donation" },
@@ -478,6 +472,10 @@ export const content = {
       tag: "FAQS",
       title: "Frequently Asked Questions",
       items: [
+        {
+          q: "How to offer donations via E-Hundi?",
+          a: "You can scan our PhonePe E-Hundi QR code or use SBI Bank details via Google Pay / PhonePe / NEFT for direct contributions."
+        },
         {
           q: "How can I get an official donation receipt after online bank transfer?",
           a: "After transferring funds online, you can immediately generate your digital receipt on our website or share your transaction reference on WhatsApp to +91 8431806098."

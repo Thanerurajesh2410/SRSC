@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, Globe, Heart } from 'lucide-react';
+import { Menu, X, Globe, Wallet } from 'lucide-react';
 
 export default function Navbar({ lang, setLang, t }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +14,7 @@ export default function Navbar({ lang, setLang, t }) {
     { name: t.nav.gallery, href: "#gallery" },
     { name: t.nav.committee, href: "#committee" },
     { name: t.nav.sevas, href: "#sevas" },
-    { name: t.nav.bank, href: "#donation" },
+    { name: t.nav.bank, href: "#donation", isHundi: true },
     { name: t.nav.location, href: "#location" },
   ];
 
@@ -51,7 +51,11 @@ export default function Navbar({ lang, setLang, t }) {
                 <a
                   key={idx}
                   href={link.href}
-                  className="text-xs font-bold text-gray-200 hover:text-[var(--primary-gold)] transition-colors py-1 border-b-2 border-transparent hover:border-[var(--primary-gold)]"
+                  className={`text-xs font-bold transition-colors py-1 border-b-2 ${
+                    link.isHundi
+                      ? 'text-[#FFD700] border-[#FFD700] hover:text-amber-200 animate-pulse bg-white/10 px-2.5 py-1 rounded-full'
+                      : 'text-gray-200 border-transparent hover:text-[var(--primary-gold)] hover:border-[var(--primary-gold)]'
+                  }`}
                 >
                   {link.name}
                 </a>
@@ -69,9 +73,9 @@ export default function Navbar({ lang, setLang, t }) {
                 <span>{lang === 'te' ? 'English' : 'తెలుగు'}</span>
               </button>
 
-              {/* Donate Button */}
-              <a href="#donation" className="btn-gold text-xs !py-2 !px-4">
-                <Heart className="w-3.5 h-3.5 fill-current" />
+              {/* Highlighted E-Hundi Button */}
+              <a href="#donation" className="btn-gold text-xs !py-2 !px-4 shadow-[0_0_20px_rgba(255,215,0,0.5)] border border-amber-300">
+                <Wallet className="w-4 h-4 fill-current text-yellow-950 animate-bounce" />
                 <span>{t.nav.donateBtn}</span>
               </a>
             </div>
@@ -79,6 +83,10 @@ export default function Navbar({ lang, setLang, t }) {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 lg:hidden">
+            <a href="#donation" className="btn-gold text-[11px] py-1.5 px-3">
+              <Wallet className="w-3.5 h-3.5" />
+              <span>ఈ-హుండి</span>
+            </a>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg text-white hover:bg-white/10"
@@ -99,7 +107,9 @@ export default function Navbar({ lang, setLang, t }) {
                 key={idx}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="text-sm font-bold text-gray-200 hover:text-[var(--primary-gold)] py-2 border-b border-white/10"
+                className={`text-sm font-bold py-2 border-b border-white/10 ${
+                  link.isHundi ? 'text-[#FFD700] font-black' : 'text-gray-200 hover:text-[var(--primary-gold)]'
+                }`}
               >
                 {link.name}
               </a>
