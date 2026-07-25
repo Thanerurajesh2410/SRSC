@@ -1,12 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX, Music, Play, Pause } from 'lucide-react';
+import { Volume2, VolumeX, Music } from 'lucide-react';
 
 export default function DevotionalAudio({ lang }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioCtxRef = useRef(null);
   const isPlayingRef = useRef(false);
 
-  // Soothing Sri Rama Sitar / Tanpura / Temple Bell Ambient Synthesizer
+  // Auto-play Sri Rama Devotional Chant / Music on site load
+  useEffect(() => {
+    const startAudio = () => {
+      if (!isPlayingRef.current) {
+        isPlayingRef.current = true;
+        setIsPlaying(true);
+        playSriRamaAudio();
+      }
+    };
+
+    // Attempt instant autoplay
+    startAudio();
+
+    // Listen for any user click/touch anywhere on the window to fulfill browser autoplay policy
+    const handleFirstInteraction = () => {
+      if (!isPlayingRef.current) {
+        startAudio();
+      }
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+    };
+
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+    window.addEventListener('scroll', handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+    };
+  }, []);
+
   const togglePlay = () => {
     if (isPlaying) {
       isPlayingRef.current = false;
@@ -42,7 +75,7 @@ export default function DevotionalAudio({ lang }) {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        // Warm Sitar / Veena Bell Tone
+        // Warm Divine Bell & Sitar Tone
         osc.type = 'sine';
         osc.frequency.setValueAtTime(ragaNotes[noteIdx], ctx.currentTime);
         
@@ -58,24 +91,14 @@ export default function DevotionalAudio({ lang }) {
 
         noteIdx = (noteIdx + 1) % ragaNotes.length;
 
-        // Schedule next melody note
         setTimeout(playNextNote, 1200);
       };
 
       playNextNote();
     } catch (e) {
-      console.log('Audio playback initialized', e);
+      console.log('Autoplay listener active', e);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      isPlayingRef.current = false;
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close();
-      }
-    };
-  }, []);
 
   return (
     <div className="flex items-center">
@@ -86,12 +109,12 @@ export default function DevotionalAudio({ lang }) {
             ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-300 animate-pulse shadow-amber-500/50'
             : 'bg-white/10 text-amber-300 border-amber-400/40 hover:bg-white/20'
         }`}
-        title={isPlaying ? "పాజ్ చేయి (Pause Devotional Audio)" : "శ్రీరామదాసు కీర్తన ప్లే చేయి (Play Sri Ramadasu Devotional Audio)"}
+        title={isPlaying ? "పాజ్ చేయి (Pause Music)" : "ప్లే చేయి (Play Music)"}
       >
         <Music className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
         <span>
           {isPlaying
-            ? (lang === 'te' ? '॥ శ్రీరామ గానం ప్లే అవుతోంది ॥' : '॥ Sri Rama Chants Playing ॥')
+            ? (lang === 'te' ? '॥ శ్రీరామ గానం వినపడుతోంది ॥' : '॥ Sri Rama Chants Playing ॥')
             : (lang === 'te' ? '॥ శ్రీరామదాసు భక్తి గానం ॥' : '॥ Sri Rama Devotional Audio ॥')}
         </span>
         {isPlaying ? (

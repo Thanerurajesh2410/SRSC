@@ -70,7 +70,7 @@ export default function ConstructionGallery({ t }) {
             </div>
             <div className="bg-[var(--primary-saffron)]/20 border border-[var(--primary-saffron)] p-3 rounded-xl text-center relative overflow-hidden">
               <Building2 className="w-5 h-5 text-[var(--primary-saffron)] mx-auto mb-1 animate-pulse" />
-              <div className="text-xs font-bold text-white">2. గ్రానైట్ గోడల నిర్మాణం</div>
+              <div className="text-xs font-bold text-white">2. రాతి గోడల నిర్మాణం</div>
               <div className="text-[10px] text-[var(--primary-saffron)] font-bold">In Progress (75%)</div>
             </div>
             <div className="bg-white/5 border border-white/10 p-3 rounded-xl text-center opacity-60">

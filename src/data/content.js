@@ -17,11 +17,11 @@ export const content = {
       title: "శ్రీ రామాలయం పామినివాండ్లవూరు",
       slogan: "మన గ్రామం మన సంకల్పం, శ్రీ రామాలయమే మన లక్ష్యం.",
       subSlogan: "మన గ్రామ అభివృద్ధి, మన చేతుల్లోనే...",
-      desc: "మన ఊరిలో శ్రీ రామాలయ నిర్మాణం మరియు సేవా కార్యక్రమాలను నిర్వహించుటయే మా లక్ష్యం. ఈ పవిత్ర కార్యక్రమంలో ప్రతి ఒక్కరూ భాగస్వాములు కావాలని మనస్పూర్తిగా కోరుతున్నాము.",
+      desc: "మన ఊరిలో శ్రీ రామాలయ రాతి గోడల నిర్మాణం మరియు సేవా కార్యక్రమాలను నిర్వహించుటయే మా లక్ష్యం. ఈ పవిత్ర కార్యక్రమంలో ప్రతి ఒక్కరూ భాగస్వాములు కావాలని మనస్పూర్తిగా కోరుతున్నాము.",
       donateAction: "స్వామివారికి విరాళం ఇవ్వండి",
       progressAction: "నిర్మాణ చిత్రాలు చూడండి",
     },
-    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • శ్రీరామదాసు భక్తి సంకీర్తనల రామాలయం • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • గ్రానైట్ రాతి గర్భగుడి నిర్మాణం వేగంగా జరుగుతోంది • మీ విరాళాలను నేరుగా SBI బ్యాంక్ లేదా PhonePe UPI ద్వారా పంపగలరు",
+    ticker: "॥ శ్రీ రామ జయ రామ జయ జయ రామ ॥ • శ్రీరామదాసు భక్తి సంకీర్తనల రామాలయం • పామినివాండ్లవూరు శ్రీ రామాలయ శంకుస్థాపన పూర్తయినది • రాతి గోడల నిర్మాణం వేగంగా జరుగుతోంది • మీ విరాళాలను నేరుగా SBI బ్యాంక్ లేదా PhonePe UPI ద్వారా పంపగలరు",
     sevas: {
       tag: "విరాళాల పథకాలు",
       title: "వివిధ శ్రీ రామ సేవా పథకాలు",
@@ -29,9 +29,9 @@ export const content = {
       items: [
         {
           id: "garbhagudi",
-          title: "గర్భగుడి శీల నిర్మాణ సేవ",
+          title: "గర్భగుడి రాతి గోడల సేవ",
           amount: "₹ 5,008 / ₹ 10,008",
-          desc: "దివ్య గ్రానైట్ రాతితో నిర్మిస్తున్న గర్భగుడి కిటికీలు మరియు గోడల నిర్మాణ నిధి.",
+          desc: "దివ్యమైన చెక్కిన రాతితో నిర్మిస్తున్న గర్భగుడి గోడల నిర్మాణ నిధి.",
           badge: "శాశ్వత నిధి"
         },
         {
@@ -57,7 +57,7 @@ export const content = {
       items: [
         {
           title: "శ్రీ రామాలయ నిర్మాణం",
-          desc: "పామినివాండ్లవూరు గ్రామంలో దివ్యమైన గ్రానైట్ రాతితో శ్రీ రామాలయ నిర్మాణం వేగంగా జరుగుతోంది.",
+          desc: "పామినివాండ్లవూరు గ్రామంలో దివ్యమైన రాతి గోడలతో శ్రీ రామాలయ నిర్మాణం వేగంగా జరుగుతోంది.",
           icon: "Building"
         },
         {
@@ -80,7 +80,7 @@ export const content = {
     slideshow: [
       { id: 1, title: "శ్రీ రామాలయం పామినివాండ్లవూరు - అధికారిక బ్యానర్", src: "/assets/banner.jpg", tag: "Regd Sri Ramalayam" },
       { id: 2, title: "శ్రీ రామాలయ శంకుస్థాపన & ఆవరణ దృశ్యం", src: "/assets/construction_1.jpg", tag: "Phase 1 - Ground View" },
-      { id: 3, title: "దివ్య గ్రానైట్ రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg", tag: "Phase 2 - Granite Walls" },
+      { id: 3, title: "దివ్యమైన రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg", tag: "Phase 2 - Stone Walls" },
       { id: 4, title: "ఆలయ కిటికీ ద్వారబంధాలు మరియు శిల్పకళ", src: "/assets/construction_3.jpg", tag: "Phase 3 - Window Frames" },
       { id: 5, title: "గర్భగుడి ద్వారబంధం మరియు ప్రధాన అంతర్భాగం", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
     ],
@@ -88,11 +88,11 @@ export const content = {
       tag: "ఆలయ ప్రగతి",
       title: "శ్రీ రామాలయ నిర్మాణ చిత్రాలు",
       subtitle: "పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ పనుల తాజా ఫోటోలు",
-      statusTitle: "ప్రస్తుత నిర్మాణ దశ: శంకుస్థాపన & గ్రానైట్ గోడల నిర్మాణం పూర్తవుతోంది",
+      statusTitle: "ప్రస్తుత నిర్మాణ దశ: శంకుస్థాపన & రాతి గోడల నిర్మాణం పూర్తవుతోంది",
       viewOriginalBanner: "అధికారిక ఫ్లెక్సి బ్యానర్ చూడండి",
       photos: [
         { id: 1, title: "ఆలయ ఆవరణ మరియు చుట్టుపక్కల దృశ్యం", src: "/assets/construction_1.jpg" },
-        { id: 2, title: "శ్రీ రామాలయం గ్రానైట్ రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg" },
+        { id: 2, title: "శ్రీ రామాలయం రాతి గోడల నిర్మాణం", src: "/assets/construction_2.jpg" },
         { id: 3, title: "ఆలయ ద్వార బంధాలు మరియు కిటికీల అమరిక", src: "/assets/construction_3.jpg" },
         { id: 4, title: "గర్భగుడి ద్వార ద్వార బంధం మరియు అంతర్భాగం", src: "/assets/construction_4.jpg" }
       ]
@@ -236,8 +236,8 @@ export const content = {
           a: "మీరు ఆన్‌లైన్‌లో విరాళం పంపిన తర్వాత, మా 'రశీదు రూపొందించు' ఆప్షన్ ద్వారా డిజిటల్ రశీదును పొందవచ్చు లేదా మీ వివరాలను 8431806098 వాట్సాప్ నంబర్‌కు పంపగలరు."
         },
         {
-          q: "విరాళంగా సామాగ్రినే (సిమెంట్, గ్రానైట్ రాళ్ళు) ఇవ్వవచ్చా?",
-          a: "ఖచ్చితంగా ఇవ్వవచ్చు! ఆలయ నిర్మాణానికి అవసరమైన రాళ్ళు, గ్రానైట్ ద్వారబంధాలు మరియు సిమెంట్ అందజేయాలనుకునేవారు నేరుగా కమిటీ సభ్యులను సంప్రదించగలరు."
+          q: "విరాళంగా సామాగ్రినే (సిమెంట్, రాళ్ళు) ఇవ్వవచ్చా?",
+          a: "ఖచ్చితంగా ఇవ్వవచ్చు! ఆలయ నిర్మాణానికి అవసరమైన చెక్కిన రాళ్ళు, ద్వారబంధాలు మరియు సిమెంట్ అందజేయాలనుకునేవారు నేరుగా కమిటీ సభ్యులను సంప్రదించగలరు."
         }
       ]
     },
@@ -265,11 +265,11 @@ export const content = {
       title: "Sri Ramalayam Paminivandla Vooru",
       slogan: "Our Village, Our Resolve — Sri Rama Temple is Our Sacred Goal.",
       subSlogan: "Our Village Development Lies in Our Hands...",
-      desc: "Our sole resolution is the successful construction of Sri Rama Temple and noble community services in Paminivandla Vooru. We heartfully invite every devotee to join hands in this divine cause.",
+      desc: "Our sole resolution is the successful construction of Sri Rama Temple Stone Walls and noble community services in Paminivandla Vooru. We heartfully invite every devotee to join hands in this divine cause.",
       donateAction: "Donate for Temple Construction",
       progressAction: "View Construction Progress",
     },
-    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Inspired by Bhakta Ramadasu Devotional Keerthanas • Sri Ramalayam Foundation Ceremony Completed in Paminivandla Vooru • Direct Online Donations Accepted via SBI & PhonePe UPI",
+    ticker: "॥ SRI RAMA JAYA RAMA JAYA JAYA RAMA ॥ • Inspired by Bhakta Ramadasu Devotional Keerthanas • Sri Ramalayam Foundation Ceremony Completed in Paminivandla Vooru • Stone Walls Construction Underway • Direct Online Donations Accepted via SBI & PhonePe UPI",
     sevas: {
       tag: "DONATION SCHEMES",
       title: "Temple Seva & Sponsorship Categories",
@@ -277,9 +277,9 @@ export const content = {
       items: [
         {
           id: "garbhagudi",
-          title: "Granite Sanctum Stone Seva",
+          title: "Stone Sanctum Wall Seva",
           amount: "₹ 5,008 / ₹ 10,008",
-          desc: "Contribution towards carved granite stones and pillars for Garbhagudi.",
+          desc: "Contribution towards carved stone walls and pillars for Garbhagudi.",
           badge: "Permanent Fund"
         },
         {
@@ -305,7 +305,7 @@ export const content = {
       items: [
         {
           title: "Sri Rama Temple Construction",
-          desc: "Construction of magnificent granite stone Sri Rama Temple is in active progress in Paminivandla Vooru.",
+          desc: "Construction of magnificent carved stone Sri Rama Temple is in active progress in Paminivandla Vooru.",
           icon: "Building"
         },
         {
@@ -328,7 +328,7 @@ export const content = {
     slideshow: [
       { id: 1, title: "Sri Ramalayam Paminivandla Vooru Banner", src: "/assets/banner.jpg", tag: "Official Temple Banner" },
       { id: 2, title: "Temple Grounds & Foundation Site", src: "/assets/construction_1.jpg", tag: "Phase 1 - Ground View" },
-      { id: 3, title: "Granite Stone Wall Construction View", src: "/assets/construction_2.jpg", tag: "Phase 2 - Granite Walls" },
+      { id: 3, title: "Carved Stone Wall Construction View", src: "/assets/construction_2.jpg", tag: "Phase 2 - Stone Walls" },
       { id: 4, title: "Temple Window Frames & Carvings", src: "/assets/construction_3.jpg", tag: "Phase 3 - Window Frames" },
       { id: 5, title: "Sanctum Sanctorum (Garbhagudi) Entrance", src: "/assets/construction_4.jpg", tag: "Phase 4 - Sanctum Door" }
     ],
@@ -336,11 +336,11 @@ export const content = {
       tag: "TEMPLE PROGRESS",
       title: "Construction Progress Gallery",
       subtitle: "Recent photos of Sri Rama Temple construction in Paminivandla Vooru",
-      statusTitle: "Current Phase: Foundation & Granite Stone Outer Structure Construction",
+      statusTitle: "ప్రస్తుత నిర్మాణ దశ: శంకుస్థాపన & రాతి గోడల నిర్మాణం పూర్తవుతోంది",
       viewOriginalBanner: "View Official Flexi Banner",
       photos: [
         { id: 1, title: "Temple Grounds & Surrounding Landscape", src: "/assets/construction_1.jpg" },
-        { id: 2, title: "Granite Stone Walls Construction View", src: "/assets/construction_2.jpg" },
+        { id: 2, title: "Sri Ramalayam Stone Walls Construction", src: "/assets/construction_2.jpg" },
         { id: 3, title: "Temple Window Frames & Wall Elevation", src: "/assets/construction_3.jpg" },
         { id: 4, title: "Sanctum Sanctorum (Garbhagudi) Door Frame & Interior", src: "/assets/construction_4.jpg" }
       ]
@@ -484,7 +484,7 @@ export const content = {
         },
         {
           q: "Can we donate building materials directly?",
-          a: "Yes! Devotees who wish to contribute granite stones, cement, or electrical fixtures are welcome to contact committee office bearers."
+          a: "Yes! Devotees who wish to contribute carved stones, cement, or electrical fixtures are welcome to contact committee office bearers."
         }
       ]
     },
