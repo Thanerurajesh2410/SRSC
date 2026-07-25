@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Menu, X, Globe, Heart } from 'lucide-react';
-import DevotionalAudio from './DevotionalAudio';
 
 export default function Navbar({ lang, setLang, t }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,9 +59,6 @@ export default function Navbar({ lang, setLang, t }) {
             </nav>
 
             <div className="flex items-center gap-3 border-l border-white/20 pl-4">
-              {/* 🎶 Devotional Audio Player */}
-              <DevotionalAudio lang={lang} />
-
               {/* Language Switcher */}
               <button
                 onClick={toggleLang}
@@ -83,7 +79,6 @@ export default function Navbar({ lang, setLang, t }) {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 lg:hidden">
-            <DevotionalAudio lang={lang} />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg text-white hover:bg-white/10"
