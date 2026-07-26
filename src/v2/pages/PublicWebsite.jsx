@@ -3,15 +3,16 @@ import { Building2, Heart, Calendar, FileText, Camera, ShieldCheck, MapPin, Mail
 import { getDB } from '../data/v2Database';
 
 const slideshowImages = [
-  { id: 1, src: '/assets/temple_photo_1.png', title: 'శ్రీ రామాలయ శంకుస్థాపన పవిత్ర రాతి స్తంభాల పూజ', tag: 'పామినివాండ్లవూరు ఆలయ శంకుస్థాపన' },
+  { id: 1, src: '/assets/temple_photo_1.png', title: 'శ్రీ రామాలయ శంకుస్థాపన పవిత్ర రాతి స్తంభాల పూజ', tag: 'పామినివాండ్లవూరు శంకుస్థాపన' },
   { id: 2, src: '/assets/temple_photo_2.png', title: 'గ్రామస్థులు & భక్తుల సమక్షంలో ఆలయ పునాది పూజా మహోత్సవం', tag: 'పవిత్ర శంకుస్థాపన మహోత్సవం' },
-  { id: 3, src: '/assets/temple_photo_3.png', title: 'రాతి గోడల ఆలయ శంకుస్థాపన పునాది నిర్మాణం', tag: 'ఆలయ ప్రగతి' },
-  { id: 4, src: '/assets/temple_photo_4.png', title: 'టేకు కలప ద్వారబంధం & చెక్కిన రాతి స్తంభాల నిర్మాణం', tag: 'రాతి స్తంభాల అలంకరణ' },
+  { id: 3, src: '/assets/temple_photo_3.png', title: 'రాతి గోడల ఆలయ శంకుస్థాపన పునాది నిర్మాణం', tag: 'ఆలయ పునాది ప్రగతి' },
+  { id: 4, src: '/assets/temple_photo_4.png', title: 'అలంకరించిన టేకు కలప ప్రధాన ద్వారబంధం', tag: 'ఆలయ ద్వారబంధం' },
   { id: 5, src: '/assets/temple_photo_5.png', title: 'పునాది గుంటలో పవిత్ర రాతి రాళ్ళ ప్రతిష్ఠాపన పూజ', tag: 'గర్భగుడి శంకుస్థాపన' },
-  { id: 6, src: '/assets/construction_1.jpg', title: 'చెక్కిన రాతి రాళ్ళు మరియు గర్భగుడి గోడల నిర్మాణం', tag: 'ఆలయ నిర్మాణం' },
-  { id: 7, src: '/assets/construction_2.jpg', title: 'ఆలయ ప్రాంగణం మరియు రాతి స్తంభాల అమరిక', tag: 'పామినివాండ్లవూరు' },
-  { id: 8, src: '/assets/construction_3.jpg', title: 'ఆలయ ప్రధాన ద్వారబంధం మరియు శంకుస్థాపన ప్రగతి', tag: 'శ్రీ రామాలయం' },
-  { id: 9, src: '/assets/banner.jpg', title: 'శ్రీ రామా సేవా కమిటీ ఆలయ నిర్మాణ దృశ్యం', tag: 'అధికారిక శ్రీ రామాలయం' }
+  { id: 6, src: '/assets/temple_photo_6.png', title: 'ఆలయ పెద్దలు & భక్తుల పవిత్ర దర్శన దృశ్యం', tag: 'పామినివాండ్లవూరు గ్రామస్థులు' },
+  { id: 7, src: '/assets/temple_photo_7.png', title: 'శ్రీ రామాలయ ప్రాంగణం & చెక్కిన రాతి నిర్మాణం', tag: 'ఆలయ ప్రాంగణ ప్రగతి' },
+  { id: 8, src: '/assets/temple_photo_8.png', title: 'శ్రీ రామాలయ రాతి గోడలు & ద్వార బంధాల అమరిక', tag: 'రాతి గోడల నిర్మాణం' },
+  { id: 9, src: '/assets/temple_photo_9.png', title: 'గర్భగుడి అంతర్భాగం & చెక్కిన రాతి గోడలు', tag: 'గర్భగుడి నిర్మాణం' },
+  { id: 10, src: '/assets/temple_photo_10.png', title: 'శ్రీ రామాలయ పవిత్ర రాతి నిర్మాణం పూర్తయిన దృశ్యం', tag: 'ఆలయ రాతి నిర్మాణం' }
 ];
 
 export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSection }) {
@@ -126,13 +127,77 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
         </div>
       </div>
 
+      {/* 1. HOME SUB-SECTION */}
+      {activeTab === 'home' && (
+        <div className="space-y-10 animate-fadeIn">
+          
+          {/* 📸 100% FULL SCREEN TEMPLE SLIDESHOW BANNER (Edge-to-Edge Full Viewport Width) */}
+          <div className="relative w-full overflow-hidden shadow-2xl bg-black border-b-4 border-[#FFD700] group">
+            <div className="relative h-[380px] sm:h-[540px] md:h-[660px] lg:h-[760px] w-full">
+              <img
+                src={slideshowImages[slideIdx].src}
+                alt={slideshowImages[slideIdx].title}
+                className="w-full h-full object-cover object-center transition-all duration-1000 transform group-hover:scale-105"
+              />
+              
+              {/* Gradient Overlay for Cinematic High-Contrast Text */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent flex flex-col justify-end p-6 sm:p-12 md:p-16">
+                <div className="max-w-5xl mx-auto w-full">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-xs sm:text-sm font-black text-[#FFD700] bg-[#5C121E]/95 px-4 py-1.5 rounded-full border-2 border-[#FFD700] shadow-xl">
+                      🚩 {slideshowImages[slideIdx].tag}
+                    </span>
+                    <span className="text-xs sm:text-sm font-mono font-black text-amber-300 bg-black/80 px-4 py-1 rounded-full border border-amber-400/40">
+                      {slideIdx + 1} / {slideshowImages.length}
+                    </span>
+                  </div>
+                  
+                  <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white heading-telugu drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-tight">
+                    {slideshowImages[slideIdx].title}
+                  </h2>
+                </div>
+              </div>
+
+              {/* Full Screen Slideshow Previous / Next Arrow Controls */}
+              <button
+                onClick={() => setSlideIdx((prev) => (prev === 0 ? slideshowImages.length - 1 : prev - 1))}
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
+                aria-label="Previous Slide"
+              >
+                <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
+              </button>
+              <button
+                onClick={() => setSlideIdx((prev) => (prev + 1) % slideshowImages.length)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
+                aria-label="Next Slide"
+              >
+                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
+              </button>
+
+              {/* Slide Position Dots */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex justify-center items-center gap-2 z-20">
+                {slideshowImages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSlideIdx(idx)}
+                    className={`h-3 rounded-full transition-all ${
+                      idx === slideIdx ? 'w-10 bg-[#FFD700] shadow-[0_0_15px_#FFD700]' : 'w-3 bg-white/40 hover:bg-white/80'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8 relative z-10">
 
-        {/* 1. HOME SUB-SECTION */}
+        {/* 1. HOME MAIN CONTENT BELOW SLIDESHOW */}
         {activeTab === 'home' && (
           <div className="space-y-10 animate-fadeIn">
             {/* Hero Header Section */}
-            <div className="text-center max-w-4xl mx-auto py-4">
+            <div className="text-center max-w-4xl mx-auto py-2">
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs md:text-sm font-black bg-[#5C121E]/90 text-[#FFD700] border-2 border-[#FFD700] shadow-[0_0_25px_rgba(255,215,0,0.5)] mb-4 animate-bounce">
                 <span>🚩 {t.hero.badge}</span>
               </div>
@@ -159,62 +224,6 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               <p className="text-lg md:text-xl font-extrabold text-[var(--primary-saffron)] heading-telugu mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
                 "{t.hero.slogan}"
               </p>
-            </div>
-
-            {/* 📸 Temple Photos Auto Slideshow Widget (Replaces Progress Bar) */}
-            <div className="max-w-5xl mx-auto gold-card !p-4 sm:!p-6 bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#1A0306] border-3 border-[#FFD700] shadow-2xl rounded-3xl relative overflow-hidden">
-              <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/20">
-                <div className="flex items-center gap-2">
-                  <Camera className="w-6 h-6 text-[#FFD700]" />
-                  <h3 className="text-lg sm:text-2xl font-black text-[#FFD700] heading-telugu">శ్రీ రామాలయ నిర్మాణ & పూజా చిత్రాల గ్యాలరీ</h3>
-                </div>
-                <span className="text-xs sm:text-sm font-mono font-black text-amber-300 bg-black/60 px-3.5 py-1 rounded-full border border-amber-400/40">
-                  {slideIdx + 1} / {slideshowImages.length}
-                </span>
-              </div>
-
-              <div className="relative h-[280px] sm:h-[400px] md:h-[480px] rounded-2xl overflow-hidden border-2 border-white/20 bg-black group">
-                <img
-                  src={slideshowImages[slideIdx].src}
-                  alt={slideshowImages[slideIdx].title}
-                  className="w-full h-full object-cover object-center transition-all duration-700 transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-5 sm:p-8">
-                  <span className="text-xs sm:text-sm font-black text-[#FFD700] bg-[#5C121E] px-3.5 py-1 rounded-full border border-[#FFD700]/50 w-fit mb-2">
-                    {slideshowImages[slideIdx].tag}
-                  </span>
-                  <h4 className="text-lg sm:text-2xl md:text-3xl font-black text-white heading-telugu drop-shadow-lg">
-                    {slideshowImages[slideIdx].title}
-                  </h4>
-                </div>
-
-                {/* Slideshow Manual Controls */}
-                <button
-                  onClick={() => setSlideIdx((prev) => (prev === 0 ? slideshowImages.length - 1 : prev - 1))}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/60 text-[#FFD700] hover:bg-[#5C121E] border border-[#FFD700] transition-colors"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={() => setSlideIdx((prev) => (prev + 1) % slideshowImages.length)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/60 text-[#FFD700] hover:bg-[#5C121E] border border-[#FFD700] transition-colors"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
-              </div>
-
-              {/* Dots Indicator */}
-              <div className="flex justify-center items-center gap-2 mt-4">
-                {slideshowImages.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSlideIdx(idx)}
-                    className={`h-2.5 rounded-full transition-all ${
-                      idx === slideIdx ? 'w-8 bg-[#FFD700]' : 'w-2.5 bg-white/30 hover:bg-white/60'
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
 
             {/* Quick Action Navigation Buttons */}
@@ -966,6 +975,10 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                   />
                 </div>
 
+                <button type="submit" className="btn-gold w-full text-base sm:text-lg font-black py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2">
+                  <MessageSquare className="w-6 h-6 text-emerald-950" />
+                  <span>WhatsApp ద్వారా నేరుగా సందేశం పంపండి</span>
+                </button>
               </form>
             </div>
           </div>
