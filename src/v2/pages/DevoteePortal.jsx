@@ -566,12 +566,12 @@ export default function DevoteePortal({ t, showToast }) {
             {/* Rendered Printable Formal TTD-Style Receipt Card with Watermark */}
             <div ref={receiptModalRef} className="bg-white text-black p-6 sm:p-8 rounded-xl border-2 border-gray-800 shadow-2xl relative overflow-hidden font-sans">
               
-              {/* Watermark Background Layer */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.07] rotate-[-25deg] z-0">
+              {/* Watermark Background Layer - Official Temple Logo */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
                 <div className="text-center">
-                  <img src="/assets/logo.jpg" alt="Watermark Logo" className="w-64 h-64 mx-auto mb-2 rounded-full grayscale" />
-                  <span className="text-4xl sm:text-5xl font-black uppercase text-[#5C121E] tracking-widest block">SRI RAMA SEVA COMMITTEE</span>
-                  <span className="text-2xl font-bold text-black block mt-1">పామినివాండ్లవూరు</span>
+                  <img src="/assets/logo.jpg" alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
+                  <span className="text-3xl sm:text-4xl font-black uppercase text-[#5C121E] tracking-widest block mt-2">SRI RAMA SEVA COMMITTEE</span>
+                  <span className="text-xl font-black text-amber-900 block mt-0.5">పామినివాండ్లవూరు</span>
                 </div>
               </div>
 
@@ -587,11 +587,8 @@ export default function DevoteePortal({ t, showToast }) {
                 </div>
                 
                 <div className="text-right shrink-0">
-                  <div className="font-mono text-xl font-black tracking-widest text-black bg-gray-100 px-3 py-1 rounded border border-gray-400 mb-1">
-                    ||||| | |||| ||||| ||
-                  </div>
                   <span className="text-[11px] font-bold text-gray-600 block">రశీదు సంఖ్య (Receipt No):</span>
-                  <span className="text-xs sm:text-sm font-mono font-black text-[#5C121E]">{selectedReceipt.id || selectedReceipt.receiptNo}</span>
+                  <span className="text-sm sm:text-base font-mono font-black text-[#5C121E] bg-gray-100 px-3 py-1 rounded border border-gray-400 inline-block">{selectedReceipt.id || selectedReceipt.receiptNo}</span>
                 </div>
               </div>
 
