@@ -213,6 +213,8 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
   const juneSum = juneDonations.reduce((acc, curr) => acc + (typeof curr.amount === 'number' ? curr.amount : parseInt(String(curr.amount).replace(/\D/g, '')) || 0), 0);
   const julySum = julyDonations.reduce((acc, curr) => acc + (typeof curr.amount === 'number' ? curr.amount : parseInt(String(curr.amount).replace(/\D/g, '')) || 0), 0);
 
+  const safeSlideIdx = slideIdx % (activeGalleryImages.length || 1);
+
   return (
     <div className="bg-[#090914] text-white min-h-screen sacred-temple-bg-masked">
       
