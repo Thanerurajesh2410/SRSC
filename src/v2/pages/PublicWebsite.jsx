@@ -257,26 +257,6 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               </button>
             </div>
 
-            {/* 📢 Important Announcement Banner Card */}
-            <div className="gold-card max-w-5xl mx-auto bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-3 border-[#FFD700] !p-6 sm:!p-8 rounded-3xl shadow-2xl relative overflow-hidden my-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <div className="p-3.5 rounded-2xl bg-[#FFD700] text-[#5C121E] font-black shrink-0 shadow-lg">
-                  <Bell className="w-8 h-8 animate-bounce" />
-                </div>
-                <div>
-                  <h3 className="text-lg sm:text-2xl font-black text-[#FFD700] heading-telugu mb-2 flex items-center gap-2">
-                    <span>📢 ముఖ్య గమనిక & అధికారిక ప్రకటన (Important Announcement)</span>
-                  </h3>
-                  <p className="text-sm sm:text-base font-extrabold text-white leading-relaxed">
-                    ఈ వెబ్‌సైట్‌లో ప్రదర్శించబడిన విరాళాల వివరాలు అన్నీ శ్రీ రామా సేవా కమిటీ అధికారిక ఆలయ బ్యాంక్ ఖాతా (SBI A/C) ప్రారంభించిన తర్వాత, భక్తులు నేరుగా <span className="text-[#FFD700] font-mono font-black">NEFT / Bank Transfer, UPI లేదా PhonePe</span> ద్వారా ఆలయ ఖాతాకు జమ చేసిన విరాళాలు మాత్రమే.
-                  </p>
-                  <p className="text-xs sm:text-sm font-semibold text-amber-200/90 mt-2 italic border-t border-white/10 pt-2">
-                    (Note: All donation details displayed on this website strictly represent direct transfers received via NEFT, UPI, or PhonePe after creating the official temple bank account).
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* 🚩 PhonePe QR Scanner & Bank Transfer Card with Copy Functionality */}
             <div ref={bankSectionRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
               

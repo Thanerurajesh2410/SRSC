@@ -94,77 +94,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans transition-colors duration-500 relative">
-      
-      {/* 🌟 Top Version & Theme Control Bar */}
-      <div className="bg-[#1A0306] border-b border-[var(--primary-gold)]/40 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 z-50">
-        
-        {/* Version Switcher Controller */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 text-[#FFD700] font-black">
-            <Layers className="w-4 h-4 text-[var(--primary-saffron)]" />
-            <span>వర్షన్ ఎంపిక (Version Switcher):</span>
-          </div>
-
-          <div className="inline-flex rounded-full bg-black/60 p-0.5 border border-[#FFD700]/50">
-            <button
-              onClick={() => { setActiveVersion('v1'); showToast("Version 1 లోకి మారారు!"); }}
-              className={`px-3 py-1 rounded-full text-xs font-black transition-all ${
-                activeVersion === 'v1'
-                  ? 'bg-[#5C121E] text-[#FFD700] border border-[#FFD700] shadow-md'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              V1 (Classic Site)
-            </button>
-
-            <button
-              onClick={() => { setActiveVersion('v2'); showToast("Version 2 (ERP Suite) లోకి మారారు!"); }}
-              className={`px-3 py-1 rounded-full text-xs font-black transition-all ${
-                activeVersion === 'v2'
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border border-yellow-300 shadow-md'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              V2 (ERP & Devotee Portal) 🚀
-            </button>
-          </div>
-        </div>
-
-        {/* Dynamic Color Theme Selector */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1 text-[var(--primary-gold-light)] font-bold">
-            <Palette className="w-3.5 h-3.5 text-[var(--primary-saffron)]" />
-            <span className="hidden sm:inline">థీమ్స్:</span>
-          </div>
-
-          <button
-            onClick={() => setTheme('theme-maroon')}
-            className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-all ${
-              theme === 'theme-maroon' ? 'bg-[#5C121E] text-[#FFD700] border border-[#FFD700]' : 'bg-white/10 text-gray-300'
-            }`}
-          >
-            1. Maroon
-          </button>
-
-          <button
-            onClick={() => setTheme('theme-cream')}
-            className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-all ${
-              theme === 'theme-cream' ? 'bg-[#FFFDF0] text-[#5C121E] border border-[#5C121E]' : 'bg-white/10 text-gray-300'
-            }`}
-          >
-            2. Cream
-          </button>
-
-          <button
-            onClick={() => setTheme('theme-saffron')}
-            className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-all ${
-              theme === 'theme-saffron' ? 'bg-[#E65100] text-[#FFD700] border border-[#FFD700]' : 'bg-white/10 text-gray-300'
-            }`}
-          >
-            3. Saffron
-          </button>
-        </div>
-      </div>
+      {/* 🚀 VERSION 1: CLASSIC TEMPLE WEBSITE */}
 
       {/* 🚀 VERSION 1: CLASSIC TEMPLE WEBSITE */}
       {activeVersion === 'v1' ? (

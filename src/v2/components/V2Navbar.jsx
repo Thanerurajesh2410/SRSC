@@ -10,37 +10,6 @@ export default function V2Navbar({ activeModule, setActiveModule, lang, setLang,
 
   return (
     <header className="sticky top-0 z-50 bg-[#2D080E] border-b-2 border-[#FFD700] text-white shadow-2xl backdrop-blur-md">
-      {/* Top Banner Bar for Version 2 & Fast Switcher */}
-      <div className="bg-[#5C121E] border-b border-amber-500/30 px-4 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="bg-[#FFD700] text-black font-black px-2 py-0.5 rounded text-[10px] uppercase">
-            VERSION 2.0 ENTERPRISE ERP
-          </span>
-          <span className="hidden sm:inline font-bold text-amber-200">
-            శ్రీ రామాలయం ERP • పామినివాండ్లవూరు
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Quick Version Switcher Button */}
-          <button
-            onClick={onToggleVersion}
-            className="px-3 py-0.5 rounded-full text-[11px] font-black bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:brightness-110 border border-yellow-300 shadow flex items-center gap-1 transition-transform transform active:scale-95"
-            title="Switch back to V1 Classic Website"
-          >
-            <span>🔄 Switch to Version 1 (Classic)</span>
-          </button>
-
-          {/* Language Switcher */}
-          <button
-            onClick={toggleLang}
-            className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/10 text-amber-300 hover:bg-white/20 border border-amber-400/40 flex items-center gap-1"
-          >
-            <Globe className="w-3 h-3 text-amber-400" />
-            <span>{lang === 'te' ? 'English' : 'తెలుగు'}</span>
-          </button>
-        </div>
-      </div>
 
       {/* ⚡ ATTENTION-GRABBING FLASH NEWS SCROLLING TICKER BAR (Visible on ALL Pages) */}
       <div className="flash-news-banner py-2 px-3 flex items-center justify-between gap-3 text-white overflow-hidden shadow-2xl relative z-20">
