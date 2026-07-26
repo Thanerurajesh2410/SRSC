@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Building2, Heart, Calendar, FileText, Camera, ShieldCheck, MapPin, Mail, MessageSquare, Phone, CheckCircle2, ChevronRight, Award, DollarSign, Wallet, Users, Sparkles, Send, Download, FileCheck, Layers, Info, Bell } from 'lucide-react';
+import { Building2, Heart, Calendar, FileText, Camera, ShieldCheck, MapPin, Mail, MessageSquare, Phone, CheckCircle2, ChevronRight, Award, DollarSign, Wallet, Users, Sparkles, Send, Download, FileCheck, Layers, Info, Bell, TrendingUp, CheckCircle, Database } from 'lucide-react';
+import { getDB } from '../data/v2Database';
 
 export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSection }) {
   const [activeTab, setActiveTab] = useState(subSection || 'home');
@@ -393,28 +394,137 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           </div>
         )}
 
-        {/* 10. REPORTS SUB-SECTION */}
-        {activeTab === 'reports' && (
-          <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
-            <div className="text-center mb-8">
-              <span className="section-tag">పారదర్శకత నివేదికలు</span>
-              <h2 className="text-3xl font-black text-white heading-telugu">ఆదాయ వ్యయాలు & ఆడిట్ రికార్డులు</h2>
-            </div>
+        {/* 10. REPORTS SUB-SECTION - DYNAMIC DATABASE MATCHED & ENLARGED FONT */}
+        {activeTab === 'reports' && (() => {
+          const currentDB = getDB();
+          const dbDonationsList = currentDB.donations || [];
+          const dbExpensesList = currentDB.expenses || [];
 
-            <div className="gold-card space-y-4 bg-[#5C121E]/90 border-2 border-amber-400/70">
-              <h3 className="text-lg font-bold text-[#FFD700]">నెలవారీ ఆదాయ వ్యయ నివేదిక (Income & Expense)</h3>
-              <div className="space-y-2 text-xs">
-                {v2T.financials.monthlyIncome.map((m, idx) => (
-                  <div key={idx} className="flex justify-between p-3 rounded-xl bg-black/60 border border-white/20">
-                    <span className="font-bold text-white">{m.month}</span>
-                    <span className="text-emerald-400 font-mono">ఆదాయం: ₹ {m.income.toLocaleString()}</span>
-                    <span className="text-sky-300 font-mono">ఖర్చు: ₹ {m.expense.toLocaleString()}</span>
+          const totalDonationsReceived = dbDonationsList.reduce((acc, curr) => {
+            const num = typeof curr.amount === 'number' ? curr.amount : parseInt(String(curr.amount).replace(/\D/g, '')) || 0;
+            return acc + num;
+          }, 0);
+
+          const totalExpensesUtilized = dbExpensesList.reduce((acc, curr) => {
+            const num = typeof curr.amount === 'number' ? curr.amount : parseInt(String(curr.amount).replace(/\D/g, '')) || 0;
+            return acc + num;
+          }, 0);
+
+          const netBalance = totalDonationsReceived - totalExpensesUtilized;
+
+          const juneDonations = dbDonationsList.filter(d => String(d.date).includes('06-2026') || String(d.date).includes('June'));
+          const julyDonations = dbDonationsList.filter(d => String(d.date).includes('07-2026') || String(d.date).includes('July'));
+
+          const juneSum = juneDonations.reduce((acc, curr) => acc + (typeof curr.amount === 'number' ? curr.amount : parseInt(String(curr.amount).replace(/\D/g, '')) || 0), 0);
+          const julySum = julyDonations.reduce((acc, curr) => acc + (typeof curr.amount === 'number' ? curr.amount : parseInt(String(curr.amount).replace(/\D/g, '')) || 0), 0);
+
+          return (
+            <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
+              <div className="text-center mb-8">
+                <span className="section-tag text-sm sm:text-base font-black px-5 py-2">పారదర్శకత నివేదికలు</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3 mb-2">ఆదాయ వ్యయాలు & ఆడిట్ నివేదిక</h2>
+                <p className="text-sm sm:text-base md:text-lg text-amber-300 font-extrabold max-w-3xl mx-auto mt-2">
+                  ఆలయ డేటాబేస్ నుండి లైవ్ విరాళాల జాబితా ప్రకారం లెక్కించబడిన అధికారిక ఆర్థిక నివేదిక.
+                </p>
+              </div>
+
+              {/* 📊 Summary Financial Metric Cards (Enlarged View Font) */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="gold-card bg-[#5C121E]/95 border-3 border-emerald-400 !p-6 rounded-3xl text-center shadow-2xl space-y-2">
+                  <span className="text-xs sm:text-sm font-black text-gray-200 uppercase tracking-wider block">మొత్తం సేకరించిన విరాళాలు (Income)</span>
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-emerald-400 font-mono block">₹ {totalDonationsReceived.toLocaleString()}</span>
+                  <span className="text-xs font-bold text-emerald-300 block">({dbDonationsList.length} విరాళాల రికార్డులు)</span>
+                </div>
+
+                <div className="gold-card bg-[#5C121E]/95 border-3 border-sky-400 !p-6 rounded-3xl text-center shadow-2xl space-y-2">
+                  <span className="text-xs sm:text-sm font-black text-gray-200 uppercase tracking-wider block">మొత్తం నిర్మాణ ఖర్చులు (Expenses)</span>
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-sky-300 font-mono block">₹ {totalExpensesUtilized.toLocaleString()}</span>
+                  <span className="text-xs font-bold text-sky-200 block">({dbExpensesList.length} ఖర్చుల బిల్లులు)</span>
+                </div>
+
+                <div className="gold-card bg-[#5C121E]/95 border-3 border-[#FFD700] !p-6 rounded-3xl text-center shadow-2xl space-y-2">
+                  <span className="text-xs sm:text-sm font-black text-gray-200 uppercase tracking-wider block">నికర ఆలయ నిల్వ నిధి (Net Balance)</span>
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#FFD700] font-mono block">₹ {netBalance.toLocaleString()}</span>
+                  <span className="text-xs font-bold text-amber-200 block">(నిఖార్సైన ఆలయ ఖాతా నిధి)</span>
+                </div>
+              </div>
+
+              {/* 📅 Monthly Income & Expense Breakdown Cards (Enlarged View Font) */}
+              <div className="gold-card bg-[#5C121E]/95 border-3 border-amber-400/80 !p-6 sm:!p-8 rounded-3xl space-y-6 shadow-2xl">
+                <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
+                  <TrendingUp className="w-7 h-7 text-amber-400" />
+                  <span>నెలవారీ ఆదాయ వ్యయ విశ్లేషణ నివేదిక (Monthly Summary)</span>
+                </h3>
+
+                <div className="space-y-4">
+                  {/* June 2026 */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-5 rounded-2xl bg-black/70 border-2 border-white/20 gap-3 shadow-lg">
+                    <div>
+                      <span className="text-lg sm:text-xl font-black text-white block">జూన్ 2026 (June 2026)</span>
+                      <span className="text-xs sm:text-sm text-amber-200 font-extrabold">{juneDonations.length} రికార్డులు సేకరించబడ్డాయి</span>
+                    </div>
+                    <div className="flex items-center gap-4 text-base sm:text-xl font-black font-mono">
+                      <span className="text-emerald-400 bg-emerald-950/60 px-4 py-1.5 rounded-xl border border-emerald-500/40">ఆదాయం: ₹ {juneSum.toLocaleString()}</span>
+                      <span className="text-sky-300 bg-sky-950/60 px-4 py-1.5 rounded-xl border border-sky-500/40">ఖర్చు: ₹ 0</span>
+                    </div>
                   </div>
-                ))}
+
+                  {/* July 2026 */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-5 rounded-2xl bg-black/70 border-2 border-white/20 gap-3 shadow-lg">
+                    <div>
+                      <span className="text-lg sm:text-xl font-black text-white block">జులై 2026 (July 2026)</span>
+                      <span className="text-xs sm:text-sm text-amber-200 font-extrabold">{julyDonations.length} రికార్డులు సేకరించబడ్డాయి</span>
+                    </div>
+                    <div className="flex items-center gap-4 text-base sm:text-xl font-black font-mono">
+                      <span className="text-emerald-400 bg-emerald-950/60 px-4 py-1.5 rounded-xl border border-emerald-500/40">ఆదాయం: ₹ {julySum.toLocaleString()}</span>
+                      <span className="text-sky-300 bg-sky-950/60 px-4 py-1.5 rounded-xl border border-sky-500/40">ఖర్చు: ₹ 0</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 📜 Database Matched Donors Transparent Ledger Table (Enlarged View Font) */}
+              <div className="gold-card bg-[#5C121E]/95 border-3 border-[#FFD700]/80 !p-6 sm:!p-8 rounded-3xl space-y-6 shadow-2xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-white/20">
+                  <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
+                    <Database className="w-7 h-7 text-amber-400" />
+                    <span>అధికారిక విరాళాల జాబితా & రికార్డులు (Database Donors Ledger)</span>
+                  </h3>
+                  <span className="text-xs sm:text-sm font-black text-emerald-400 bg-emerald-950/80 px-4 py-1.5 rounded-full border border-emerald-400/50">
+                    మొత్తం రికార్డులు: {dbDonationsList.length}
+                  </span>
+                </div>
+
+                <div className="overflow-x-auto scrollbar-thin">
+                  <table className="w-full text-left border-collapse min-w-[700px]">
+                    <thead>
+                      <tr className="bg-black/70 text-[#FFD700] text-sm sm:text-base font-black border-b-2 border-[#FFD700]">
+                        <th className="p-3.5">దాత పేరు (Donor Name)</th>
+                        <th className="p-3.5">మొత్తం (Amount)</th>
+                        <th className="p-3.5">తేదీ (Date)</th>
+                        <th className="p-3.5">సేవ (Seva)</th>
+                        <th className="p-3.5">చెల్లింపు మార్గం (Mode)</th>
+                        <th className="p-3.5">గ్రామం (City)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/10 text-sm sm:text-base font-extrabold text-white">
+                      {dbDonationsList.map((d, idx) => (
+                        <tr key={idx} className="hover:bg-white/10 transition-colors">
+                          <td className="p-3.5 text-amber-200 font-bold">{d.donorName}</td>
+                          <td className="p-3.5 text-emerald-400 font-mono font-black">₹ {(typeof d.amount === 'number' ? d.amount : parseInt(String(d.amount).replace(/\D/g, '')) || 0).toLocaleString()}</td>
+                          <td className="p-3.5 font-mono text-gray-300 text-xs sm:text-sm">{d.date}</td>
+                          <td className="p-3.5 text-xs sm:text-sm text-gray-200">{d.seva}</td>
+                          <td className="p-3.5 text-xs sm:text-sm text-sky-300">{d.mode || 'Direct Transfer'}</td>
+                          <td className="p-3.5 text-xs sm:text-sm text-amber-300">{d.city}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* 11. CONTACT SUB-SECTION */}
         {activeTab === 'contact' && (
