@@ -1091,15 +1091,55 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               <p className="text-xs sm:text-sm text-amber-300 font-bold mt-1">100% పారదర్శకత • నేరుగా ఆలయ అధికారిక బ్యాంక్ ఖాతాకు జమ</p>
             </div>
 
-            {/* Selected Scheme Badge */}
-            <div className="bg-[#5C121E] p-4 rounded-2xl border-2 border-[#FFD700] mb-6 space-y-1 text-center shadow-lg">
-              <span className="text-xs text-amber-200 font-bold uppercase block">ఎంచుకున్న పవిత్ర సేవ / వర్గం:</span>
-              <h4 className="text-lg sm:text-xl font-black text-[#FFD700] heading-telugu">
-                {(v2T.donationCategories.find(c => c.id === selectedCatId) || v2T.donationCategories[0]).name}
-              </h4>
-              <span className="text-sm font-extrabold text-emerald-400 bg-black/60 px-3 py-1 rounded-full border border-emerald-400/40 inline-block">
-                👉 ఉప వర్గం: {selectedSubCat || (availableSubTypes[0] || 'సాధారణ విరాళం')}
-              </span>
+            {/* Selected Scheme Badge & Dropdowns */}
+            <div className="bg-[#5C121E] p-4 rounded-2xl border-2 border-[#FFD700] mb-6 space-y-3 shadow-lg">
+              <div className="text-center">
+                <span className="text-xs text-amber-200 font-bold uppercase block">ఎంచుకున్న పవిత్ర సేవ / వర్గం:</span>
+                <h4 className="text-lg sm:text-xl font-black text-[#FFD700] heading-telugu">
+                  {(v2T.donationCategories.find(c => c.id === selectedCatId) || v2T.donationCategories[0]).name}
+                </h4>
+                <span className="text-sm font-extrabold text-emerald-400 bg-black/60 px-3 py-1 rounded-full border border-emerald-400/40 inline-block mt-1">
+                  👉 ఉప వర్గం: {selectedSubCat || (availableSubTypes[0] || 'సాధారణ విరాళం')}
+                </span>
+              </div>
+
+              {/* Category & Subcategory Quick Dropdown Pickers */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/15">
+                <div>
+                  <label className="block text-xs font-bold text-amber-200 mb-1">వర్గం మార్చుకోండి (Category):</label>
+                  <select
+                    value={selectedCatId}
+                    onChange={(e) => {
+                      setSelectedCatId(e.target.value);
+                      const newCat = v2T.donationCategories.find(c => c.id === e.target.value);
+                      if (newCat && newCat.subTypes && newCat.subTypes.length > 0) {
+                        setSelectedSubCat(newCat.subTypes[0]);
+                      }
+                    }}
+                    className="w-full bg-[#1A0306] border border-[#FFD700] rounded-xl p-2 text-xs sm:text-sm text-white font-bold"
+                  >
+                    {v2T.donationCategories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-amber-200 mb-1">ఉప వర్గం మార్చుకోండి (Subcategory):</label>
+                  <select
+                    value={selectedSubCat || (availableSubTypes[0] || '')}
+                    onChange={(e) => setSelectedSubCat(e.target.value)}
+                    className="w-full bg-[#1A0306] border border-[#FFD700] rounded-xl p-2 text-xs sm:text-sm text-white font-bold"
+                  >
+                    {availableSubTypes.map((sub, idx) => (
+                      <option key={idx} value={sub}>
+                        {sub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
 
             <form onSubmit={handleCompleteDonationPayment} className="space-y-5">
@@ -1176,7 +1216,14 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                     type="button"
                     onClick={() => {
                       setPayMode('PhonePe / UPI Direct');
-                      window.open(`upi://pay?pa=8431806098@ibl&pn=Sri%20Rama%20Seva%20Committee&am=${payAmount}&cu=INR`, '_blank');
+                      const upiUrl = `upi://pay?pa=8431806098@ibl&pn=Sri%20Rama%20Seva%20Committee&am=${payAmount}&cu=INR`;
+                      try {
+                        window.location.href = upiUrl;
+                      } catch (err) {
+                        console.error("UPI launch error:", err);
+                      }
+                      setShowQrModal(true);
+                      showToast("మొబైల్‌లో PhonePe ఓపెన్ అవుతుంది. డెస్క్‌టాప్‌లో QR స్కాన్ లేదా UPI ID కాపీ చేయండి.");
                     }}
                     className="btn-primary p-3.5 rounded-2xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 border-2 border-yellow-300"
                   >
@@ -1260,6 +1307,54 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               <button onClick={downloadDigitalReceiptPDF} className="btn-primary text-sm py-3.5 px-6 w-full rounded-2xl font-bold flex items-center justify-center gap-2">
                 <Download className="w-5 h-5" />
                 <span>రశీదు PDF డౌన్‌లోడ్ చేసుకోండి</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 📷 PHONEPE STANDEE QR CODE FULL SCREEN ZOOM MODAL */}
+      {showQrModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn" onClick={() => setShowQrModal(false)}>
+          <div className="bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] border-4 border-[#FFD700] p-6 sm:p-8 rounded-3xl max-w-md w-full shadow-2xl relative text-center text-white space-y-4" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={() => setShowQrModal(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-red-600 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <span className="inline-block px-4 py-1 rounded-full text-xs font-black bg-[#FFD700] text-black shadow-md">
+              🚩 PHONEPE OFFICIAL STANDEE QR SCANNER
+            </span>
+
+            <h3 className="text-xl sm:text-2xl font-black text-white heading-telugu">
+              శ్రీ రామా సేవా కమిటీ పామినివాండ్లవూరు
+            </h3>
+
+            <div className="bg-white p-4 rounded-3xl border-4 border-[#FFD700] shadow-2xl my-2 inline-block">
+              <img
+                src="/assets/phonepe_qr.png"
+                alt="PhonePe QR Standee Scanner Full View"
+                className="w-64 h-64 sm:w-72 sm:h-72 object-contain mx-auto"
+              />
+            </div>
+
+            <div className="bg-black/70 p-3 rounded-2xl border border-white/20">
+              <span className="text-xs text-amber-200 font-bold block">అధికారిక UPI ID:</span>
+              <span className="text-sm sm:text-base font-mono font-black text-[#FFD700] block my-0.5">8431806098@ibl</span>
+              <span className="text-xs text-gray-300 font-semibold block">మొబైల్ ఫోన్‌తో PhonePe, GPay, Paytm ద్వారా స్కాన్ చేయండి</span>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => copyToClipboard('8431806098@ibl', 'upi')}
+                className="btn-gold text-xs sm:text-sm w-full py-3 rounded-xl font-black flex items-center justify-center gap-2"
+              >
+                {copiedUpi ? <CheckCircle2 className="w-4 h-4 text-emerald-950" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedUpi ? "UPI ID కాపీ చేయబడింది!" : "UPI ID కాపీ చేయండి"}</span>
               </button>
             </div>
           </div>
