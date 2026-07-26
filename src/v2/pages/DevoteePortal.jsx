@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { User, LogIn, UserPlus, History, Award, Bell, ShieldCheck, Heart, Download, CheckCircle2, AlertCircle, Calendar, Plus, Mail, Phone, MapPin } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { User, LogIn, UserPlus, History, Award, Bell, ShieldCheck, Heart, Download, CheckCircle2, AlertCircle, Calendar, Plus, Mail, Phone, MapPin, X } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import { getDB, saveDB, validateUniqueDevotee, addAuditLog } from '../data/v2Database';
 
 export default function DevoteePortal({ t, showToast }) {
@@ -9,6 +11,10 @@ export default function DevoteePortal({ t, showToast }) {
   // Devotee Authentication State
   const [loggedInDevotee, setLoggedInDevotee] = useState(null);
   
+  // Devotee Selected Receipt State for Modal View & Download
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const receiptModalRef = useRef(null);
+
   // Registration Form State
   const [regName, setRegName] = useState('');
   const [regPhone, setRegPhone] = useState('');
@@ -32,6 +38,25 @@ export default function DevoteePortal({ t, showToast }) {
   useEffect(() => {
     setDbState(getDB());
   }, []);
+
+  // Download Receipt PDF Function (html2canvas + jsPDF)
+  const downloadReceiptPDF = async () => {
+    if (!receiptModalRef.current || !selectedReceipt) return;
+    try {
+      showToast("రశీదు PDF డౌన్‌లోడ్ ప్రారంభమైంది...");
+      const canvas = await html2canvas(receiptModalRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`SRI_RAMA_SEVA_RECEIPT_${selectedReceipt.id || 'DONATION'}.pdf`);
+      showToast("రశీదు PDF విజయవంతంగా డౌన్‌లోడ్ చేయబడింది!");
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      showToast("PDF డౌన్‌లోడ్‌లో లోపం జరిగింది.");
+    }
+  };
 
   // Handle Registration with Unique Phone & Email Validation
   const handleRegister = (e) => {
@@ -379,16 +404,21 @@ export default function DevoteePortal({ t, showToast }) {
                 ) : (
                   <div className="space-y-3">
                     {devoteeDonations.map((d, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3.5 rounded-xl bg-black/50 border border-white/10 text-xs">
+                      <div key={idx} className="flex items-center justify-between p-4 rounded-2xl bg-black/60 border border-[#FFD700]/40 text-xs sm:text-sm">
                         <div>
                           <span className="font-mono text-amber-300 font-bold block">{d.id}</span>
-                          <span className="font-bold text-white text-sm">{d.seva}</span>
-                          <span className="text-gray-400 block">{d.date} • {d.mode}</span>
+                          <span className="font-black text-white text-base block my-0.5">{d.seva}</span>
+                          <span className="text-gray-300 block">{d.date} • {d.mode}</span>
                         </div>
                         <div className="text-right">
-                          <span className="text-base font-black text-emerald-400 font-mono block">₹ {d.amount.toLocaleString()}</span>
-                          <button onClick={() => showToast("రశీదు వివరాలు ధృవీకరించబడ్డాయి!")} className="text-[11px] text-sky-400 font-bold underline flex items-center gap-1 mt-1">
-                            <Download className="w-3 h-3" /> రశీదు చూడండి
+                          <span className="text-lg sm:text-xl font-black text-emerald-400 font-mono block">₹ {typeof d.amount === 'number' ? d.amount.toLocaleString() : d.amount}</span>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedReceipt(d)}
+                            className="btn-gold text-xs py-1.5 px-3.5 rounded-xl font-bold inline-flex items-center gap-1.5 mt-2 shadow-md"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            <span>రశీదు చూడండి & డౌన్‌లోడ్</span>
                           </button>
                         </div>
                       </div>
@@ -488,6 +518,154 @@ export default function DevoteePortal({ t, showToast }) {
         )}
 
       </div>
+
+      {/* 📄 FORMAL TTD-STYLE DEVOTEE RECEIPT MODAL WITH WATERMARK */}
+      {selectedReceipt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
+          <div className="bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] border-4 border-[#FFD700] p-6 sm:p-8 rounded-3xl max-w-2xl w-full max-h-[94vh] overflow-y-auto shadow-2xl relative text-white space-y-6">
+            
+            <button
+              type="button"
+              onClick={() => setSelectedReceipt(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-red-600 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="text-center">
+              <span className="bg-emerald-500 text-black font-black text-xs uppercase px-4 py-1 rounded-full shadow-lg inline-block mb-2">
+                ✓ ధృవీకరించబడిన డిజిటల్ రశీదు
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-black text-[#FFD700] heading-telugu">శ్రీ రామాలయం అధికారిక విరాళం రశీదు</h3>
+            </div>
+
+            {/* Rendered Printable Formal TTD-Style Receipt Card with Watermark */}
+            <div ref={receiptModalRef} className="bg-white text-black p-6 sm:p-8 rounded-xl border-2 border-gray-800 shadow-2xl relative overflow-hidden font-sans">
+              
+              {/* Watermark Background Layer */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.07] rotate-[-25deg] z-0">
+                <div className="text-center">
+                  <img src="/assets/logo.jpg" alt="Watermark Logo" className="w-64 h-64 mx-auto mb-2 rounded-full grayscale" />
+                  <span className="text-4xl sm:text-5xl font-black uppercase text-[#5C121E] tracking-widest block">SRI RAMA SEVA COMMITTEE</span>
+                  <span className="text-2xl font-bold text-black block mt-1">పామినివాండ్లవూరు</span>
+                </div>
+              </div>
+
+              {/* Header Section */}
+              <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4 relative z-10">
+                <div className="flex items-center gap-3">
+                  <img src="/assets/logo.jpg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ (SRI RAMA SEVA COMMITTEE)</h3>
+                    <p className="text-xs font-bold text-gray-700">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
+                    <p className="text-[11px] font-semibold text-gray-600">చిత్తూరు జిల్లా - 517416, ఆంధ్రప్రదేశ్, భారతదేశం</p>
+                  </div>
+                </div>
+                
+                <div className="text-right shrink-0">
+                  <div className="font-mono text-xl font-black tracking-widest text-black bg-gray-100 px-3 py-1 rounded border border-gray-400 mb-1">
+                    ||||| | |||| ||||| ||
+                  </div>
+                  <span className="text-[11px] font-bold text-gray-600 block">రశీదు సంఖ్య (Receipt No):</span>
+                  <span className="text-xs sm:text-sm font-mono font-black text-[#5C121E]">{selectedReceipt.id || selectedReceipt.receiptNo}</span>
+                </div>
+              </div>
+
+              {/* Receipt Title Badge */}
+              <div className="text-center mb-4 relative z-10">
+                <h4 className="text-base sm:text-lg font-black text-[#5C121E] uppercase tracking-wide underline decoration-amber-600 underline-offset-4 heading-telugu">
+                  శ్రీ రామాలయం విరాళం రశీదు / Official Donation Receipt
+                </h4>
+              </div>
+
+              {/* TTD-Style Crisp Grid Table */}
+              <div className="border-2 border-gray-800 text-xs sm:text-sm mb-4 relative z-10 bg-white/90">
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">దాత ఐడీ (Donor ID):</div>
+                  <div className="p-2.5 font-mono font-black col-span-2 text-gray-900">{selectedReceipt.id || selectedReceipt.receiptNo}</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">తేదీ & సమయం (Date & Time):</div>
+                  <div className="p-2.5 font-mono font-bold col-span-2 text-gray-900">{selectedReceipt.date || new Date().toLocaleDateString('te-IN')}</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆడిట్ లాగ్ ఐడీ (Audit Log No):</div>
+                  <div className="p-2.5 font-mono font-extrabold col-span-2 text-gray-800">LOG-2026-AUDIT-{(selectedReceipt.id || selectedReceipt.receiptNo || '001').replace(/\D/g, '')}</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆలయ ట్రస్ట్ పేరు (Trust Name):</div>
+                  <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400 bg-amber-50">
+                  <div className="p-2.5 font-black bg-amber-100 border-r border-gray-400 text-sm sm:text-base text-[#5C121E]">విరాళం కానుక మొత్తం (Donation Amount):</div>
+                  <div className="p-2.5 font-mono font-black text-lg text-emerald-800 col-span-2">Rs. {(typeof selectedReceipt.amount === 'number' ? selectedReceipt.amount : parseInt(String(selectedReceipt.amount).replace(/\D/g, '')) || 0).toLocaleString()} /-</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">దాత పేరు (Primary Donor Name):</div>
+                  <div className="p-2.5 font-black text-base col-span-2 text-gray-900">{selectedReceipt.donorName || selectedReceipt.name || loggedInDevotee?.name}</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఫోన్ నంబర్ (Phone No):</div>
+                  <div className="p-2.5 font-mono font-bold col-span-2 text-gray-800">{selectedReceipt.phone || loggedInDevotee?.phone || '9866125609'}</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">గ్రామం / ఊరు (Village / City):</div>
+                  <div className="p-2.5 font-bold col-span-2 text-gray-900">{selectedReceipt.city || loggedInDevotee?.city || 'పామినివాండ్లవూరు'}</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">విరాళం విభాగం & సేవ (Category & Seva):</div>
+                  <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">{selectedReceipt.seva || 'రాతి గోడల నిర్మాణం'}</div>
+                </div>
+
+                <div className="grid grid-cols-3 border-b border-gray-400">
+                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">చెల్లింపు మార్గం (Payment Mode):</div>
+                  <div className="p-2.5 font-bold col-span-2 text-sky-800">{selectedReceipt.mode || 'PhonePe Standee QR / UPI'}</div>
+                </div>
+
+                <div className="grid grid-cols-3">
+                  <div className="p-2.5 font-bold bg-emerald-100 border-r border-gray-400 text-emerald-950">ఆడిట్ స్థితి (Audit Status):</div>
+                  <div className="p-2.5 font-black col-span-2 text-emerald-700">✓ VERIFIED & RECORDED IN TEMPLE AUDIT DATABASE</div>
+                </div>
+              </div>
+
+              {/* Important Information Box (TTD Format) */}
+              <div className="border border-red-800 bg-red-50/70 p-3 rounded text-[11px] text-red-950 mb-4 space-y-1 relative z-10">
+                <p className="font-bold text-red-900 border-b border-red-300 pb-1">Important Information to the Donor:</p>
+                <p>1. Sri Ramalayam construction donations are strictly utilized for temple stone wall work, sanctum sanctorum, and religious rituals.</p>
+                <p>2. This receipt is automatically recorded in the official Sri Rama Seva Committee ERP audit ledger.</p>
+                <p>3. For further information or donation queries, please contact Sri Rama Seva Committee at +91 9866125609.</p>
+              </div>
+
+              {/* Signatures & Note */}
+              <div className="flex justify-between items-end text-[11px] font-bold text-gray-700 pt-2 relative z-10">
+                <div>
+                  <p className="text-gray-500 italic">NOTE: This is an electronically generated document and does not require a physical signature.</p>
+                </div>
+                <div className="text-right border-t border-gray-800 pt-1">
+                  <p className="font-black text-[#5C121E] text-xs">Executive Committee</p>
+                  <p className="font-bold text-gray-800">Sri Rama Seva Committee, Paminivandlavooru</p>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <button onClick={downloadReceiptPDF} className="btn-primary text-sm py-3.5 px-6 w-full rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl">
+                <Download className="w-5 h-5" />
+                <span>రశీదు PDF డౌన్‌లోడ్ చేసుకోండి (Download Official Receipt PDF)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

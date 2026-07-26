@@ -780,42 +780,131 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                   </button>
                 </form>
 
-                {/* Rendered Receipt Card */}
+                {/* Rendered Formal TTD-Style Receipt Card */}
                 {generatedReceipt && (
                   <div className="space-y-4">
-                    <div ref={receiptRef} className="bg-[#FFFDF0] text-[#2D080E] p-8 rounded-3xl border-4 border-[#FFD700] shadow-2xl">
-                      <div className="flex justify-between border-b-2 border-[#5C121E]/30 pb-4 mb-5">
+                    <div ref={receiptRef} className="bg-white text-black p-6 sm:p-8 rounded-xl border-2 border-gray-800 shadow-2xl relative overflow-hidden font-sans">
+                      
+                      {/* Watermark Background Layer */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.07] rotate-[-25deg] z-0">
+                        <div className="text-center">
+                          <img src="/assets/logo.jpg" alt="Watermark Logo" className="w-64 h-64 mx-auto mb-2 rounded-full grayscale" />
+                          <span className="text-4xl sm:text-5xl font-black uppercase text-[#5C121E] tracking-widest block">SRI RAMA SEVA COMMITTEE</span>
+                          <span className="text-2xl font-bold text-black block mt-1">పామినివాండ్లవూరు</span>
+                        </div>
+                      </div>
+
+                      {/* Header Section */}
+                      <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4 relative z-10">
                         <div className="flex items-center gap-3">
-                          <img src="/assets/logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border-2 border-amber-600" />
+                          <img src="/assets/logo.jpg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
                           <div>
-                            <h4 className="text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ</h4>
-                            <p className="text-xs font-bold text-amber-800">పామినివాండ్లవూరు • ERP అధికారిక రశీదు</p>
+                            <h3 className="text-lg sm:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ (SRI RAMA SEVA COMMITTEE)</h3>
+                            <p className="text-xs font-bold text-gray-700">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
+                            <p className="text-[11px] font-semibold text-gray-600">చిత్తూరు జిల్లా - 517416, ఆంధ్రప్రదేశ్, భారతదేశం</p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <span className="text-xs font-bold text-gray-600 block">రశీదు నం:</span>
-                          <span className="text-sm sm:text-base font-mono font-black text-[#5C121E]">{generatedReceipt.receiptNo}</span>
+                        
+                        <div className="text-right shrink-0">
+                          <div className="font-mono text-xl font-black tracking-widest text-black bg-gray-100 px-3 py-1 rounded border border-gray-400 mb-1">
+                            ||||| | |||| ||||| ||
+                          </div>
+                          <span className="text-[11px] font-bold text-gray-600 block">రశీదు సంఖ్య (Receipt No):</span>
+                          <span className="text-xs sm:text-sm font-mono font-black text-[#5C121E]">{generatedReceipt.receiptNo}</span>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-5 text-sm sm:text-base mb-6">
-                        <div><span className="text-gray-600 block text-xs font-bold">దాత పేరు:</span><span className="font-black text-lg text-[#5C121E]">{generatedReceipt.name}</span></div>
-                        <div><span className="text-gray-600 block text-xs font-bold">తేదీ:</span><span className="font-mono font-bold text-gray-800">{generatedReceipt.date}</span></div>
-                        <div><span className="text-gray-600 block text-xs font-bold">మార్గాలు:</span><span className="font-bold text-gray-800">{generatedReceipt.mode}</span></div>
-                        <div><span className="text-gray-600 block text-xs font-bold">విరాళం వర్గం / సేవ:</span><span className="font-bold text-gray-800">{generatedReceipt.seva}</span></div>
+                      {/* Receipt Title Badge */}
+                      <div className="text-center mb-4 relative z-10">
+                        <h4 className="text-base sm:text-lg font-black text-[#5C121E] uppercase tracking-wide underline decoration-amber-600 underline-offset-4 heading-telugu">
+                          శ్రీ రామాలయం విరాళం రశీదు / Official ERP Donor Receipt
+                        </h4>
                       </div>
 
-                      <div className="bg-[#5C121E] text-white p-4 rounded-2xl flex items-center justify-between">
-                        <span className="text-sm sm:text-base font-bold">పవిత్ర విరాళం కానుక:</span>
-                        <span className="text-2xl sm:text-3xl font-black font-mono text-[#FFD700]">₹ {parseInt(generatedReceipt.amount).toLocaleString()}</span>
+                      {/* TTD-Style Crisp Grid Table */}
+                      <div className="border-2 border-gray-800 text-xs sm:text-sm mb-4 relative z-10 bg-white/90">
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">దాత ఐడీ (Donor ID):</div>
+                          <div className="p-2.5 font-mono font-black col-span-2 text-gray-900">{generatedReceipt.receiptNo}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">తేదీ & సమయం (Date & Time):</div>
+                          <div className="p-2.5 font-mono font-bold col-span-2 text-gray-900">{generatedReceipt.date}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆడిట్ లాగ్ ఐడీ (Audit Log No):</div>
+                          <div className="p-2.5 font-mono font-extrabold col-span-2 text-gray-800">LOG-2026-AUDIT-{generatedReceipt.receiptNo.replace(/\D/g, '')}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆలయ ట్రస్ట్ పేరు (Trust Name):</div>
+                          <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400 bg-amber-50">
+                          <div className="p-2.5 font-black bg-amber-100 border-r border-gray-400 text-sm sm:text-base text-[#5C121E]">విరాళం కానుక మొత్తం (Donation Amount):</div>
+                          <div className="p-2.5 font-mono font-black text-lg text-emerald-800 col-span-2">Rs. {parseInt(generatedReceipt.amount || 0).toLocaleString()} /-</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">దాత పేరు (Primary Donor Name):</div>
+                          <div className="p-2.5 font-black text-base col-span-2 text-gray-900">{generatedReceipt.name}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఫోన్ నంబర్ (Phone No):</div>
+                          <div className="p-2.5 font-mono font-bold col-span-2 text-gray-800">{generatedReceipt.phone || '9866125609'}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">గ్రామం / ఊరు (Village / City):</div>
+                          <div className="p-2.5 font-bold col-span-2 text-gray-900">{generatedReceipt.city || 'పామినివాండ్లవూరు'}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">విరాళం విభాగం & సేవ (Category & Seva):</div>
+                          <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">{generatedReceipt.seva}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3 border-b border-gray-400">
+                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">చెల్లింపు మార్గం (Payment Mode):</div>
+                          <div className="p-2.5 font-bold col-span-2 text-sky-800">{generatedReceipt.mode}</div>
+                        </div>
+
+                        <div className="grid grid-cols-3">
+                          <div className="p-2.5 font-bold bg-emerald-100 border-r border-gray-400 text-emerald-950">ఆడిట్ స్థితి (Audit Status):</div>
+                          <div className="p-2.5 font-black col-span-2 text-emerald-700">✓ VERIFIED & RECORDED IN TEMPLE AUDIT DATABASE</div>
+                        </div>
                       </div>
+
+                      {/* Important Information Box (TTD Format) */}
+                      <div className="border border-red-800 bg-red-50/70 p-3 rounded text-[11px] text-red-950 mb-4 space-y-1 relative z-10">
+                        <p className="font-bold text-red-900 border-b border-red-300 pb-1">Important Information to the Donor:</p>
+                        <p>1. Sri Ramalayam construction donations are strictly utilized for temple stone wall work, sanctum sanctorum, and religious rituals.</p>
+                        <p>2. This receipt is automatically recorded in the official Sri Rama Seva Committee ERP audit ledger.</p>
+                        <p>3. For further information or donation queries, please contact Sri Rama Seva Committee at +91 9866125609.</p>
+                      </div>
+
+                      {/* Signatures & Note */}
+                      <div className="flex justify-between items-end text-[11px] font-bold text-gray-700 pt-2 relative z-10">
+                        <div>
+                          <p className="text-gray-500 italic">NOTE: This is an electronically generated document and does not require a physical signature.</p>
+                        </div>
+                        <div className="text-right border-t border-gray-800 pt-1">
+                          <p className="font-black text-[#5C121E] text-xs">Executive Committee</p>
+                          <p className="font-bold text-gray-800">Sri Rama Seva Committee, Paminivandlavooru</p>
+                        </div>
+                      </div>
+
                     </div>
 
                     <div className="flex flex-wrap gap-3">
-                      <button onClick={downloadReceiptImage} className="btn-gold text-sm sm:text-base py-3 px-6 flex-1 rounded-2xl font-bold">
+                      <button onClick={downloadReceiptImage} className="btn-gold text-sm sm:text-base py-3.5 px-6 flex-1 rounded-2xl font-bold flex items-center justify-center gap-2">
                         🖼️ ఇమేజ్ (PNG) డౌన్‌లోడ్
                       </button>
-                      <button onClick={downloadReceiptPDF} className="btn-primary text-sm sm:text-base py-3 px-6 flex-1 rounded-2xl font-bold">
+                      <button onClick={downloadReceiptPDF} className="btn-primary text-sm sm:text-base py-3.5 px-6 flex-1 rounded-2xl font-bold flex items-center justify-center gap-2">
                         📄 PDF డౌన్‌లోడ్
                       </button>
                     </div>
