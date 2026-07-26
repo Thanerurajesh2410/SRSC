@@ -145,15 +145,22 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           {websiteSettings.showSlideshow !== false && activeGalleryImages.length > 0 && (
             <div className="relative w-full overflow-hidden shadow-2xl bg-black border-b-4 border-[#FFD700] group">
               <div className="relative h-[380px] sm:h-[540px] md:h-[660px] lg:h-[760px] w-full">
+                {/* Blurred Background Backdrop for Full Image Aspect Ratio */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center filter blur-2xl opacity-40 scale-110 pointer-events-none"
+                  style={{ backgroundImage: `url('${activeGalleryImages[safeSlideIdx].src}')` }}
+                />
+
+                {/* Uncropped Full Image Display */}
                 <img
                   src={activeGalleryImages[safeSlideIdx].src}
                   alt={activeGalleryImages[safeSlideIdx].title}
-                  className="w-full h-full object-cover object-center transition-all duration-1000 transform group-hover:scale-105"
+                  className="relative z-10 w-full h-full object-contain object-center transition-all duration-700"
                 />
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent flex flex-col justify-end p-6 sm:p-12 md:p-16">
-                  <div className="max-w-5xl mx-auto w-full">
+                <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/95 via-black/25 to-transparent flex flex-col justify-end p-6 sm:p-12 md:p-16 pointer-events-none">
+                  <div className="max-w-5xl mx-auto w-full pointer-events-auto">
                     <div className="flex items-center gap-3 mb-3">
                       <span className="text-xs sm:text-sm font-black text-[#FFD700] bg-[#5C121E]/95 px-4 py-1.5 rounded-full border-2 border-[#FFD700] shadow-xl">
                         🚩 {activeGalleryImages[safeSlideIdx].tag}
@@ -172,14 +179,14 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 {/* Slideshow Arrows */}
                 <button
                   onClick={() => setSlideIdx((prev) => (prev === 0 ? activeGalleryImages.length - 1 : prev - 1))}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
                   aria-label="Previous Slide"
                 >
                   <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
                 </button>
                 <button
                   onClick={() => setSlideIdx((prev) => (prev + 1) % activeGalleryImages.length)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
                   aria-label="Next Slide"
                 >
                   <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />

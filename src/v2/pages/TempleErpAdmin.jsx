@@ -329,10 +329,10 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
       tag: newImgTag || 'పామినివాండ్లవూరు ఆలయం'
     };
 
-    currentDB.galleryImages.unshift(newPhoto);
+    currentDB.galleryImages.push(newPhoto);
     saveDB(currentDB);
     setDbState(currentDB);
-    addAuditLog(userRole, `Added Gallery Image: ${newImgTitle}`);
+    addAuditLog(userRole, `Added Gallery Image to End: ${newImgTitle}`);
 
     setNewImgTitle('');
     setNewImgTag('');
