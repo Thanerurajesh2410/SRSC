@@ -595,113 +595,60 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               </div>
             </div>
 
-            {/* Display Category Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {v2T.donationCategories.map(cat => (
-                <div key={cat.id} className="gold-card bg-[#5C121E]/95 border-3 border-amber-400/80 space-y-4 !p-6 sm:!p-8 rounded-3xl shadow-2xl">
-                  <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
-                    <Layers className="w-6 h-6 text-amber-400" />
-                    <span>{cat.name}</span>
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-200 italic font-medium">{cat.desc}</p>
-                  
-                  {/* Subtypes Badges */}
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {cat.subTypes.map((sub, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => {
-                          setSelectedCatId(cat.id);
-                          setSelectedSubCat(sub);
-                          setShowPaymentGatewayModal(true);
-                        }}
-                        className="bg-black/70 hover:bg-[#5C121E] text-amber-200 hover:text-white text-xs sm:text-sm font-extrabold px-3 py-1.5 rounded-xl border border-white/20 flex items-center gap-1.5 shadow transition-colors cursor-pointer"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                        <span>{sub}</span>
-                      </button>
-                    ))}
+            {/* PhonePe Standee QR Code Section (Centered & Prominent) */}
+            <div className="max-w-3xl mx-auto pt-4">
+              <div className="gold-card border-4 border-[#FFD700] bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#200407] !p-6 sm:!p-10 rounded-3xl shadow-[0_0_60px_rgba(255,215,0,0.4)] text-center space-y-6">
+                <div className="inline-flex items-center gap-2 bg-[#FFD700] text-black font-black text-xs sm:text-sm uppercase px-5 py-2 rounded-full shadow-lg animate-pulse">
+                  <QrCode className="w-5 h-5 text-black" />
+                  <span>అధికారిక PhonePe Standee QR స్కాన్ & E-HUNDI</span>
+                </div>
+
+                <h3 className="text-2xl sm:text-4xl font-black text-white heading-telugu">
+                  శ్రీ రామా సేవా కమిటీ పామినివాండ్లవూరు
+                </h3>
+                <p className="text-sm sm:text-base text-amber-200 font-extrabold max-w-xl mx-auto">
+                  మీ మొబైల్ ఫోన్‌లోని PhonePe, GPay, Paytm లేదా ఏ ఇతర UPI యాప్ ద్వారానైనా క్రింది QR కోడ్‌ను స్కాన్ చేసి నేరుగా ఆలయ ఖాతాకు విరాళం సమర్పించండి.
+                </p>
+
+                {/* QR Display Container */}
+                <div className="bg-white p-6 rounded-3xl border-4 border-[#FFD700] shadow-2xl inline-block my-2 cursor-pointer hover:scale-105 transition-transform" onClick={() => setShowQrModal(true)}>
+                  <img
+                    src="/assets/phonepe_qr.png"
+                    alt="Sri Rama Seva Committee PhonePe Standee QR"
+                    className="w-64 h-64 sm:w-80 sm:h-80 object-contain mx-auto"
+                  />
+                  <span className="text-xs font-black text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-400 inline-block mt-3">
+                    🔍 జూమ్ చేయడానికి క్లిక్ చేయండి (Click to Zoom)
+                  </span>
+                </div>
+
+                <div className="bg-black/70 p-4 sm:p-5 rounded-2xl border-2 border-white/20 max-w-lg mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-left">
+                    <span className="text-xs text-amber-300 font-bold block uppercase">అధికారిక UPI ID:</span>
+                    <span className="text-base sm:text-lg font-mono font-black text-[#FFD700] block">{t.donation.upiId}</span>
                   </div>
 
                   <button
-                    onClick={() => {
-                      setSelectedCatId(cat.id);
-                      if (cat.subTypes.length > 0) setSelectedSubCat(cat.subTypes[0]);
-                      setShowPaymentGatewayModal(true);
-                    }}
-                    className="btn-primary text-base sm:text-lg py-3.5 px-6 w-full mt-4 font-black rounded-2xl shadow-xl flex items-center justify-center gap-2"
+                    type="button"
+                    onClick={() => copyToClipboard(t.donation.upiId, 'upi')}
+                    className="btn-gold text-xs sm:text-sm py-3 px-5 rounded-xl font-black shrink-0 shadow-lg flex items-center gap-2"
                   >
-                    <CreditCard className="w-5 h-5 text-amber-300" />
-                    <span>ఈ వర్గంలో విరాళం సమర్పించండి</span>
+                    {copiedUpi ? <CheckCircle2 className="w-4 h-4 text-emerald-950" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedUpi ? "కాపీ చేయబడింది!" : "UPI ID కాపీ చేయండి"}</span>
                   </button>
                 </div>
-              ))}
-            </div>
 
-            {/* PhonePe Standee QR & Bank Account Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-6">
-              {/* E-Hundi Scanner */}
-              <div className="gold-card border-3 border-[#FFD700] bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#200407] flex flex-col justify-between !p-6 sm:!p-8 rounded-3xl shadow-2xl">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs sm:text-sm font-black uppercase text-black bg-[#FFD700] px-3.5 py-1 rounded-full shadow">
-                      ఈ-హుండి (E-HUNDI)
-                    </span>
-                    <span className="text-xs sm:text-sm font-black text-amber-300">DIRECT SCANNER</span>
-                  </div>
-
-                  <h3 className="text-2xl font-black text-white heading-telugu mb-3">PhonePe & UPI Standee Scanner</h3>
-                  <p className="text-sm text-gray-200 mb-4">{t.donation.scanQr}</p>
-
-                  <div className="bg-black/70 p-4 rounded-2xl border border-[#FFD700] flex flex-col sm:flex-row items-center gap-4">
-                    <img src="/assets/phonepe_qr.png" alt="PhonePe QR" className="w-32 h-32 bg-white p-1 rounded-xl cursor-pointer" onClick={() => setShowQrModal(true)} />
-                    <div>
-                      <h4 className="text-sm font-black text-white">SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU</h4>
-                      <p className="text-sm font-mono text-amber-300 font-black my-1">UPI ID: {t.donation.upiId}</p>
-                      <button onClick={() => copyToClipboard(t.donation.upiId, 'upi')} className="btn-gold text-xs !py-1.5 !px-3 rounded-lg">
-                        {copiedUpi ? "కాపీ అయింది" : "UPI ID కాపీ చేయి"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <button onClick={() => setShowQrModal(true)} className="btn-primary text-sm py-3.5 mt-6 w-full font-black rounded-2xl">
-                  QR కోడ్ జూమ్ చేసి స్కాన్ చేయండి
+                <button
+                  type="button"
+                  onClick={() => setShowQrModal(true)}
+                  className="btn-primary text-base sm:text-lg py-4 px-8 w-full max-w-lg mx-auto font-black rounded-2xl shadow-2xl flex items-center justify-center gap-3"
+                >
+                  <QrCode className="w-6 h-6 text-amber-300" />
+                  <span>పెద్దదిగా QR కోడ్ చూడండి (Open Large QR Popup)</span>
                 </button>
               </div>
-
-              {/* SBI Account Card */}
-              <div className="gold-card border-3 border-amber-400 bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] flex flex-col justify-between !p-6 sm:!p-8 rounded-3xl shadow-2xl">
-                <div>
-                  <h3 className="text-2xl font-black text-white heading-telugu mb-4">{t.donation.bankTitle}</h3>
-                  <div className="space-y-3 text-sm font-extrabold">
-                    <div className="bg-black/60 p-3.5 rounded-xl border border-white/15">
-                      <span className="text-xs text-amber-300 block">ఖాతా పేరు</span>
-                      <span className="text-base text-white font-mono">{t.donation.accountName}</span>
-                    </div>
-                    <div className="bg-black/60 p-3.5 rounded-xl border border-[#FFD700]/50 flex justify-between items-center">
-                      <div>
-                        <span className="text-xs text-amber-300 block">ఖాతా సంఖ్య</span>
-                        <span className="text-xl text-[var(--primary-gold)] font-mono font-black">{t.donation.accountNo}</span>
-                      </div>
-                      <button onClick={() => copyToClipboard(t.donation.accountNo, 'account')} className="p-2.5 rounded-xl bg-white/10 text-amber-300">
-                        {copiedAccount ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
-                      </button>
-                    </div>
-                    <div className="bg-black/60 p-3.5 rounded-xl border border-white/15 flex justify-between items-center">
-                      <div>
-                        <span className="text-xs text-amber-300 block">IFSC కోడ్</span>
-                        <span className="text-lg text-white font-mono font-black">{t.donation.ifsc}</span>
-                      </div>
-                      <button onClick={() => copyToClipboard(t.donation.ifsc, 'ifsc')} className="p-2.5 rounded-xl bg-white/10 text-amber-300">
-                        {copiedIfsc ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+
           </div>
         )}
 
@@ -1208,37 +1155,17 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 />
               </div>
 
-              {/* Payment Option Selector */}
+              {/* Payment Option Selector - QR Code Standee Only */}
               <div>
                 <label className="block text-xs sm:text-sm font-black text-amber-200 mb-2">5. చెల్లింపు మార్గం (Payment Option)</label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPayMode('PhonePe / UPI Direct');
-                      const upiUrl = `upi://pay?pa=8431806098@ibl&pn=Sri%20Rama%20Seva%20Committee&am=${payAmount}&cu=INR`;
-                      try {
-                        window.location.href = upiUrl;
-                      } catch (err) {
-                        console.error("UPI launch error:", err);
-                      }
-                      setShowQrModal(true);
-                      showToast("మొబైల్‌లో PhonePe ఓపెన్ అవుతుంది. డెస్క్‌టాప్‌లో QR స్కాన్ లేదా UPI ID కాపీ చేయండి.");
-                    }}
-                    className="btn-primary p-3.5 rounded-2xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 border-2 border-yellow-300"
-                  >
-                    <Zap className="w-5 h-5" />
-                    <span>PhonePe / GPay డైరెక్ట్ చెల్లింపు</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowQrModal(true)}
-                    className="btn-gold p-3.5 rounded-2xl text-xs sm:text-sm font-black flex items-center justify-center gap-2"
-                  >
-                    <QrCode className="w-5 h-5" />
-                    <span>PhonePe Standee QR స్కాన్</span>
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowQrModal(true)}
+                  className="btn-gold w-full p-4 rounded-2xl text-sm sm:text-base font-black flex items-center justify-center gap-3 shadow-xl"
+                >
+                  <QrCode className="w-6 h-6 text-black" />
+                  <span>PhonePe Standee QR స్కాన్ & E-HUNDI</span>
+                </button>
               </div>
 
               <button
@@ -1253,10 +1180,10 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
         </div>
       )}
 
-      {/* 📄 INSTANT DIGITAL RECEIPT MODAL */}
+      {/* 📄 INSTANT DIGITAL RECEIPT MODAL (TTD Devasthanam Formal Style with Watermark) */}
       {digitalReceipt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
-          <div className="bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] border-4 border-[#FFD700] p-6 sm:p-8 rounded-3xl max-w-xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative text-white space-y-6">
+          <div className="bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] border-4 border-[#FFD700] p-6 sm:p-8 rounded-3xl max-w-2xl w-full max-h-[94vh] overflow-y-auto shadow-2xl relative text-white space-y-6">
             
             <button
               type="button"

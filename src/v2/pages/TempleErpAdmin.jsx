@@ -352,6 +352,21 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
     showToast("ఫోటో తొలగించబడింది!");
   };
 
+  // Set Gallery Image as First Slide
+  const handleSetFirstGalleryImage = (imageId) => {
+    const currentDB = getDB();
+    if (!currentDB.galleryImages) return;
+    const imgIdx = currentDB.galleryImages.findIndex(img => String(img.id) === String(imageId));
+    if (imgIdx > -1) {
+      const [selectedImg] = currentDB.galleryImages.splice(imgIdx, 1);
+      currentDB.galleryImages.unshift(selectedImg);
+      saveDB(currentDB);
+      setDbState(currentDB);
+      addAuditLog(userRole, `Set Gallery Image '${selectedImg.title}' as First Slide`);
+      showToast(`'${selectedImg.title}' మొదటి స్లైడ్ ఫోటోగా అమర్చబడింది!`);
+    }
+  };
+
   // Pixel-Perfect A4 Standard PDF Generation for Reports
   const downloadReportPDF = async () => {
     if (!reportRef.current) return;
@@ -1378,8 +1393,13 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {galleryList.map((img) => (
-                        <div key={img.id} className="gold-card !p-4 bg-black/60 border-2 border-white/20 rounded-2xl flex flex-col justify-between space-y-3">
+                      {galleryList.map((img, idx) => (
+                        <div key={img.id} className={`gold-card !p-4 bg-black/60 border-2 rounded-2xl flex flex-col justify-between space-y-3 relative ${idx === 0 ? 'border-[#FFD700] ring-2 ring-[#FFD700]/70' : 'border-white/20'}`}>
+                          {idx === 0 && (
+                            <span className="absolute top-2 right-2 bg-[#FFD700] text-black font-black text-[10px] px-2.5 py-0.5 rounded-full shadow-lg z-10">
+                              ⭐ మొదటి స్లైడ్ (1st Slide)
+                            </span>
+                          )}
                           <div className="aspect-video rounded-xl overflow-hidden bg-black border border-white/20">
                             <img src={img.src} alt={img.title} className="w-full h-full object-cover" />
                           </div>
@@ -1389,14 +1409,26 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                             </span>
                             <h4 className="text-sm font-black text-white heading-telugu line-clamp-2">{img.title}</h4>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteGalleryImage(img.id)}
-                            className="btn-outline text-xs !py-2 !px-3 text-red-400 border-red-500/50 hover:bg-red-600 hover:text-white rounded-xl w-full flex items-center justify-center gap-1.5 font-bold"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            <span>తొలగించండి (Delete)</span>
-                          </button>
+                          <div className="flex flex-col gap-2">
+                            {idx !== 0 && (
+                              <button
+                                type="button"
+                                onClick={() => handleSetFirstGalleryImage(img.id)}
+                                className="btn-gold text-xs !py-2 !px-3 rounded-xl w-full flex items-center justify-center gap-1.5 font-black shadow-md"
+                              >
+                                <Sparkles className="w-4 h-4 text-emerald-950" />
+                                <span>⭐ మొదటి ఫోటోగా అమర్చు (Set as 1st)</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteGalleryImage(img.id)}
+                              className="btn-outline text-xs !py-2 !px-3 text-red-400 border-red-500/50 hover:bg-red-600 hover:text-white rounded-xl w-full flex items-center justify-center gap-1.5 font-bold"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              <span>తొలగించండి (Delete)</span>
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
