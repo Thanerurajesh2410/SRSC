@@ -1,0 +1,493 @@
+import React, { useState, useEffect } from 'react';
+import { User, LogIn, UserPlus, History, Award, Bell, ShieldCheck, Heart, Download, CheckCircle2, AlertCircle, Calendar, Plus, Mail, Phone, MapPin } from 'lucide-react';
+import { getDB, saveDB, validateUniqueDevotee, addAuditLog } from '../data/v2Database';
+
+export default function DevoteePortal({ t, showToast }) {
+  const [db, setDbState] = useState(getDB());
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
+
+  // Devotee Authentication State
+  const [loggedInDevotee, setLoggedInDevotee] = useState(null);
+  
+  // Registration Form State
+  const [regName, setRegName] = useState('');
+  const [regPhone, setRegPhone] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regCity, setRegCity] = useState('');
+  const [regPass, setRegPass] = useState('');
+  const [validationError, setValidationError] = useState('');
+
+  // Login Form State
+  const [loginPhone, setLoginPhone] = useState('');
+  const [loginPass, setLoginPass] = useState('');
+
+  // Devotee Dashboard Sub-tab State
+  const [activeTab, setActiveTab] = useState('history');
+
+  // Book Seva Form State
+  const [bookSevaName, setBookSevaName] = useState('నిత్య పంచామృత అభిషేకం');
+  const [bookSevaDate, setBookSevaDate] = useState(new Date().toISOString().split('T')[0]);
+  const [bookSevaAmt, setBookSevaAmt] = useState(501);
+
+  useEffect(() => {
+    setDbState(getDB());
+  }, []);
+
+  // Handle Registration with Unique Phone & Email Validation
+  const handleRegister = (e) => {
+    e.preventDefault();
+    setValidationError('');
+
+    // Validate Unique Phone & Email
+    const check = validateUniqueDevotee(regPhone, regEmail);
+    if (!check.valid) {
+      setValidationError(check.message);
+      showToast(check.message);
+      return;
+    }
+
+    const currentDB = getDB();
+    const newDevotee = {
+      id: 'DEV-' + Math.floor(1000 + Math.random() * 9000),
+      name: regName,
+      phone: regPhone,
+      email: regEmail,
+      city: regCity || 'పామినివాండ్లవూరు',
+      registeredAt: new Date().toLocaleDateString('te-IN')
+    };
+
+    currentDB.devotees.push(newDevotee);
+    saveDB(currentDB);
+    setDbState(currentDB);
+    addAuditLog(regName, `New Devotee Registered (${regPhone}, ${regEmail})`);
+
+    setLoggedInDevotee(newDevotee);
+    showToast("భక్తుడి నమోదు విజయవంతంగా పూర్తయింది!");
+    setRegName('');
+    setRegPhone('');
+    setRegEmail('');
+    setRegCity('');
+    setRegPass('');
+  };
+
+  // Handle Login
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setValidationError('');
+
+    const currentDB = getDB();
+    const cleanPhone = loginPhone.trim().replace(/\D/g, '');
+    const found = currentDB.devotees.find(d => d.phone.replace(/\D/g, '') === cleanPhone);
+
+    if (found) {
+      setLoggedInDevotee(found);
+      addAuditLog(found.name, `Devotee Logged In (${found.phone})`);
+      showToast(`నమస్కారం ${found.name}! పోర్టల్‌లోకి విజయవంతంగా లాగిన్ అయ్యారు.`);
+    } else {
+      setValidationError("ఈ ఫోన్ నంబర్‌తో ఏ భక్తుడి ఖాతా కనుగొనబడలేదు. దయచేసి ముందస్తుగా సైన్ అప్ చేయండి.");
+    }
+  };
+
+  // Handle Seva Booking
+  const handleBookSevaSubmit = (e) => {
+    e.preventDefault();
+    if (!loggedInDevotee) return;
+
+    const currentDB = getDB();
+    const newBooking = {
+      id: 'SEVA-' + Math.floor(1000 + Math.random() * 9000),
+      devoteeName: loggedInDevotee.name,
+      phone: loggedInDevotee.phone,
+      sevaName: bookSevaName,
+      date: bookSevaDate,
+      amount: bookSevaAmt,
+      status: 'Confirmed'
+    };
+
+    currentDB.sevaBookings.push(newBooking);
+    saveDB(currentDB);
+    setDbState(currentDB);
+    addAuditLog(loggedInDevotee.name, `Booked Seva: ${bookSevaName} on ${bookSevaDate}`);
+
+    showToast(`${bookSevaName} సేవ విజయవంతంగా బుక్ కాబడింది!`);
+  };
+
+  // Devotee Specific Donations List
+  const devoteeDonations = db.donations.filter(
+    d => loggedInDevotee && (d.phone.replace(/\D/g, '') === loggedInDevotee.phone.replace(/\D/g, '') || d.donorName.toLowerCase().includes(loggedInDevotee.name.toLowerCase()))
+  );
+
+  // Devotee Specific Seva Bookings List
+  const devoteeSevas = db.sevaBookings.filter(
+    s => loggedInDevotee && s.phone.replace(/\D/g, '') === loggedInDevotee.phone.replace(/\D/g, '')
+  );
+
+  return (
+    <div className="bg-[#090914] text-white min-h-screen py-8 sacred-temple-bg-masked">
+      <div className="w-full px-4 md:px-8 lg:px-12 max-w-full">
+        
+        {/* Top Portal Badge Header */}
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs md:text-sm font-black bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg mb-3">
+            <User className="w-4 h-4 text-amber-300" />
+            <span>🚩 పామినివాండ్లవూరు శ్రీ రామాలయం - భక్తుల అధికారిక డిజిటల్ పోర్టల్</span>
+          </div>
+          <h2 className="text-2xl md:text-4xl font-black text-white heading-telugu leading-tight">
+            భక్తుల డిజిటల్ సేవల నమోదు & పారదర్శకత పోర్టల్
+          </h2>
+        </div>
+
+        {/* 🔒 Devotee Authentication Popup Card (Enlarged Divine God Photo Screen) */}
+        {!loggedInDevotee ? (
+          <div className="my-6 flex justify-center items-center">
+            <div className="gold-card max-w-2xl md:max-w-3xl w-full !p-8 md:!p-12 border-4 border-[#FFD700] text-center shadow-[0_0_60px_rgba(255,215,0,0.45)] relative overflow-hidden bg-gradient-to-b from-[#4A0E17]/95 via-[#2D080E]/95 to-[#1A0306]/98 rounded-3xl">
+              
+              {/* Background God Photo Watermark Overlay */}
+              <div className="absolute inset-0 opacity-15 bg-[url('/assets/temple_bg.jpg')] bg-cover bg-center pointer-events-none" />
+
+              {/* Divine God Photo Emblem Header */}
+              <div className="relative z-10 mb-6 flex flex-col items-center">
+                <div className="relative mb-3 group">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-[#FFD700] via-[#FF9933] to-[#FFD700] rounded-full blur-md opacity-85 group-hover:opacity-100 transition duration-500 animate-pulse" />
+                  <img
+                    src="/assets/logo.jpg"
+                    alt="Sri Rama Seva Committee Official Logo"
+                    className="relative w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-[#FFD700] shadow-2xl object-cover bg-[#1A0306] p-0.5 ring-4 ring-[#FFD700]/60"
+                  />
+                  <div className="absolute -bottom-2 right-0 bg-[#5C121E] text-sky-400 p-2 rounded-full border-2 border-[#FFD700] shadow-lg">
+                    <User className="w-5 h-5" />
+                  </div>
+                </div>
+
+                <h3 className="text-xl md:text-3xl font-black text-white heading-telugu mb-1">
+                  భక్తుల ఖాతా సైన్ ఇన్ & నమోదు
+                </h3>
+                <p className="text-xs md:text-sm text-amber-300 font-bold max-w-lg mx-auto">
+                  మీ రశీదులు తనిఖీ చేయడానికి, సేవలు బుక్ చేయడానికి & డిజిటల్ సర్టిఫికెట్లు పొందడానికి సైన్ ఇన్ చేయండి
+                </p>
+              </div>
+
+              {/* Toggle Auth Mode Buttons */}
+              <div className="relative z-10 flex rounded-2xl bg-black/70 p-1.5 border-2 border-[#FFD700]/60 mb-6 max-w-md mx-auto shadow-inner">
+                <button
+                  onClick={() => { setAuthMode('login'); setValidationError(''); }}
+                  className={`flex-1 py-3 text-sm md:text-base font-black rounded-xl transition-all flex items-center justify-center gap-2 ${
+                    authMode === 'login' ? 'bg-[#5C121E] text-[#FFD700] border border-[#FFD700] shadow-lg' : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  <LogIn className="w-4 h-4 text-amber-300" />
+                  <span>సైన్ ఇన్ (Sign In)</span>
+                </button>
+                <button
+                  onClick={() => { setAuthMode('register'); setValidationError(''); }}
+                  className={`flex-1 py-3 text-sm md:text-base font-black rounded-xl transition-all flex items-center justify-center gap-2 ${
+                    authMode === 'register' ? 'bg-[#5C121E] text-[#FFD700] border border-[#FFD700] shadow-lg' : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  <UserPlus className="w-4 h-4 text-sky-400" />
+                  <span>క్రొత్త ఖాతా (Register)</span>
+                </button>
+              </div>
+
+              {validationError && (
+                <div className="relative z-10 mb-6 p-3.5 rounded-2xl bg-red-950/90 border border-red-500 text-xs md:text-sm font-bold text-red-300 flex items-start justify-center gap-2 max-w-md mx-auto animate-bounce">
+                  <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+
+              {/* 1. Devotee Login Form */}
+              {authMode === 'login' ? (
+                <form onSubmit={handleLogin} className="relative z-10 space-y-5 max-w-md mx-auto text-left">
+                  <div>
+                    <label className="block text-xs md:text-sm font-black text-amber-200 mb-1.5 uppercase">
+                      నమోదైన ఫోన్ నంబర్ (Registered Phone Number) *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        required
+                        placeholder="ఉదా: 9866125609"
+                        value={loginPhone}
+                        onChange={(e) => setLoginPhone(e.target.value)}
+                        className="w-full bg-[#1A0306]/90 border-2 border-[#FFD700] rounded-2xl py-3.5 px-4 pl-12 text-base md:text-lg text-amber-300 focus:outline-none focus:ring-4 focus:ring-[#FFD700]/40 font-mono font-bold"
+                      />
+                      <Phone className="w-5 h-5 text-amber-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn-gold w-full py-4 text-base md:text-xl font-black shadow-2xl rounded-2xl border-2 border-yellow-200 transform hover:scale-[1.02] active:scale-95 transition-all">
+                    <span>✨ పోర్టల్‌లోకి ప్రవేశించండి (Login Now)</span>
+                  </button>
+                </form>
+              ) : (
+                /* 2. Devotee Registration Form with Unique Phone & Email Validation */
+                <form onSubmit={handleRegister} className="relative z-10 space-y-4 max-w-md mx-auto text-left">
+                  <div>
+                    <label className="block text-xs md:text-sm font-black text-amber-200 mb-1 uppercase">భక్తుడి పూర్తి పేరు (Full Name) *</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        required
+                        placeholder="మీ పూర్తి పేరు"
+                        value={regName}
+                        onChange={(e) => setRegName(e.target.value)}
+                        className="w-full bg-[#1A0306]/90 border-2 border-[#FFD700] rounded-2xl py-3 px-4 pl-11 text-sm md:text-base text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700] font-bold"
+                      />
+                      <User className="w-5 h-5 text-amber-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs md:text-sm font-black text-amber-200 mb-1 uppercase">ఫోన్ నంబర్ (Unique Phone) *</label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        required
+                        placeholder="ఉదా: 9866125609"
+                        value={regPhone}
+                        onChange={(e) => setRegPhone(e.target.value)}
+                        className="w-full bg-[#1A0306]/90 border-2 border-[#FFD700] rounded-2xl py-3 px-4 pl-11 text-sm md:text-base text-amber-300 focus:outline-none focus:ring-2 focus:ring-[#FFD700] font-mono font-bold"
+                      />
+                      <Phone className="w-5 h-5 text-amber-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs md:text-sm font-black text-amber-200 mb-1 uppercase">ఇమెయిల్ అడ్రస్ (Unique Email) *</label>
+                    <div className="relative">
+                      <input
+                        type="email"
+                        required
+                        placeholder="ఉదా: devotee@gmail.com"
+                        value={regEmail}
+                        onChange={(e) => setRegEmail(e.target.value)}
+                        className="w-full bg-[#1A0306]/90 border-2 border-[#FFD700] rounded-2xl py-3 px-4 pl-11 text-sm md:text-base text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700] font-bold"
+                      />
+                      <Mail className="w-5 h-5 text-amber-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs md:text-sm font-black text-amber-200 mb-1 uppercase">గ్రామం / ఊరు (City / Village)</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="పామినివాండ్లవూరు"
+                        value={regCity}
+                        onChange={(e) => setRegCity(e.target.value)}
+                        className="w-full bg-[#1A0306]/90 border-2 border-white/30 rounded-2xl py-3 px-4 pl-11 text-sm md:text-base text-white focus:outline-none focus:border-[#FFD700] font-bold"
+                      />
+                      <MapPin className="w-5 h-5 text-amber-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn-primary w-full py-3.5 text-base md:text-lg font-black shadow-2xl rounded-2xl border-2 border-amber-300 transform hover:scale-[1.02] active:scale-95 transition-all">
+                    <span>+ భక్తుడి ఖాతా సృష్టించండి (Register Account)</span>
+                  </button>
+                </form>
+              )}
+
+            </div>
+          </div>
+        ) : (
+          /* Devotee Logged In Customer Dashboard */
+          <div className="space-y-6 animate-fadeIn">
+            
+            {/* Devotee Profile Summary Header */}
+            <div className="gold-card border-2 border-sky-400/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-full bg-sky-950 text-sky-300 border border-sky-400">
+                  <User className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-black text-white heading-telugu">{loggedInDevotee.name}</h3>
+                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-mono px-2 py-0.5 rounded-full font-bold">
+                      VERIFIED DEVOTEE ({loggedInDevotee.id})
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-300 font-mono mt-0.5">
+                    📱 {loggedInDevotee.phone} | ✉️ {loggedInDevotee.email} | 📍 {loggedInDevotee.city}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setLoggedInDevotee(null)}
+                className="px-4 py-1.5 rounded-full text-xs font-bold bg-red-600/30 text-red-300 border border-red-500/40 hover:bg-red-600 hover:text-white transition-colors"
+              >
+                లాగౌట్ (Logout)
+              </button>
+            </div>
+
+            {/* Dashboard Sub-Tabs Bar - Font Size 20px */}
+            <div className="flex flex-wrap items-center gap-3 border-b border-white/10 pb-4 text-[20px] font-black">
+              <button
+                onClick={() => setActiveTab('history')}
+                className={`px-5 py-3 rounded-2xl transition-all flex items-center gap-2 ${
+                  activeTab === 'history' ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] font-black shadow-xl scale-105' : 'bg-white/10 text-gray-200 hover:bg-white/20'
+                }`}
+              >
+                <History className="w-5 h-5 text-amber-300" />
+                <span>విరాళాల చరిత్ర ({devoteeDonations.length})</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('book-seva')}
+                className={`px-5 py-3 rounded-2xl transition-all flex items-center gap-2 ${
+                  activeTab === 'book-seva' ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] font-black shadow-xl scale-105' : 'bg-white/10 text-gray-200 hover:bg-white/20'
+                }`}
+              >
+                <Calendar className="w-5 h-5 text-amber-300" />
+                <span>సేవ బుకింగ్ (Book Seva)</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('booked-sevas')}
+                className={`px-5 py-3 rounded-2xl transition-all flex items-center gap-2 ${
+                  activeTab === 'booked-sevas' ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] font-black shadow-xl scale-105' : 'bg-white/10 text-gray-200 hover:bg-white/20'
+                }`}
+              >
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <span>బుక్ చేసిన సేవలు ({devoteeSevas.length})</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('certificates')}
+                className={`px-5 py-3 rounded-2xl transition-all flex items-center gap-2 ${
+                  activeTab === 'certificates' ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] font-black shadow-xl scale-105' : 'bg-white/10 text-gray-200 hover:bg-white/20'
+                }`}
+              >
+                <Award className="w-5 h-5 text-amber-300" />
+                <span>ధృవీకరణ పత్రాలు (Certificates)</span>
+              </button>
+            </div>
+
+            {/* TAB 1: Donation History Log */}
+            {activeTab === 'history' && (
+              <div className="gold-card space-y-4">
+                <h4 className="text-base font-bold text-[#FFD700] flex items-center gap-2">
+                  <History className="w-5 h-5 text-amber-400" />
+                  <span>మీ శ్రీ రామ ఈ-హుండి & నిర్మాణ విరాళాల రికార్డు</span>
+                </h4>
+
+                {devoteeDonations.length === 0 ? (
+                  <p className="text-xs text-gray-400 py-4 text-center">
+                    ఇప్పటివరకు ఏమీ విరాళాలు నమోదు కాబడలేదు. మీరు ఈ-హుండి ద్వారా విరాళం సమర్పించవచ్చు.
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {devoteeDonations.map((d, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3.5 rounded-xl bg-black/50 border border-white/10 text-xs">
+                        <div>
+                          <span className="font-mono text-amber-300 font-bold block">{d.id}</span>
+                          <span className="font-bold text-white text-sm">{d.seva}</span>
+                          <span className="text-gray-400 block">{d.date} • {d.mode}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-base font-black text-emerald-400 font-mono block">₹ {d.amount.toLocaleString()}</span>
+                          <button onClick={() => showToast("రశీదు వివరాలు ధృవీకరించబడ్డాయి!")} className="text-[11px] text-sky-400 font-bold underline flex items-center gap-1 mt-1">
+                            <Download className="w-3 h-3" /> రశీదు చూడండి
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* TAB 2: Book Seva Form */}
+            {activeTab === 'book-seva' && (
+              <div className="gold-card space-y-4">
+                <h4 className="text-base font-bold text-[#FFD700] flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-amber-400" />
+                  <span>శ్రీ రామాలయ నిత్య & విశేష సేవ బుకింగ్ (Book Seva)</span>
+                </h4>
+
+                <form onSubmit={handleBookSevaSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-300 mb-1">సేవా విభాగం ఎంచుకోండి *</label>
+                      <select
+                        value={bookSevaName}
+                        onChange={(e) => setBookSevaName(e.target.value)}
+                        className="w-full bg-[#1A0306] border border-white/20 rounded-xl p-2.5 text-xs text-amber-300 font-bold"
+                      >
+                        <option value="శ్రీ రామ అష్టోత్తర శతనామావళి అర్చన">శ్రీ రామ అష్టోత్తర శతనామావళి అర్చన (₹ 108)</option>
+                        <option value="నిత్య పంచామృత అభిషేకం">నిత్య పంచామృత అభిషేకం (₹ 501)</option>
+                        <option value="పవిత్ర దీపారాధన & అలంకార సేవ">పవిత్ర దీపారాధన & అలంకార సేవ (₹ 1,008)</option>
+                        <option value="స్వామివారి పట్టు వస్త్రముల సేవ">స్వామివారి పట్టు వస్త్రముల సేవ (₹ 2,500)</option>
+                        <option value="శ్రీ సీతారామ కల్యాణోత్సవం & ఊంజల్ సేవ">శ్రీ సీతారామ కల్యాణోత్సవం (₹ 5,008)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-300 mb-1">సేవా తేదీ (Select Date) *</label>
+                      <input
+                        type="date"
+                        required
+                        value={bookSevaDate}
+                        onChange={(e) => setBookSevaDate(e.target.value)}
+                        className="w-full bg-[#1A0306] border border-white/20 rounded-xl p-2.5 text-xs text-white font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn-gold w-full py-2.5 text-xs font-extrabold shadow-xl">
+                    + సేవ బుక్ చేయండి (Confirm Seva Booking)
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* TAB 3: Booked Sevas List */}
+            {activeTab === 'booked-sevas' && (
+              <div className="gold-card space-y-4">
+                <h4 className="text-base font-bold text-[#FFD700]">మీరు బుక్ చేసిన ఆలయ సేవలు</h4>
+                {devoteeSevas.length === 0 ? (
+                  <p className="text-xs text-gray-400 py-4 text-center">ఇప్పటివరకు ఏమీ సేవలు బుక్ చేయబడలేదు.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {devoteeSevas.map((s, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3.5 rounded-xl bg-black/50 border border-white/10 text-xs">
+                        <div>
+                          <span className="font-mono text-sky-300 font-bold block">{s.id}</span>
+                          <span className="font-bold text-white text-sm">{s.sevaName}</span>
+                          <span className="text-gray-400 block font-mono">తేదీ: {s.date}</span>
+                        </div>
+                        <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full font-bold">
+                          {s.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* TAB 4: Certificates */}
+            {activeTab === 'certificates' && (
+              <div className="gold-card space-y-4">
+                <h4 className="text-base font-bold text-[#FFD700]">ఆలయ నిర్మాణ భాగస్వామ్య సర్టిఫికేట్</h4>
+                <div className="bg-[#FFFDF0] text-[#2D080E] p-6 rounded-2xl border-4 border-[#FFD700] text-center space-y-3">
+                  <Award className="w-12 h-12 text-amber-600 mx-auto" />
+                  <h3 className="text-xl font-black heading-telugu text-[#5C121E]">శ్రీ రామా సేవా ప్రశంసా పురస్కారము</h3>
+                  <p className="text-xs font-bold text-amber-900 leading-relaxed">
+                    శ్రీ రామాలయ రాతి గోడల నిర్మాణ పవిత్ర యజ్ఞంలో తమ అమూల్యమైన కానుకతో భాగస్వాములైనందుకు భక్తులు <span className="font-black underline">{loggedInDevotee.name}</span> గారికి అందజేయు దివ్య ప్రశంసా పత్రము.
+                  </p>
+                  <button onClick={() => showToast("సర్టిఫికేట్ PDF డౌన్‌లోడ్ చేయబడింది!")} className="btn-gold text-xs py-2 px-4 inline-flex items-center gap-1">
+                    <Download className="w-4 h-4" /> సర్టిఫికేట్ డౌన్‌లోడ్ చేయండి
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}

@@ -51,10 +51,10 @@ export default function Navbar({ lang, setLang, t }) {
                 <a
                   key={idx}
                   href={link.href}
-                  className={`text-xs font-bold transition-colors py-1 border-b-2 ${
+                  className={`text-[20px] font-black transition-colors py-1 border-b-2 ${
                     link.isHundi
-                      ? 'text-[#FFD700] border-[#FFD700] hover:text-amber-200 animate-pulse bg-white/10 px-2.5 py-1 rounded-full'
-                      : 'text-gray-200 border-transparent hover:text-[var(--primary-gold)] hover:border-[var(--primary-gold)]'
+                      ? 'text-[#FFD700] border-2 border-[#FFD700] hover:text-amber-200 animate-pulse bg-white/10 px-4 py-1.5 rounded-full'
+                      : 'text-gray-100 border-transparent hover:text-[var(--primary-gold)] hover:border-[var(--primary-gold)]'
                   }`}
                 >
                   {link.name}

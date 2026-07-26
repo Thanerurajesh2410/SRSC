@@ -46,6 +46,20 @@ body, body.theme-maroon {
   background-attachment: fixed;
 }
 
+/* Sacred Temple Masked Background Utility */
+.sacred-temple-bg-masked {
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(255, 215, 0, 0.35) 0%, rgba(92, 18, 30, 0.75) 50%, rgba(10, 2, 4, 0.95) 90%),
+    linear-gradient(180deg, rgba(42, 6, 11, 0.7) 0%, rgba(9, 9, 20, 0.85) 50%, rgba(10, 2, 4, 0.98) 100%),
+    url('/assets/temple_bg.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+
 body.theme-maroon .gold-card {
   background: linear-gradient(180deg, rgba(74, 14, 23, 0.95) 0%, rgba(45, 8, 14, 0.98) 100%);
   border: 1.5px solid rgba(255, 215, 0, 0.5);
@@ -204,11 +218,20 @@ body.theme-navy .gold-card {
 .gold-card {
   backdrop-filter: blur(14px);
   border-radius: 22px;
-  padding: 2rem;
+  padding: 1.75rem;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
   position: relative;
   overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+  .gold-card {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
 }
 
 .gold-card::before {
@@ -223,7 +246,7 @@ body.theme-navy .gold-card {
 }
 
 .gold-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   border-color: #FFD700;
   box-shadow: 0 15px 45px rgba(255, 215, 0, 0.35);
 }
@@ -231,6 +254,16 @@ body.theme-navy .gold-card {
 .gold-card:hover::before {
   left: 100%;
 }
+
+/* Touch Friendly Menu Buttons */
+header button, nav button, nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.4;
+}
+
 
 /* Buttons */
 .btn-primary {

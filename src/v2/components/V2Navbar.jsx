@@ -1,0 +1,179 @@
+import React, { useState } from 'react';
+import { LayoutDashboard, Users, Heart, Globe, Menu, X, Building2, Calendar, FileText, Camera, ShieldCheck, Sparkles, Phone, Lock } from 'lucide-react';
+
+export default function V2Navbar({ activeModule, setActiveModule, lang, setLang, t, v2T, onToggleVersion }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleLang = () => {
+    setLang(lang === 'te' ? 'en' : 'te');
+  };
+
+  return (
+    <header className="sticky top-0 z-50 bg-[#2D080E] border-b-2 border-[#FFD700] text-white shadow-2xl backdrop-blur-md">
+      {/* Top Banner Bar for Version 2 & Fast Switcher */}
+      <div className="bg-[#5C121E] border-b border-amber-500/30 px-4 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="bg-[#FFD700] text-black font-black px-2 py-0.5 rounded text-[10px] uppercase">
+            VERSION 2.0 ENTERPRISE ERP
+          </span>
+          <span className="hidden sm:inline font-bold text-amber-200">
+            శ్రీ రామాలయం ERP • పామినివాండ్లవూరు
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Quick Version Switcher Button */}
+          <button
+            onClick={onToggleVersion}
+            className="px-3 py-0.5 rounded-full text-[11px] font-black bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:brightness-110 border border-yellow-300 shadow flex items-center gap-1 transition-transform transform active:scale-95"
+            title="Switch back to V1 Classic Website"
+          >
+            <span>🔄 Switch to Version 1 (Classic)</span>
+          </button>
+
+          {/* Language Switcher */}
+          <button
+            onClick={toggleLang}
+            className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/10 text-amber-300 hover:bg-white/20 border border-amber-400/40 flex items-center gap-1"
+          >
+            <Globe className="w-3 h-3 text-amber-400" />
+            <span>{lang === 'te' ? 'English' : 'తెలుగు'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Navbar - Left Aligned Layout */}
+      <div className="w-full px-4 md:px-6 py-2.5 overflow-x-auto scrollbar-none">
+        <div className="flex items-center justify-between gap-4 whitespace-nowrap min-w-max">
+          
+          {/* Crystal Clear Brand Logo & Left Alignment */}
+          <div className="flex items-center gap-3 shrink-0 select-none cursor-pointer group" onClick={() => setActiveModule('public-home')}>
+            <div className="relative shrink-0">
+              <img
+                src="/assets/logo.jpg"
+                alt="Sri Rama Seva Committee Logo"
+                className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-[#FFD700] shadow-xl object-cover bg-[#1A0306] p-0.5 ring-2 ring-[#FFD700]/60 transform group-hover:scale-105 transition-transform"
+              />
+              <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow" title="Official Verified ERP Active" />
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <h1 className="text-base md:text-xl font-black text-white heading-telugu leading-tight group-hover:text-amber-200 transition-colors">
+                {t.nav.title}
+              </h1>
+              <p className="text-[11px] md:text-xs text-amber-300 font-extrabold">
+                {v2T.tagline}
+              </p>
+            </div>
+          </div>
+
+          {/* Left Aligned Module Navigation - Fits All Screen Widths */}
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
+            
+            {/* 1. Public Website Section Dropdown Button */}
+            <button
+              onClick={() => setActiveModule('public-home')}
+              className={`px-3.5 md:px-4.5 py-2 rounded-xl text-sm md:text-base lg:text-[17px] font-black transition-all flex items-center gap-1.5 shrink-0 ${
+                activeModule.startsWith('public')
+                  ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg'
+                  : 'text-gray-100 bg-white/5 border border-white/10 hover:bg-white/20 hover:text-white'
+              }`}
+            >
+              <Building2 className="w-4 h-4 text-amber-400" />
+              <span>ప్రజా వెబ్‌సైట్ (Public Website)</span>
+            </button>
+
+            {/* 2. Devotee Portal Button */}
+            <button
+              onClick={() => setActiveModule('devotee-portal')}
+              className={`px-3.5 md:px-4.5 py-2 rounded-xl text-sm md:text-base lg:text-[17px] font-black transition-all flex items-center gap-1.5 shrink-0 ${
+                activeModule === 'devotee-portal'
+                  ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg'
+                  : 'text-gray-100 bg-white/5 border border-white/10 hover:bg-white/20 hover:text-white'
+              }`}
+            >
+              <Users className="w-4 h-4 text-sky-400" />
+              <span>భక్తుల పోర్టల్ (Devotee Portal)</span>
+            </button>
+
+            {/* 3. Temple ERP Admin Suite Button */}
+            <button
+              onClick={() => setActiveModule('erp-admin')}
+              className={`px-3.5 md:px-4.5 py-2 rounded-xl text-sm md:text-base lg:text-[17px] font-black transition-all flex items-center gap-1.5 shrink-0 ${
+                activeModule === 'erp-admin'
+                  ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg'
+                  : 'bg-amber-500/20 text-[#FFD700] border border-amber-400/60 hover:bg-[#5C121E]'
+              }`}
+            >
+              <LayoutDashboard className="w-4 h-4 text-[#FFD700]" />
+              <span>టెంపుల్ ERP అడ్మిన్ (Temple ERP Suite)</span>
+            </button>
+
+            {/* Donate CTA */}
+            <button
+              onClick={() => setActiveModule('public-donations')}
+              className="btn-gold text-sm md:text-base lg:text-[17px] !py-2 !px-4 md:!px-5 shadow-xl border-2 border-amber-300 font-black shrink-0 rounded-xl"
+            >
+              <Heart className="w-4 h-4 fill-current text-red-700" />
+              <span>ఈ-హుండి విరాళం</span>
+            </button>
+
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex items-center gap-2 lg:hidden shrink-0">
+            <button onClick={() => setIsOpen(!isOpen)} className="p-2 rounded-lg text-[#FFD700] hover:bg-white/10">
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      {isOpen && (
+        <div className="lg:hidden bg-[#3A0A11] border-b-2 border-[#FFD700] p-4 space-y-3 shadow-2xl animate-fadeIn">
+          <div className="space-y-2.5">
+            <button
+              onClick={() => { setActiveModule('public-home'); setIsOpen(false); }}
+              className="w-full text-left p-3.5 rounded-xl text-sm sm:text-base font-black bg-white/10 text-white hover:bg-white/20 border border-white/10 flex items-center gap-2.5"
+            >
+              <Building2 className="w-5 h-5 text-amber-400" />
+              <span>1. ప్రజా వెబ్‌సైట్ (Public Website)</span>
+            </button>
+            <button
+              onClick={() => { setActiveModule('devotee-portal'); setIsOpen(false); }}
+              className="w-full text-left p-3.5 rounded-xl text-sm sm:text-base font-black bg-white/10 text-sky-300 hover:bg-white/20 border border-sky-400/30 flex items-center gap-2.5"
+            >
+              <Users className="w-5 h-5 text-sky-400" />
+              <span>2. భక్తుల పోర్టల్ (Devotee Portal)</span>
+            </button>
+            <button
+              onClick={() => { setActiveModule('erp-admin'); setIsOpen(false); }}
+              className="w-full text-left p-3.5 rounded-xl text-sm sm:text-base font-black bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg flex items-center gap-2.5"
+            >
+              <LayoutDashboard className="w-5 h-5 text-[#FFD700]" />
+              <span>3. శ్రీ రామాలయం ERP అడ్మిన్ (Temple ERP Suite)</span>
+            </button>
+            <button
+              onClick={() => { setActiveModule('public-donations'); setIsOpen(false); }}
+              className="w-full text-left p-3.5 rounded-xl text-sm sm:text-base font-black bg-gradient-to-r from-amber-500 to-orange-600 text-white border border-yellow-300 flex items-center gap-2.5 shadow-lg"
+            >
+              <Heart className="w-5 h-5 fill-red-700 text-red-700" />
+              <span>4. ఈ-హుండి విరాళం సమర్పించండి</span>
+            </button>
+          </div>
+
+          <div className="pt-3.5 border-t border-white/20 flex justify-between items-center text-xs sm:text-sm font-bold">
+            <button onClick={() => { onToggleVersion(); setIsOpen(false); }} className="text-amber-300 font-extrabold underline flex items-center gap-1">
+              <span>🔄 Switch to Version 1 Classic</span>
+            </button>
+            <button onClick={toggleLang} className="text-white bg-white/10 px-3 py-1.5 rounded-lg border border-white/20 font-bold">
+              🌐 {lang === 'te' ? 'English' : 'తెలుగు'}
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
