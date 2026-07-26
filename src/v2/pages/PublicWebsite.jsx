@@ -1,41 +1,97 @@
-import React, { useState } from 'react';
-import { Building2, Heart, Calendar, FileText, Camera, ShieldCheck, MapPin, Mail, MessageSquare, Phone, CheckCircle2, ChevronRight, Award, DollarSign, Wallet, Users, Sparkles, Send, Download, FileCheck, Layers, Info, Bell, TrendingUp, CheckCircle, Database } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Building2, Heart, Calendar, FileText, Camera, ShieldCheck, MapPin, Mail, MessageSquare, Phone, CheckCircle2, ChevronRight, Award, DollarSign, Wallet, Users, Sparkles, Send, Download, FileCheck, Layers, Info, Bell, TrendingUp, CheckCircle, Database, ChevronLeft, Copy, Check, QrCode, Crown, UserCheck, UserPlus, Coins, User } from 'lucide-react';
 import { getDB } from '../data/v2Database';
+
+const slideshowImages = [
+  { id: 1, src: '/assets/temple_photo_1.png', title: 'శ్రీ రామాలయ శంకుస్థాపన పవిత్ర రాతి స్తంభాల పూజ', tag: 'పామినివాండ్లవూరు ఆలయ శంకుస్థాపన' },
+  { id: 2, src: '/assets/temple_photo_2.png', title: 'గ్రామస్థులు & భక్తుల సమక్షంలో ఆలయ పునాది పూజా మహోత్సవం', tag: 'పవిత్ర శంకుస్థాపన మహోత్సవం' },
+  { id: 3, src: '/assets/temple_photo_3.png', title: 'రాతి గోడల ఆలయ శంకుస్థాపన పునాది నిర్మాణం', tag: 'ఆలయ ప్రగతి' },
+  { id: 4, src: '/assets/temple_photo_4.png', title: 'టేకు కలప ద్వారబంధం & చెక్కిన రాతి స్తంభాల నిర్మాణం', tag: 'రాతి స్తంభాల అలంకరణ' },
+  { id: 5, src: '/assets/temple_photo_5.png', title: 'పునాది గుంటలో పవిత్ర రాతి రాళ్ళ ప్రతిష్ఠాపన పూజ', tag: 'గర్భగుడి శంకుస్థాపన' },
+  { id: 6, src: '/assets/construction_1.jpg', title: 'చెక్కిన రాతి రాళ్ళు మరియు గర్భగుడి గోడల నిర్మాణం', tag: 'ఆలయ నిర్మాణం' },
+  { id: 7, src: '/assets/construction_2.jpg', title: 'ఆలయ ప్రాంగణం మరియు రాతి స్తంభాల అమరిక', tag: 'పామినివాండ్లవూరు' },
+  { id: 8, src: '/assets/construction_3.jpg', title: 'ఆలయ ప్రధాన ద్వారబంధం మరియు శంకుస్థాపన ప్రగతి', tag: 'శ్రీ రామాలయం' },
+  { id: 9, src: '/assets/banner.jpg', title: 'శ్రీ రామా సేవా కమిటీ ఆలయ నిర్మాణ దృశ్యం', tag: 'అధికారిక శ్రీ రామాలయం' }
+];
 
 export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSection }) {
   const [activeTab, setActiveTab] = useState(subSection || 'home');
   const [donorVerifyId, setDonorVerifyId] = useState('');
   const [verifiedResult, setVerifiedResult] = useState(null);
-  const [feedbackName, setFeedbackName] = useState('');
-  const [feedbackMsg, setFeedbackMsg] = useState('');
+  
+  // Slideshow State
+  const [slideIdx, setSlideIdx] = useState(0);
 
-  // Active Category Filter for Donation Suite
-  const [selectedCatId, setSelectedCatId] = useState('all');
+  // Auto-play slideshow timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlideIdx((prev) => (prev + 1) % slideshowImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const handleVerifyReceipt = (e) => {
+  // WhatsApp Contact Form State
+  const [waName, setWaName] = useState('');
+  const [waPhone, setWaPhone] = useState('');
+  const [waCity, setWaCity] = useState('');
+  const [waMsg, setWaMsg] = useState('');
+
+  // Dropdown Donation Selection State
+  const [selectedCatId, setSelectedCatId] = useState('cat-1');
+  const [selectedSubCat, setSelectedSubCat] = useState('');
+
+  // Copy State for Bank Details
+  const [copiedAccount, setCopiedAccount] = useState(false);
+  const [copiedIfsc, setCopiedIfsc] = useState(false);
+  const [copiedUpi, setCopiedUpi] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
+
+  const bankSectionRef = useRef(null);
+
+  const copyToClipboard = (text, type) => {
+    navigator.clipboard.writeText(text);
+    if (type === 'account') {
+      setCopiedAccount(true);
+      setTimeout(() => setCopiedAccount(false), 2500);
+    } else if (type === 'ifsc') {
+      setCopiedIfsc(true);
+      setTimeout(() => setCopiedIfsc(false), 2500);
+    } else if (type === 'upi') {
+      setCopiedUpi(true);
+      setTimeout(() => setCopiedUpi(false), 2500);
+    }
+    showToast("కాపీ చేయబడింది: " + text);
+  };
+
+  const handleSendWhatsAppForm = (e) => {
     e.preventDefault();
-    if (!donorVerifyId) return;
-    const donor = t.donorWall.donors.find(d => String(d.id) === String(donorVerifyId) || d.name.toLowerCase().includes(donorVerifyId.toLowerCase()));
-    if (donor) {
-      setVerifiedResult(donor);
-      showToast("రశీదు వివరాలు దాతల పట్టికలో నిర్ధారించబడ్డాయి!");
-    } else {
-      setVerifiedResult({ error: "ఎలాంటి రశీదు కనుగొనబడలేదు. రశీదు నంబర్ లేదా దాత పేరును సరిచూడండి." });
+    if (!waName || !waMsg) {
+      showToast("దయచేసి మీ పేరు మరియు సందేశం నమోదు చేయండి.");
+      return;
+    }
+    const text = encodeURIComponent(
+      `జై శ్రీరామ్!\n\n` +
+      `పేరు: ${waName}\n` +
+      `ఫోన్: ${waPhone || 'N/A'}\n` +
+      `గ్రామం: ${waCity || 'పామినివాండ్లవూరు'}\n` +
+      `సందేశం: ${waMsg}`
+    );
+    window.open(`https://wa.me/919866125609?text=${text}`, '_blank');
+    showToast("WhatsApp సందేశం తెరవబడింది!");
+    setWaName('');
+    setWaPhone('');
+    setWaCity('');
+    setWaMsg('');
+  };
+
+  const scrollToBank = () => {
+    if (bankSectionRef.current) {
+      bankSectionRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const handleSendFeedback = (e) => {
-    e.preventDefault();
-    if (!feedbackName || !feedbackMsg) return;
-    showToast("మీ అభిప్రాయం కమిటీకి పంపబడింది. ధన్యవాదాలు!");
-    setFeedbackName('');
-    setFeedbackMsg('');
-  };
-
-  const openWhatsApp = () => {
-    const text = encodeURIComponent("జై శ్రీరామ్! పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ సేవా వివరాలకై సంప్రదిస్తున్నాను.");
-    window.open("https://wa.me/919866125609?text=" + text, '_blank');
-  };
+  const selectedCategoryObj = v2T.donationCategories.find(c => c.id === selectedCatId) || v2T.donationCategories[0];
+  const availableSubTypes = selectedCategoryObj ? selectedCategoryObj.subTypes : [];
 
   return (
     <div className="bg-[#090914] text-white min-h-screen sacred-temple-bg-masked">
@@ -46,10 +102,9 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           {[
             { id: 'home', label: 'హోమ్ (Home)' },
             { id: 'about', label: 'ఆలయ విశేషాలు (About)' },
-            { id: 'construction', label: 'నిర్మాణ పురోగతి (Construction)' },
             { id: 'donations', label: 'ఈ-హుండి & వర్గాలు (Donations)' },
+            { id: 'committee', label: 'కమిటీ సభ్యులు (Committee)' },
             { id: 'terms', label: '📜 నిబంధనలు (Terms)' },
-            { id: 'sevas', label: 'సేవలు & పూజలు (Sevas)' },
             { id: 'events', label: 'ఉత్సవాలు (Events)' },
             { id: 'gallery', label: 'చిత్రావళి (Gallery)' },
             { id: 'news', label: 'వార్తలు (News)' },
@@ -75,21 +130,21 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
 
         {/* 1. HOME SUB-SECTION */}
         {activeTab === 'home' && (
-          <div className="space-y-12 animate-fadeIn">
-            {/* Hero Section */}
-            <div className="text-center max-w-4xl mx-auto py-6">
+          <div className="space-y-10 animate-fadeIn">
+            {/* Hero Header Section */}
+            <div className="text-center max-w-4xl mx-auto py-4">
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs md:text-sm font-black bg-[#5C121E]/90 text-[#FFD700] border-2 border-[#FFD700] shadow-[0_0_25px_rgba(255,215,0,0.5)] mb-4 animate-bounce">
                 <span>🚩 {t.hero.badge}</span>
               </div>
 
               {/* Fixed Lord Rama Divine Portrait */}
-              <div className="flex justify-center my-6">
+              <div className="flex justify-center my-4">
                 <div className="relative group">
                   <div className="absolute -inset-6 bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-500 rounded-full blur-2xl opacity-85 group-hover:opacity-100 transition duration-1000 animate-pulse" />
                   <img
                     src="/assets/logo.jpg"
                     alt="Lord Rama Portrait"
-                    className="relative w-48 h-48 md:w-60 md:h-60 rounded-full border-4 border-[#FFD700] shadow-[0_0_60px_rgba(255,215,0,0.8)] object-cover"
+                    className="relative w-40 h-40 md:w-52 md:h-52 rounded-full border-4 border-[#FFD700] shadow-[0_0_60px_rgba(255,215,0,0.8)] object-cover"
                   />
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] px-4 py-1 rounded-full text-xs font-black shadow-2xl flex items-center gap-1.5 whitespace-nowrap">
                     <Sparkles className="w-3.5 h-3.5 fill-[#FFD700]" />
@@ -104,40 +159,78 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               <p className="text-lg md:text-xl font-extrabold text-[var(--primary-saffron)] heading-telugu mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
                 "{t.hero.slogan}"
               </p>
+            </div>
 
-              {/* Construction Progress Widget */}
-              <div className="max-w-2xl mx-auto gold-card !p-5 mb-8 border-2 border-[#FFD700]/70 shadow-2xl bg-[#5C121E]/80 backdrop-blur-md">
-                <div className="flex items-center justify-between text-xs sm:text-sm font-extrabold mb-2">
-                  <span className="text-amber-300">రాతి గోడల నిర్మాణ పురోగతి (Progress):</span>
-                  <span className="text-emerald-400 font-mono text-sm sm:text-base font-black">{v2T.construction.progressPct}% Completed</span>
+            {/* 📸 Temple Photos Auto Slideshow Widget (Replaces Progress Bar) */}
+            <div className="max-w-5xl mx-auto gold-card !p-4 sm:!p-6 bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#1A0306] border-3 border-[#FFD700] shadow-2xl rounded-3xl relative overflow-hidden">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/20">
+                <div className="flex items-center gap-2">
+                  <Camera className="w-6 h-6 text-[#FFD700]" />
+                  <h3 className="text-lg sm:text-2xl font-black text-[#FFD700] heading-telugu">శ్రీ రామాలయ నిర్మాణ & పూజా చిత్రాల గ్యాలరీ</h3>
                 </div>
-                <div className="w-full bg-black/70 rounded-full h-4 border border-white/20 p-0.5 overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-400 h-full rounded-full transition-all duration-1000 shadow-lg"
-                    style={{ width: `${v2T.construction.progressPct}%` }}
-                  />
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm font-extrabold text-gray-100 mt-3">
-                  <div>మొత్తం బడ్జెట్: <span className="text-amber-300">{v2T.construction.totalBudget}</span></div>
-                  <div>అందిన విరాళాలు: <span className="text-emerald-400">{v2T.construction.fundsReceived}</span></div>
-                  <div>ఖర్చయిన నిధులు: <span className="text-sky-300">{v2T.construction.fundsUtilized}</span></div>
-                </div>
+                <span className="text-xs sm:text-sm font-mono font-black text-amber-300 bg-black/60 px-3.5 py-1 rounded-full border border-amber-400/40">
+                  {slideIdx + 1} / {slideshowImages.length}
+                </span>
               </div>
 
-              <div className="flex flex-wrap justify-center gap-4">
-                <button onClick={() => setActiveTab('donations')} className="btn-primary px-6 py-3.5 text-base font-black shadow-[0_0_35px_rgba(230,81,0,0.8)] border-2 border-amber-300 rounded-2xl">
-                  <Wallet className="w-5 h-5 text-yellow-300" />
-                  <span>ఈ-హుండి ద్వారా విరాళం</span>
+              <div className="relative h-[280px] sm:h-[400px] md:h-[480px] rounded-2xl overflow-hidden border-2 border-white/20 bg-black group">
+                <img
+                  src={slideshowImages[slideIdx].src}
+                  alt={slideshowImages[slideIdx].title}
+                  className="w-full h-full object-cover object-center transition-all duration-700 transform group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-5 sm:p-8">
+                  <span className="text-xs sm:text-sm font-black text-[#FFD700] bg-[#5C121E] px-3.5 py-1 rounded-full border border-[#FFD700]/50 w-fit mb-2">
+                    {slideshowImages[slideIdx].tag}
+                  </span>
+                  <h4 className="text-lg sm:text-2xl md:text-3xl font-black text-white heading-telugu drop-shadow-lg">
+                    {slideshowImages[slideIdx].title}
+                  </h4>
+                </div>
+
+                {/* Slideshow Manual Controls */}
+                <button
+                  onClick={() => setSlideIdx((prev) => (prev === 0 ? slideshowImages.length - 1 : prev - 1))}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/60 text-[#FFD700] hover:bg-[#5C121E] border border-[#FFD700] transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6" />
                 </button>
-                <button onClick={() => setActiveTab('construction')} className="btn-outline px-6 py-3.5 text-base font-black rounded-2xl">
-                  <Building2 className="w-5 h-5 text-amber-300" />
-                  <span>నిర్మాణ ప్రగతి నివేదిక</span>
+                <button
+                  onClick={() => setSlideIdx((prev) => (prev + 1) % slideshowImages.length)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/60 text-[#FFD700] hover:bg-[#5C121E] border border-[#FFD700] transition-colors"
+                >
+                  <ChevronRight className="w-6 h-6" />
                 </button>
+              </div>
+
+              {/* Dots Indicator */}
+              <div className="flex justify-center items-center gap-2 mt-4">
+                {slideshowImages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSlideIdx(idx)}
+                    className={`h-2.5 rounded-full transition-all ${
+                      idx === slideIdx ? 'w-8 bg-[#FFD700]' : 'w-2.5 bg-white/30 hover:bg-white/60'
+                    }`}
+                  />
+                ))}
               </div>
             </div>
 
+            {/* Quick Action Navigation Buttons */}
+            <div className="flex flex-wrap justify-center gap-4">
+              <button onClick={() => setActiveTab('donations')} className="btn-primary px-7 py-4 text-lg font-black shadow-[0_0_35px_rgba(230,81,0,0.8)] border-2 border-amber-300 rounded-2xl">
+                <Wallet className="w-6 h-6 text-yellow-300" />
+                <span>ఈ-హుండి ద్వారా విరాళం సమర్పించండి</span>
+              </button>
+              <button onClick={() => setActiveTab('committee')} className="btn-outline px-7 py-4 text-lg font-black rounded-2xl">
+                <Users className="w-6 h-6 text-amber-300" />
+                <span>కమిటీ సభ్యుల వివరాలు</span>
+              </button>
+            </div>
+
             {/* 📢 Important Announcement Banner Card */}
-            <div className="gold-card max-w-4xl mx-auto bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-3 border-[#FFD700] !p-6 sm:!p-8 rounded-3xl shadow-2xl relative overflow-hidden my-8">
+            <div className="gold-card max-w-5xl mx-auto bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-3 border-[#FFD700] !p-6 sm:!p-8 rounded-3xl shadow-2xl relative overflow-hidden my-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="p-3.5 rounded-2xl bg-[#FFD700] text-[#5C121E] font-black shrink-0 shadow-lg">
                   <Bell className="w-8 h-8 animate-bounce" />
@@ -154,6 +247,143 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* 🚩 PhonePe QR Scanner & Bank Transfer Card with Copy Functionality */}
+            <div ref={bankSectionRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              
+              {/* E-Hundi & QR Scanner Card */}
+              <div className="gold-card border-3 border-[#FFD700] shadow-[0_0_50px_rgba(255,215,0,0.45)] bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#200407] flex flex-col justify-between !p-6 sm:!p-8 rounded-3xl">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-black bg-[#FFD700] px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 fill-black" />
+                      ఈ-హుండి (E-HUNDI)
+                    </span>
+                    <span className="text-xs sm:text-sm font-black text-amber-300">100% SECURE & DIRECT</span>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-black text-white heading-telugu mb-3">
+                    PhonePe & UPI E-Hundi Scanner
+                  </h3>
+
+                  <p className="text-sm sm:text-base text-gray-100 mb-6 leading-relaxed font-semibold">
+                    {t.donation.scanQr}
+                  </p>
+
+                  <div className="bg-black/70 p-5 rounded-2xl border-2 border-dashed border-[#FFD700] flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left shadow-2xl">
+                    <img
+                      src="/assets/phonepe_qr.png"
+                      alt="PhonePe QR Scanner"
+                      className="w-36 h-36 rounded-xl object-contain bg-white p-1.5 border-2 border-amber-400 shadow-2xl cursor-pointer hover:scale-105 transition-transform"
+                      onClick={() => setShowQrModal(true)}
+                    />
+
+                    <div>
+                      <h4 className="text-base sm:text-lg font-black text-white mb-1.5 leading-snug">
+                        SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU
+                      </h4>
+                      <p className="text-sm sm:text-base font-mono text-amber-300 font-black mb-3">
+                        UPI ID: {t.donation.upiId}
+                      </p>
+
+                      <button
+                        onClick={() => copyToClipboard(t.donation.upiId, 'upi')}
+                        className="btn-gold text-xs sm:text-sm !py-2 !px-4 rounded-xl font-bold"
+                      >
+                        {copiedUpi ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        <span>{copiedUpi ? "UPI ID కాపీ అయింది" : "UPI ID కాపీ చేయి"}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-5 border-t border-white/15 flex justify-center">
+                  <button
+                    onClick={() => setShowQrModal(true)}
+                    className="btn-primary text-sm sm:text-base w-full py-4 shadow-2xl flex items-center justify-center gap-2.5 font-black rounded-2xl"
+                  >
+                    <QrCode className="w-5 h-5" />
+                    <span>QR కోడ్ జూమ్ చేసి స్కాన్ చేయండి (Open Scanner)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Direct SBI Bank Account Transfer Card */}
+              <div className="gold-card border-3 border-amber-400 bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] flex flex-col justify-between !p-6 sm:!p-8 rounded-3xl shadow-2xl">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#FFD700] bg-[#5C121E] px-3.5 py-1.5 rounded-full border border-[#FFD700]/50 flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-amber-300" />
+                      BANK TRANSFER
+                    </span>
+                    <span className="text-xs sm:text-sm font-black text-emerald-400 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4" /> SBI Official Account
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-black text-white heading-telugu mb-4">
+                    {t.donation.bankTitle}
+                  </h3>
+
+                  <div className="space-y-4">
+                    {/* Account Name */}
+                    <div className="bg-black/60 p-4 rounded-2xl border border-white/15">
+                      <span className="text-xs font-black text-amber-300 uppercase tracking-wider block mb-0.5">ఖాతా పేరు (Account Name)</span>
+                      <span className="text-base sm:text-lg font-black text-white font-mono">{t.donation.accountName}</span>
+                    </div>
+
+                    {/* Account Number */}
+                    <div className="bg-black/60 p-4 rounded-2xl border-2 border-[#FFD700]/60 flex items-center justify-between shadow-inner">
+                      <div>
+                        <span className="text-xs font-black text-amber-300 uppercase tracking-wider block mb-0.5">ఖాతా సంఖ్య (Account Number)</span>
+                        <span className="text-xl sm:text-2xl lg:text-3xl font-black text-[var(--primary-gold)] font-mono">{t.donation.accountNo}</span>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(t.donation.accountNo, 'account')}
+                        className="p-3 rounded-xl bg-white/10 text-amber-300 hover:bg-white/20 transition-colors"
+                        title="Account Number Copy"
+                      >
+                        {copiedAccount ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
+                      </button>
+                    </div>
+
+                    {/* IFSC Code */}
+                    <div className="bg-black/60 p-4 rounded-2xl border border-white/15 flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-black text-amber-300 uppercase tracking-wider block mb-0.5">IFSC కోడ్</span>
+                        <span className="text-lg sm:text-xl font-black text-white font-mono">{t.donation.ifsc}</span>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(t.donation.ifsc, 'ifsc')}
+                        className="p-3 rounded-xl bg-white/10 text-amber-300 hover:bg-white/20 transition-colors"
+                        title="IFSC Code Copy"
+                      >
+                        {copiedIfsc ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
+                      </button>
+                    </div>
+
+                    {/* Bank & Branch */}
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="bg-black/60 p-3.5 rounded-2xl border border-white/15">
+                        <span className="text-gray-400 block text-xs font-bold">బ్యాంక్ పేరు</span>
+                        <span className="font-extrabold text-white text-base">{t.donation.bankName}</span>
+                      </div>
+                      <div className="bg-black/60 p-3.5 rounded-2xl border border-white/15">
+                        <span className="text-gray-400 block text-xs font-bold">బ్రాంచ్</span>
+                        <span className="font-extrabold text-white text-base">{t.donation.branch}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-5 border-t border-white/15 text-center">
+                  <p className="text-sm sm:text-base text-amber-200 font-extrabold">
+                    గూగుల్ పే / ఫోన్‌పే / పేటీఎం / నెట్ బ్యాంకింగ్ ద్వారా నేరుగా జమ చేయవచ్చు.
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
         )}
@@ -182,88 +412,249 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           </div>
         )}
 
-        {/* 3. TEMPLE CONSTRUCTION SUB-SECTION */}
-        {activeTab === 'construction' && (
+        {/* 3. 🏆 COMPREHENSIVE DONATIONS SUB-SECTION WITH CATEGORY & SUBCATEGORY DROPDOWNS */}
+        {activeTab === 'donations' && (
           <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center mb-8">
-              <span className="section-tag text-sm sm:text-base font-black px-5 py-2">నిర్మాణ నివేదిక</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3">రాతి గోడల నిర్మాణం & ప్రాజెక్ట్ పురోగతి</h2>
+              <span className="section-tag text-sm sm:text-base font-black px-5 py-2">విరాళాల వర్గీకరణ & సమర్పణ</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3 mb-2">శ్రీ రామాలయం విరాళాల పథకాలు & విభాగాలు</h2>
+              <p className="text-sm sm:text-base md:text-lg text-amber-300 font-extrabold max-w-3xl mx-auto mt-2">
+                పారదర్శకత మరియు సులువైన లెక్కల నిర్వహణ కొరకు విరాళాలు పవిత్ర వర్గాలుగా వర్గీకరించబడ్డాయి.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="gold-card text-center bg-[#5C121E]/95 border-3 border-amber-400 !p-6 rounded-3xl shadow-2xl">
-                <span className="text-xs sm:text-sm text-gray-200 block font-black mb-1">అంచనా బడ్జెట్ (Total Budget)</span>
-                <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-amber-300 font-mono">{v2T.construction.totalBudget}</span>
+            {/* 🎯 Interactive Category & Subcategory Dropdown Selector Card (Requirement 4) */}
+            <div className="gold-card bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-3 border-[#FFD700] !p-6 sm:!p-8 rounded-3xl shadow-2xl space-y-6">
+              <div className="flex items-center gap-3 pb-3 border-b border-white/20">
+                <Layers className="w-8 h-8 text-[#FFD700]" />
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu">విరాళాల విభాగం & ఉప విభాగం ఎంచుకోండి (Select Category & Subcategory)</h3>
+                  <p className="text-xs sm:text-sm text-gray-200 font-bold">మీరు విరాళం ఇవ్వాలనుకుంటున్న పవిత్ర విభాగాన్ని క్రింది డ్రాప్‌డౌన్ నుండి ఎంచుకోండి.</p>
+                </div>
               </div>
-              <div className="gold-card text-center bg-[#5C121E]/95 border-3 border-emerald-400 !p-6 rounded-3xl shadow-2xl">
-                <span className="text-xs sm:text-sm text-gray-200 block font-black mb-1">సేకరించిన విరాళాలు (Funds Received)</span>
-                <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-emerald-400 font-mono">{v2T.construction.fundsReceived}</span>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 1. Category Dropdown */}
+                <div>
+                  <label className="block text-sm sm:text-base font-black text-amber-200 mb-2">1. విరాళాల ప్రధాన విభాగం (Main Category)</label>
+                  <select
+                    value={selectedCatId}
+                    onChange={(e) => {
+                      setSelectedCatId(e.target.value);
+                      const newCat = v2T.donationCategories.find(c => c.id === e.target.value);
+                      if (newCat && newCat.subTypes && newCat.subTypes.length > 0) {
+                        setSelectedSubCat(newCat.subTypes[0]);
+                      }
+                    }}
+                    className="w-full bg-[#1A0306] border-2 border-[#FFD700] rounded-2xl p-4 text-base sm:text-lg text-white font-black shadow-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
+                  >
+                    {v2T.donationCategories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* 2. Subcategory Dropdown */}
+                <div>
+                  <label className="block text-sm sm:text-base font-black text-amber-200 mb-2">2. ఉప విభాగం (Subcategory Scheme)</label>
+                  <select
+                    value={selectedSubCat || (availableSubTypes[0] || '')}
+                    onChange={(e) => setSelectedSubCat(e.target.value)}
+                    className="w-full bg-[#1A0306] border-2 border-[#FFD700] rounded-2xl p-4 text-base sm:text-lg text-white font-black shadow-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
+                  >
+                    {availableSubTypes.map((sub, idx) => (
+                      <option key={idx} value={sub}>
+                        {sub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="gold-card text-center bg-[#5C121E]/95 border-3 border-sky-400 !p-6 rounded-3xl shadow-2xl">
-                <span className="text-xs sm:text-sm text-gray-200 block font-black mb-1">ఖర్చు చేసిన నిధులు (Utilized)</span>
-                <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-sky-300 font-mono">{v2T.construction.fundsUtilized}</span>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 bg-black/60 p-4 rounded-2xl border border-white/10">
+                <div className="text-sm sm:text-base font-bold text-amber-300">
+                  ఎంచుకున్న సేవ: <span className="text-[#FFD700] font-black">{selectedCategoryObj.name}</span> {selectedSubCat && <span>👉 <span className="text-emerald-400 font-black">{selectedSubCat}</span></span>}
+                </div>
+                <button
+                  onClick={() => {
+                    showToast(`'${selectedSubCat || selectedCategoryObj.name}' సేవ కొరకు విరాళం సమర్పించే విభాగం ఎంచుకోబడింది.`);
+                    scrollToBank();
+                  }}
+                  className="btn-primary px-6 py-3.5 text-base font-black rounded-2xl shadow-xl w-full sm:w-auto shrink-0"
+                >
+                  ఈ వర్గంలో విరాళం సమర్పించండి (Donate Now)
+                </button>
+              </div>
+            </div>
+
+            {/* Display Category Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {v2T.donationCategories.map(cat => (
+                <div key={cat.id} className="gold-card bg-[#5C121E]/95 border-3 border-amber-400/80 space-y-4 !p-6 sm:!p-8 rounded-3xl shadow-2xl">
+                  <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
+                    <Layers className="w-6 h-6 text-amber-400" />
+                    <span>{cat.name}</span>
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-200 italic font-medium">{cat.desc}</p>
+                  
+                  {/* Subtypes Badges */}
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {cat.subTypes.map((sub, idx) => (
+                      <span key={idx} className="bg-black/70 text-amber-200 text-xs sm:text-sm font-extrabold px-3 py-1.5 rounded-xl border border-white/20 flex items-center gap-1.5 shadow">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <span>{sub}</span>
+                      </span>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setSelectedCatId(cat.id);
+                      if (cat.subTypes.length > 0) setSelectedSubCat(cat.subTypes[0]);
+                      showToast(`${cat.name} ఎంచుకోబడింది.`);
+                      scrollToBank();
+                    }}
+                    className="btn-primary text-base sm:text-lg py-3.5 px-6 w-full mt-4 font-black rounded-2xl shadow-xl"
+                  >
+                    ఈ వర్గంలో విరాళం సమర్పించండి
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* PhonePe Standee QR & Bank Account Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-6">
+              {/* E-Hundi Scanner */}
+              <div className="gold-card border-3 border-[#FFD700] bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#200407] flex flex-col justify-between !p-6 sm:!p-8 rounded-3xl shadow-2xl">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs sm:text-sm font-black uppercase text-black bg-[#FFD700] px-3.5 py-1 rounded-full shadow">
+                      ఈ-హుండి (E-HUNDI)
+                    </span>
+                    <span className="text-xs sm:text-sm font-black text-amber-300">DIRECT SCANNER</span>
+                  </div>
+
+                  <h3 className="text-2xl font-black text-white heading-telugu mb-3">PhonePe & UPI Standee Scanner</h3>
+                  <p className="text-sm text-gray-200 mb-4">{t.donation.scanQr}</p>
+
+                  <div className="bg-black/70 p-4 rounded-2xl border border-[#FFD700] flex flex-col sm:flex-row items-center gap-4">
+                    <img src="/assets/phonepe_qr.png" alt="PhonePe QR" className="w-32 h-32 bg-white p-1 rounded-xl cursor-pointer" onClick={() => setShowQrModal(true)} />
+                    <div>
+                      <h4 className="text-sm font-black text-white">SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU</h4>
+                      <p className="text-sm font-mono text-amber-300 font-black my-1">UPI ID: {t.donation.upiId}</p>
+                      <button onClick={() => copyToClipboard(t.donation.upiId, 'upi')} className="btn-gold text-xs !py-1.5 !px-3 rounded-lg">
+                        {copiedUpi ? "కాపీ అయింది" : "UPI ID కాపీ చేయి"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <button onClick={() => setShowQrModal(true)} className="btn-primary text-sm py-3.5 mt-6 w-full font-black rounded-2xl">
+                  QR కోడ్ జూమ్ చేసి స్కాన్ చేయండి
+                </button>
+              </div>
+
+              {/* SBI Account Card */}
+              <div className="gold-card border-3 border-amber-400 bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] flex flex-col justify-between !p-6 sm:!p-8 rounded-3xl shadow-2xl">
+                <div>
+                  <h3 className="text-2xl font-black text-white heading-telugu mb-4">{t.donation.bankTitle}</h3>
+                  <div className="space-y-3 text-sm font-extrabold">
+                    <div className="bg-black/60 p-3.5 rounded-xl border border-white/15">
+                      <span className="text-xs text-amber-300 block">ఖాతా పేరు</span>
+                      <span className="text-base text-white font-mono">{t.donation.accountName}</span>
+                    </div>
+                    <div className="bg-black/60 p-3.5 rounded-xl border border-[#FFD700]/50 flex justify-between items-center">
+                      <div>
+                        <span className="text-xs text-amber-300 block">ఖాతా సంఖ్య</span>
+                        <span className="text-xl text-[var(--primary-gold)] font-mono font-black">{t.donation.accountNo}</span>
+                      </div>
+                      <button onClick={() => copyToClipboard(t.donation.accountNo, 'account')} className="p-2.5 rounded-xl bg-white/10 text-amber-300">
+                        {copiedAccount ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    <div className="bg-black/60 p-3.5 rounded-xl border border-white/15 flex justify-between items-center">
+                      <div>
+                        <span className="text-xs text-amber-300 block">IFSC కోడ్</span>
+                        <span className="text-lg text-white font-mono font-black">{t.donation.ifsc}</span>
+                      </div>
+                      <button onClick={() => copyToClipboard(t.donation.ifsc, 'ifsc')} className="p-2.5 rounded-xl bg-white/10 text-amber-300">
+                        {copiedIfsc ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* 4. 🏆 COMPREHENSIVE DONATION CATEGORIES & E-HUNDI */}
-        {activeTab === 'donations' && (
+        {/* 4. 👑 COMMITTEE MEMBERS SUB-SECTION (Requirement 6) */}
+        {activeTab === 'committee' && (
           <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center mb-8">
-              <span className="section-tag text-sm sm:text-base font-black px-5 py-2">విరాళాల వర్గీకరణ</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3 mb-2">శ్రీ రామాలయం విరాళాల పథకాలు & విభాగాలు</h2>
-              <p className="text-sm sm:text-base md:text-lg text-amber-300 font-extrabold max-w-3xl mx-auto mt-2">
-                పారదర్శకత మరియు సులువైన లెక్కల నిర్వహణ కొరకు విరాళాలు 10 పవిత్ర వర్గాలుగా వర్గీకరించబడ్డాయి.
+              <span className="section-tag text-sm sm:text-base font-black px-5 py-2">కమిటీ సభ్యులు</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3">శ్రీ రామా సేవా కమిటీ పాలక వర్గం & సభ్యులు</h2>
+              <p className="text-sm sm:text-base text-amber-300 font-bold max-w-2xl mx-auto mt-2">
+                పామినివాండ్లవూరు గ్రామ శ్రీ రామాలయ నిర్మాణ నిర్వహణ సమితి సభ్యుల వివరాలు.
               </p>
             </div>
 
-            {/* Category Filter Selector */}
-            <div className="flex flex-wrap justify-center gap-2.5 bg-[#1A0306]/90 p-4 rounded-2xl border-2 border-[#FFD700]/40 text-sm sm:text-base font-black shadow-xl">
-              <button
-                onClick={() => setSelectedCatId('all')}
-                className={`px-4 sm:px-5 py-2.5 rounded-xl transition-all ${selectedCatId === 'all' ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg scale-105 font-black' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
-              >
-                అన్ని విభాగాలు (All Categories)
-              </button>
-              {v2T.donationCategories.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCatId(cat.id)}
-                  className={`px-4 sm:px-5 py-2.5 rounded-xl transition-all ${selectedCatId === cat.id ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg scale-105 font-black' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
-                >
-                  {cat.name.split(' ')[1]}
-                </button>
-              ))}
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {t.committee.members.map((member, idx) => {
+                const isPresident = member.role.includes("PRESIDENT") && !member.role.includes("VICE");
+                const isSecretary = member.role.includes("SECRETARY");
 
-            {/* Display Donation Categories Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {v2T.donationCategories
-                .filter(cat => selectedCatId === 'all' || selectedCatId === cat.id)
-                .map(cat => (
-                  <div key={cat.id} className="gold-card bg-[#5C121E]/95 border-3 border-amber-400/80 space-y-4 !p-6 sm:!p-8 shadow-2xl">
-                    <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
-                      <Layers className="w-6 h-6 text-amber-400" />
-                      <span>{cat.name}</span>
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-200 italic font-medium">{cat.desc}</p>
-                    
-                    {/* Subtypes List */}
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      {cat.subTypes.map((sub, idx) => (
-                        <span key={idx} className="bg-black/70 text-amber-200 text-xs sm:text-sm font-extrabold px-3 py-1.5 rounded-xl border border-white/20 flex items-center gap-1.5 shadow">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                          <span>{sub}</span>
+                return (
+                  <div
+                    key={idx}
+                    className={`gold-card relative flex flex-col justify-between group transform transition-all duration-500 hover:-translate-y-2 !p-6 rounded-3xl ${
+                      isPresident
+                        ? 'border-3 border-[#FFD700] shadow-[0_0_35px_rgba(255,215,0,0.45)] bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#200407]'
+                        : isSecretary
+                        ? 'border-3 border-amber-400/80 shadow-[0_0_25px_rgba(251,191,36,0.3)] bg-gradient-to-b from-[#4D0F18] to-[#1D0407]'
+                        : 'bg-[#5C121E]/95 border-2 border-amber-400/60'
+                    }`}
+                  >
+                    {isPresident && (
+                      <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-400 to-yellow-500 text-black px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-xl flex items-center gap-1 animate-pulse">
+                        <Sparkles className="w-3.5 h-3.5 fill-black" />
+                        <span>అధ్యక్షులు • Leader</span>
+                      </div>
+                    )}
+
+                    <div>
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-3 rounded-2xl bg-amber-400/20 text-[#FFD700] border border-[#FFD700]">
+                          <Crown className="w-6 h-6" />
+                        </div>
+                        <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase bg-[#5C121E] text-[#FFD700] border border-[#FFD700]/50">
+                          {member.role}
                         </span>
-                      ))}
+                      </div>
+
+                      <h3 className="text-xl sm:text-2xl font-black text-white heading-telugu mb-1">
+                        {member.name}
+                      </h3>
+
+                      <p className="text-xs sm:text-sm text-amber-300 font-bold mb-4">
+                        {member.father}
+                      </p>
+
+                      <div className="space-y-2 text-xs sm:text-sm text-gray-200 bg-black/60 p-4 rounded-2xl border border-white/15">
+                        <p><span className="text-gray-400 font-bold">వృత్తి:</span> <strong className="text-white font-black">{member.occ}</strong></p>
+                        <p><span className="text-gray-400 font-bold">చిరునామా:</span> <span className="text-gray-200 font-bold">{member.address}</span></p>
+                      </div>
                     </div>
 
-                    <button onClick={() => showToast(`${cat.name} కానుక సమర్పించే విధానం ఆరంభించబడింది.`)} className="btn-primary text-base sm:text-lg py-3.5 px-6 w-full mt-4 font-black rounded-2xl shadow-xl">
-                      ఈ వర్గంలో విరాళం సమర్పించండి
-                    </button>
+                    <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-xs text-amber-200 font-bold">
+                      <span>పామినివాండ్లవూరు పాలక వర్గం</span>
+                      <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                    </div>
                   </div>
-                ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -299,34 +690,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           </div>
         )}
 
-        {/* 6. SEVAS SUB-SECTION - ENLARGED FONT */}
-        {activeTab === 'sevas' && (
-          <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
-            <div className="text-center mb-8">
-              <span className="section-tag text-sm sm:text-base font-black px-5 py-2">సేవల వివరాలు</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3">శ్రీ రామాలయం నిత్య & విశేష సేవలు</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {v2T.sevas.map((s) => (
-                <div key={s.id} className="gold-card flex flex-col justify-between bg-[#5C121E]/95 border-3 border-amber-400/80 !p-6 sm:!p-8 rounded-3xl shadow-2xl space-y-4">
-                  <div>
-                    <span className="text-sm font-black text-amber-300 font-mono block mb-1 bg-black/60 px-3 py-1 rounded-lg border border-amber-400/40 w-fit">{s.time}</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-white heading-telugu mt-2">{s.name}</h3>
-                  </div>
-                  <div className="flex items-center justify-between pt-4 border-t border-white/20">
-                    <span className="text-2xl sm:text-3xl font-black text-[#FFD700] font-mono">{s.amount}</span>
-                    <button onClick={() => showToast(`${s.name} సేవ బుకింగ్ కోసం అడ్మిన్ వద్దకు పంపబడింది.`)} className="btn-primary text-base font-black !py-3 !px-6 rounded-2xl shadow-xl">
-                      సేవ బుక్ చేయండి
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 7. EVENTS SUB-SECTION - ENLARGED FONT */}
+        {/* 7. EVENTS SUB-SECTION */}
         {activeTab === 'events' && (
           <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center mb-8">
@@ -353,16 +717,16 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           </div>
         )}
 
-        {/* 8. GALLERY SUB-SECTION - ENLARGED FONT */}
+        {/* 8. GALLERY SUB-SECTION WITH ALL TEMPLE PHOTOS */}
         {activeTab === 'gallery' && (
           <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center mb-8">
               <span className="section-tag text-sm sm:text-base font-black px-5 py-2">ఆలయ ప్రగతి చిత్రాలు</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3">శ్రీ రామాలయ నిర్మాణ ఫోటోల గ్యాలరీ</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3">శ్రీ రామాలయ నిర్మాణ & శంకుస్థాపన ఫోటోల గ్యాలరీ</h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {t.gallery.photos.map((p) => (
+              {slideshowImages.map((p) => (
                 <div key={p.id} className="gold-card !p-4 group bg-[#5C121E]/95 border-3 border-amber-400/80 rounded-3xl shadow-2xl">
                   <div className="aspect-video rounded-2xl overflow-hidden bg-black mb-4 border border-white/20">
                     <img src={p.src} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
@@ -374,7 +738,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           </div>
         )}
 
-        {/* 9. NEWS SUB-SECTION - ENLARGED FONT */}
+        {/* 9. NEWS SUB-SECTION */}
         {activeTab === 'news' && (
           <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center mb-8">
@@ -394,7 +758,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           </div>
         )}
 
-        {/* 10. REPORTS SUB-SECTION - DYNAMIC DATABASE MATCHED & ENLARGED FONT */}
+        {/* 10. REPORTS SUB-SECTION */}
         {activeTab === 'reports' && (() => {
           const currentDB = getDB();
           const dbDonationsList = currentDB.donations || [];
@@ -428,7 +792,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 </p>
               </div>
 
-              {/* 📊 Summary Financial Metric Cards (Enlarged View Font) */}
+              {/* 📊 Summary Financial Metric Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="gold-card bg-[#5C121E]/95 border-3 border-emerald-400 !p-6 rounded-3xl text-center shadow-2xl space-y-2">
                   <span className="text-xs sm:text-sm font-black text-gray-200 uppercase tracking-wider block">మొత్తం సేకరించిన విరాళాలు (Income)</span>
@@ -449,7 +813,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 </div>
               </div>
 
-              {/* 📅 Monthly Income & Expense Breakdown Cards (Enlarged View Font) */}
+              {/* 📅 Monthly Summary */}
               <div className="gold-card bg-[#5C121E]/95 border-3 border-amber-400/80 !p-6 sm:!p-8 rounded-3xl space-y-6 shadow-2xl">
                 <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
                   <TrendingUp className="w-7 h-7 text-amber-400" />
@@ -457,7 +821,6 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 </h3>
 
                 <div className="space-y-4">
-                  {/* June 2026 */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-5 rounded-2xl bg-black/70 border-2 border-white/20 gap-3 shadow-lg">
                     <div>
                       <span className="text-lg sm:text-xl font-black text-white block">జూన్ 2026 (June 2026)</span>
@@ -469,7 +832,6 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                     </div>
                   </div>
 
-                  {/* July 2026 */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-5 rounded-2xl bg-black/70 border-2 border-white/20 gap-3 shadow-lg">
                     <div>
                       <span className="text-lg sm:text-xl font-black text-white block">జులై 2026 (July 2026)</span>
@@ -483,7 +845,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 </div>
               </div>
 
-              {/* 📜 Database Matched Donors Transparent Ledger Table (Enlarged View Font) */}
+              {/* Ledger Table */}
               <div className="gold-card bg-[#5C121E]/95 border-3 border-[#FFD700]/80 !p-6 sm:!p-8 rounded-3xl space-y-6 shadow-2xl">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-white/20">
                   <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
@@ -526,46 +888,84 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
           );
         })()}
 
-        {/* 11. CONTACT SUB-SECTION - ENLARGED FONT */}
+        {/* 11. CONTACT SUB-SECTION WITH DIRECT WHATSAPP FORM (Requirement 2) */}
         {activeTab === 'contact' && (
           <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center mb-8">
               <span className="section-tag text-sm sm:text-base font-black px-5 py-2">సంప్రదించండి</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3">అధికారిక చిరునామా & ఫీడ్‌బ్యాక్</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white heading-telugu mt-3">అధికారిక చిరునామా & WhatsApp నేరుగా సంప్రదింపుల ఫారం</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="gold-card space-y-5 text-base sm:text-lg bg-[#5C121E]/95 border-3 border-amber-400/80 !p-8 rounded-3xl shadow-2xl">
-                <h3 className="text-2xl sm:text-3xl font-black text-[#FFD700] heading-telugu">చిరునామా:</h3>
-                <p className="font-extrabold text-white leading-relaxed">శ్రీ రామా సేవా కమిటీ, డోర్ నం: 5-233, పామినివాండ్లవూరు</p>
-                <p className="font-extrabold text-white leading-relaxed">మంగళపల్లె పంచాయతీ, బంగారుపాళెం మండలం, చిత్తూరు జిల్లా - 517416</p>
-                <p className="text-amber-300 font-mono font-black pt-3 border-t border-white/20 text-base sm:text-lg">ఇమెయిల్: sriramasevacommitteepvv@gmail.com</p>
-                <button onClick={openWhatsApp} className="btn-gold w-full text-base sm:text-lg py-4 justify-center font-black rounded-2xl mt-4 shadow-xl">
-                  <MessageSquare className="w-5 h-5" /> WhatsApp ద్వారా సంప్రదించండి
-                </button>
+              {/* Address & Direct WhatsApp Call Card */}
+              <div className="gold-card space-y-5 text-base sm:text-lg bg-[#5C121E]/95 border-3 border-amber-400/80 !p-8 rounded-3xl shadow-2xl flex flex-col justify-between">
+                <div>
+                  <h3 className="text-2xl sm:text-3xl font-black text-[#FFD700] heading-telugu mb-3">అధికారిక ఆలయ చిరునామా:</h3>
+                  <p className="font-extrabold text-white leading-relaxed">శ్రీ రామా సేవా కమిటీ, డోర్ నం: 5-233, పామినివాండ్లవూరు</p>
+                  <p className="font-extrabold text-white leading-relaxed">మంగళపల్లె పంచాయతీ, బంగారుపాళెం మండలం, చిత్తూరు జిల్లా - 517416</p>
+                  <p className="text-amber-300 font-mono font-black pt-4 border-t border-white/20 text-base sm:text-lg">ఇమెయిల్: sriramasevacommitteepvv@gmail.com</p>
+                </div>
+
+                <div className="pt-4 border-t border-white/20">
+                  <div className="bg-black/60 p-4 rounded-2xl border border-amber-400/40 text-sm font-bold text-amber-200">
+                    💡 సంప్రదింపుల సమయాలు: ఉదయం 08:00 నుండి రాత్రి 08:00 వరకు నేరుగా WhatsApp లో చాట్ చేయవచ్చు.
+                  </div>
+                </div>
               </div>
 
-              <form onSubmit={handleSendFeedback} className="gold-card space-y-4 bg-[#5C121E]/95 border-3 border-amber-400/80 !p-8 rounded-3xl shadow-2xl">
-                <h3 className="text-2xl sm:text-3xl font-black text-[#FFD700] heading-telugu mb-2">అభిప్రాయం తెలపండి (Feedback Form)</h3>
-                <input
-                  type="text"
-                  required
-                  placeholder="మీ పేరు"
-                  value={feedbackName}
-                  onChange={(e) => setFeedbackName(e.target.value)}
-                  className="w-full bg-[#1A0306] border-2 border-white/20 rounded-2xl p-4 text-base sm:text-lg text-white font-extrabold focus:border-[#FFD700] transition-colors"
-                />
-                <textarea
-                  required
-                  rows={3}
-                  placeholder="మీ సలహా లేదా సందేశం..."
-                  value={feedbackMsg}
-                  onChange={(e) => setFeedbackMsg(e.target.value)}
-                  className="w-full bg-[#1A0306] border-2 border-white/20 rounded-2xl p-4 text-base sm:text-lg text-white font-extrabold focus:border-[#FFD700] transition-colors"
-                />
-                <button type="submit" className="btn-primary w-full text-base sm:text-lg font-black py-4 rounded-2xl shadow-xl mt-2">
-                  సందేశం పంపండి
-                </button>
+              {/* 📲 Direct WhatsApp Message Form (Requirement 2) */}
+              <form onSubmit={handleSendWhatsAppForm} className="gold-card space-y-4 bg-[#5C121E]/95 border-3 border-[#FFD700] !p-8 rounded-3xl shadow-2xl">
+                <div className="flex items-center gap-3 mb-2">
+                  <MessageSquare className="w-8 h-8 text-emerald-400" />
+                  <h3 className="text-2xl sm:text-3xl font-black text-[#FFD700] heading-telugu">WhatsApp సంప్రదింపుల ఫారం (WhatsApp Message Form)</h3>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-black text-amber-200 mb-1">1. మీ పేరు (Your Name) *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="ఉదా: రాజేష్ రామ్"
+                    value={waName}
+                    onChange={(e) => setWaName(e.target.value)}
+                    className="w-full bg-[#1A0306] border-2 border-white/20 rounded-2xl p-3.5 text-base sm:text-lg text-white font-extrabold focus:border-[#FFD700] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-black text-amber-200 mb-1">2. ఫోన్ నంబర్ (Phone Number)</label>
+                  <input
+                    type="tel"
+                    placeholder="ఉదా: 9866125609"
+                    value={waPhone}
+                    onChange={(e) => setWaPhone(e.target.value)}
+                    className="w-full bg-[#1A0306] border-2 border-white/20 rounded-2xl p-3.5 text-base sm:text-lg text-white font-extrabold focus:border-[#FFD700] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-black text-amber-200 mb-1">3. మీ గ్రామం / నగరం (Village / City)</label>
+                  <input
+                    type="text"
+                    placeholder="ఉదా: పామినివాండ్లవూరు / చిత్తూరు"
+                    value={waCity}
+                    onChange={(e) => setWaCity(e.target.value)}
+                    className="w-full bg-[#1A0306] border-2 border-white/20 rounded-2xl p-3.5 text-base sm:text-lg text-white font-extrabold focus:border-[#FFD700] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-black text-amber-200 mb-1">4. మీ సందేశం / విచారణ (Your Message) *</label>
+                  <textarea
+                    required
+                    rows={3}
+                    placeholder="ఆలయ సేవలు లేదా విరాళాల గురించిన మీ సందేశం ఇక్కడ నమోదు చేయండి..."
+                    value={waMsg}
+                    onChange={(e) => setWaMsg(e.target.value)}
+                    className="w-full bg-[#1A0306] border-2 border-white/20 rounded-2xl p-3.5 text-base sm:text-lg text-white font-extrabold focus:border-[#FFD700] transition-colors"
+                  />
+                </div>
+
               </form>
             </div>
           </div>
