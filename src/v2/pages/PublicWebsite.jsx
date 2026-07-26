@@ -19,17 +19,23 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
   const [activeTab, setActiveTab] = useState(subSection || 'home');
   const [donorVerifyId, setDonorVerifyId] = useState('');
   const [verifiedResult, setVerifiedResult] = useState(null);
+
+  // Dynamic Database Settings & Images from Admin
+  const currentDB = getDB();
+  const websiteSettings = currentDB.websiteSettings || {};
+  const activeGalleryImages = (currentDB.galleryImages && currentDB.galleryImages.length > 0) ? currentDB.galleryImages : slideshowImages;
   
   // Slideshow State
   const [slideIdx, setSlideIdx] = useState(0);
 
   // Auto-play slideshow timer
   useEffect(() => {
+    if (activeGalleryImages.length === 0) return;
     const timer = setInterval(() => {
-      setSlideIdx((prev) => (prev + 1) % slideshowImages.length);
+      setSlideIdx((prev) => (prev + 1) % activeGalleryImages.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [activeGalleryImages.length]);
 
   // WhatsApp Contact Form State
   const [waName, setWaName] = useState('');
@@ -94,24 +100,28 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
   const selectedCategoryObj = v2T.donationCategories.find(c => c.id === selectedCatId) || v2T.donationCategories[0];
   const availableSubTypes = selectedCategoryObj ? selectedCategoryObj.subTypes : [];
 
+  const navTabs = [
+    { id: 'home', label: 'హోమ్ (Home)', show: true },
+    { id: 'about', label: 'ఆలయ విశేషాలు (About)', show: websiteSettings.showAbout !== false },
+    { id: 'donations', label: 'ఈ-హుండి & వర్గాలు (Donations)', show: websiteSettings.showDonations !== false },
+    { id: 'committee', label: 'కమిటీ సభ్యులు (Committee)', show: websiteSettings.showCommittee !== false },
+    { id: 'terms', label: '📜 నిబంధనలు (Terms)', show: websiteSettings.showTerms !== false },
+    { id: 'events', label: 'ఉత్సవాలు (Events)', show: websiteSettings.showEvents !== false },
+    { id: 'gallery', label: 'చిత్రావళి (Gallery)', show: websiteSettings.showGallery !== false },
+    { id: 'news', label: 'వార్తలు (News)', show: websiteSettings.showNews !== false },
+    { id: 'reports', label: 'పారదర్శకత (Reports)', show: websiteSettings.showReports !== false },
+    { id: 'contact', label: 'సంప్రదించండి (Contact)', show: websiteSettings.showContact !== false }
+  ].filter(tab => tab.show);
+
+  const safeSlideIdx = slideIdx % (activeGalleryImages.length || 1);
+
   return (
     <div className="bg-[#090914] text-white min-h-screen sacred-temple-bg-masked">
       
-      {/* Sub-Navigation Menu Bar - Left Aligned Layout */}
+      {/* Sub-Navigation Menu Bar - Dynamic Filtering Based on Admin Settings */}
       <div className="bg-[#1A0306]/95 border-b border-[#FFD700]/40 sticky top-[73px] z-40 backdrop-blur-md overflow-x-auto scrollbar-none py-3 px-3 shadow-2xl">
         <div className="flex items-center justify-start gap-2.5 md:gap-3.5 whitespace-nowrap text-sm sm:text-base md:text-lg font-black px-2">
-          {[
-            { id: 'home', label: 'హోమ్ (Home)' },
-            { id: 'about', label: 'ఆలయ విశేషాలు (About)' },
-            { id: 'donations', label: 'ఈ-హుండి & వర్గాలు (Donations)' },
-            { id: 'committee', label: 'కమిటీ సభ్యులు (Committee)' },
-            { id: 'terms', label: '📜 నిబంధనలు (Terms)' },
-            { id: 'events', label: 'ఉత్సవాలు (Events)' },
-            { id: 'gallery', label: 'చిత్రావళి (Gallery)' },
-            { id: 'news', label: 'వార్తలు (News)' },
-            { id: 'reports', label: 'పారదర్శకత (Reports)' },
-            { id: 'contact', label: 'సంప్రదించండి (Contact)' }
-          ].map(tab => (
+          {navTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => { setActiveTab(tab.id); if (setSubSection) setSubSection(tab.id); }}
@@ -131,63 +141,65 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
       {activeTab === 'home' && (
         <div className="space-y-10 animate-fadeIn">
           
-          {/* 📸 100% FULL SCREEN TEMPLE SLIDESHOW BANNER (Edge-to-Edge Full Viewport Width) */}
-          <div className="relative w-full overflow-hidden shadow-2xl bg-black border-b-4 border-[#FFD700] group">
-            <div className="relative h-[380px] sm:h-[540px] md:h-[660px] lg:h-[760px] w-full">
-              <img
-                src={slideshowImages[slideIdx].src}
-                alt={slideshowImages[slideIdx].title}
-                className="w-full h-full object-cover object-center transition-all duration-1000 transform group-hover:scale-105"
-              />
-              
-              {/* Gradient Overlay for Cinematic High-Contrast Text */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent flex flex-col justify-end p-6 sm:p-12 md:p-16">
-                <div className="max-w-5xl mx-auto w-full">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-xs sm:text-sm font-black text-[#FFD700] bg-[#5C121E]/95 px-4 py-1.5 rounded-full border-2 border-[#FFD700] shadow-xl">
-                      🚩 {slideshowImages[slideIdx].tag}
-                    </span>
-                    <span className="text-xs sm:text-sm font-mono font-black text-amber-300 bg-black/80 px-4 py-1 rounded-full border border-amber-400/40">
-                      {slideIdx + 1} / {slideshowImages.length}
-                    </span>
+          {/* 📸 100% FULL SCREEN TEMPLE SLIDESHOW BANNER (Toggled by Admin & Dynamic Uploaded Images) */}
+          {websiteSettings.showSlideshow !== false && activeGalleryImages.length > 0 && (
+            <div className="relative w-full overflow-hidden shadow-2xl bg-black border-b-4 border-[#FFD700] group">
+              <div className="relative h-[380px] sm:h-[540px] md:h-[660px] lg:h-[760px] w-full">
+                <img
+                  src={activeGalleryImages[safeSlideIdx].src}
+                  alt={activeGalleryImages[safeSlideIdx].title}
+                  className="w-full h-full object-cover object-center transition-all duration-1000 transform group-hover:scale-105"
+                />
+                
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent flex flex-col justify-end p-6 sm:p-12 md:p-16">
+                  <div className="max-w-5xl mx-auto w-full">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-xs sm:text-sm font-black text-[#FFD700] bg-[#5C121E]/95 px-4 py-1.5 rounded-full border-2 border-[#FFD700] shadow-xl">
+                        🚩 {activeGalleryImages[safeSlideIdx].tag}
+                      </span>
+                      <span className="text-xs sm:text-sm font-mono font-black text-amber-300 bg-black/80 px-4 py-1 rounded-full border border-amber-400/40">
+                        {safeSlideIdx + 1} / {activeGalleryImages.length}
+                      </span>
+                    </div>
+                    
+                    <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white heading-telugu drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-tight">
+                      {activeGalleryImages[safeSlideIdx].title}
+                    </h2>
                   </div>
-                  
-                  <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white heading-telugu drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-tight">
-                    {slideshowImages[slideIdx].title}
-                  </h2>
+                </div>
+
+                {/* Slideshow Arrows */}
+                <button
+                  onClick={() => setSlideIdx((prev) => (prev === 0 ? activeGalleryImages.length - 1 : prev - 1))}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
+                  aria-label="Previous Slide"
+                >
+                  <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
+                </button>
+                <button
+                  onClick={() => setSlideIdx((prev) => (prev + 1) % activeGalleryImages.length)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
+                  aria-label="Next Slide"
+                >
+                  <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
+                </button>
+
+                {/* Slide Position Dots */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex justify-center items-center gap-2 z-20">
+                  {activeGalleryImages.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSlideIdx(idx)}
+                      className={`h-3 rounded-full transition-all ${
+                        idx === safeSlideIdx ? 'w-10 bg-[#FFD700] shadow-[0_0_15px_#FFD700]' : 'w-3 bg-white/40 hover:bg-white/80'
+                      }`}
+                    />
+                  ))}
                 </div>
               </div>
-
-              {/* Full Screen Slideshow Previous / Next Arrow Controls */}
-              <button
-                onClick={() => setSlideIdx((prev) => (prev === 0 ? slideshowImages.length - 1 : prev - 1))}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
-                aria-label="Previous Slide"
-              >
-                <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
-              </button>
-              <button
-                onClick={() => setSlideIdx((prev) => (prev + 1) % slideshowImages.length)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3.5 sm:p-5 rounded-full bg-black/70 text-[#FFD700] hover:bg-[#5C121E] border-2 border-[#FFD700] transition-transform hover:scale-110 shadow-2xl"
-                aria-label="Next Slide"
-              >
-                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
-              </button>
-
-              {/* Slide Position Dots */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex justify-center items-center gap-2 z-20">
-                {slideshowImages.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSlideIdx(idx)}
-                    className={`h-3 rounded-full transition-all ${
-                      idx === slideIdx ? 'w-10 bg-[#FFD700] shadow-[0_0_15px_#FFD700]' : 'w-3 bg-white/40 hover:bg-white/80'
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -735,12 +747,15 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {slideshowImages.map((p) => (
-                <div key={p.id} className="gold-card !p-4 group bg-[#5C121E]/95 border-3 border-amber-400/80 rounded-3xl shadow-2xl">
+              {activeGalleryImages.map((p, idx) => (
+                <div key={p.id || idx} className="gold-card !p-4 group bg-[#5C121E]/95 border-3 border-amber-400/80 rounded-3xl shadow-2xl">
                   <div className="aspect-video rounded-2xl overflow-hidden bg-black mb-4 border border-white/20">
                     <img src={p.src} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                   </div>
-                  <h4 className="text-base sm:text-lg font-black text-white text-center heading-telugu">{p.title}</h4>
+                  <span className="text-[11px] font-black text-amber-300 bg-black/60 px-2.5 py-0.5 rounded-full border border-amber-400/40 inline-block mb-1">
+                    {p.tag}
+                  </span>
+                  <h4 className="text-base sm:text-lg font-black text-white heading-telugu">{p.title}</h4>
                 </div>
               ))}
             </div>

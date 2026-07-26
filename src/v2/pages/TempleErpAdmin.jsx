@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { LayoutDashboard, Users, Heart, DollarSign, Building2, Package, Award, ShieldCheck, FileText, Share2, Plus, Trash2, CheckCircle2, Lock, Download, Printer, Bell, AlertCircle, Eye, Phone, Mail, MapPin, Database, ChevronDown, Receipt } from 'lucide-react';
+import { LayoutDashboard, Users, Heart, DollarSign, Building2, Package, Award, ShieldCheck, FileText, Share2, Plus, Trash2, CheckCircle2, Lock, Download, Printer, Bell, AlertCircle, Eye, Phone, Mail, MapPin, Database, ChevronDown, Receipt, Sliders, Image as ImageIcon, ToggleLeft, ToggleRight, Camera, Upload } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getDB, saveDB, validateUniqueDevotee, addAuditLog } from '../data/v2Database';
+import { getDB, saveDB, validateUniqueDevotee, addAuditLog, defaultWebsiteSettings, defaultGalleryImages } from '../data/v2Database';
 
 export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [db, setDbState] = useState(getDB());
@@ -35,6 +35,11 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [receiptSeva, setReceiptSeva] = useState('రాతి గోడల నిర్మాణం (Pillars & Structure)');
   const [receiptMode, setReceiptMode] = useState('Online (UPI / PhonePe / GPay)');
   const [generatedReceipt, setGeneratedReceipt] = useState(null);
+
+  // Gallery Image Manager State
+  const [newImgTitle, setNewImgTitle] = useState('');
+  const [newImgTag, setNewImgTag] = useState('');
+  const [newImgSrc, setNewImgSrc] = useState('');
 
   // New Expense Form State
   const [newExpCat, setNewExpCat] = useState('');
@@ -282,6 +287,71 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
     showToast("వాలంటీర్ చేర్చబడ్డారు!");
   };
 
+  // Toggle Public Website Visibility Settings
+  const handleToggleWebsiteSetting = (settingKey) => {
+    const currentDB = getDB();
+    if (!currentDB.websiteSettings) currentDB.websiteSettings = { ...defaultWebsiteSettings };
+    currentDB.websiteSettings[settingKey] = !currentDB.websiteSettings[settingKey];
+    
+    saveDB(currentDB);
+    setDbState(currentDB);
+    addAuditLog(userRole, `Toggled Website Visibility: ${settingKey} -> ${currentDB.websiteSettings[settingKey]}`);
+    showToast(`వెబ్‌సైట్ విభాగం మార్పు నవీకరించబడింది (${settingKey}: ${currentDB.websiteSettings[settingKey] ? 'ON' : 'OFF'})`);
+  };
+
+  // Upload file converted to Base64 for Gallery Image
+  const handleFileUploadForGallery = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewImgSrc(reader.result);
+      showToast("ఫోటో విజయవంతంగా ఎంచుకోబడింది!");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Add Gallery & Slideshow Image
+  const handleAddGalleryImage = (e) => {
+    e.preventDefault();
+    if (!newImgTitle || !newImgSrc) {
+      showToast("దయచేసి ఫోటో శీర్షిక మరియు ఫోటోను నమోదు చేయండి.");
+      return;
+    }
+
+    const currentDB = getDB();
+    if (!currentDB.galleryImages) currentDB.galleryImages = [];
+
+    const newPhoto = {
+      id: 'IMG-' + (currentDB.galleryImages.length + 1) + '-' + Date.now().toString().slice(-4),
+      src: newImgSrc,
+      title: newImgTitle,
+      tag: newImgTag || 'పామినివాండ్లవూరు ఆలయం'
+    };
+
+    currentDB.galleryImages.unshift(newPhoto);
+    saveDB(currentDB);
+    setDbState(currentDB);
+    addAuditLog(userRole, `Added Gallery Image: ${newImgTitle}`);
+
+    setNewImgTitle('');
+    setNewImgTag('');
+    setNewImgSrc('');
+    showToast("కొత్త ఫోటో గ్యాలరీ & స్లైడ్‌షోకు జోడించబడింది!");
+  };
+
+  // Delete Gallery Image
+  const handleDeleteGalleryImage = (imageId) => {
+    const currentDB = getDB();
+    if (!currentDB.galleryImages) return;
+    currentDB.galleryImages = currentDB.galleryImages.filter(img => String(img.id) !== String(imageId));
+
+    saveDB(currentDB);
+    setDbState(currentDB);
+    addAuditLog(userRole, `Deleted Gallery Image ID: ${imageId}`);
+    showToast("ఫోటో తొలగించబడింది!");
+  };
+
   // Pixel-Perfect A4 Standard PDF Generation for Reports
   const downloadReportPDF = async () => {
     if (!reportRef.current) return;
@@ -506,7 +576,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
             </div>
 
             {/* Navigation Tabs Bar - Perfectly Aligned */}
-            <div className="flex flex-wrap items-center justify-start md:justify-center gap-2 md:gap-3 border-b border-white/10 pb-4 text-base md:text-lg xl:text-[20px] font-black">
+            <div className="flex flex-wrap items-center justify-start md:justify-center gap-2 md:gap-3 border-b border-white/10 pb-4 text-base md:text-lg xl:text-[19px] font-black">
               {[
                 { id: 'dashboard', label: '📊 డ్యాష్‌బోర్డ్' },
                 { id: 'donations', label: '🧾 రశీదుల జారీ' },
@@ -515,6 +585,8 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                 { id: 'reports', label: '📥 నివేదికలు & షేరింగ్' },
                 { id: 'materials', label: '🏗️ సామగ్రి విరాళాలు' },
                 { id: 'volunteers', label: '🤝 వాలంటీర్లు' },
+                { id: 'website-settings', label: '⚙️ వెబ్‌సైట్ విభాగాలు' },
+                { id: 'gallery-manager', label: '🖼️ గ్యాలరీ & స్లైడ్‌షో ఫోటోలు' },
                 { id: 'audit', label: '📋 ఆడిట్ & డేటాబేస్' }
               ].map(tab => (
                 <button
@@ -1131,6 +1203,207 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                 </div>
               </div>
             )}
+
+            {/* TAB 9: PUBLIC WEBSITE DISPLAY VISIBILITY CONTROLLER */}
+            {activeTab === 'website-settings' && (() => {
+              const settings = db.websiteSettings || defaultWebsiteSettings;
+
+              const toggleItems = [
+                { key: 'showSlideshow', label: 'హోమ్ స్లైడ్‌షో బానర్ (Home Banner Slideshow)', desc: 'ప్రధాన హోమ్ పేజీలో ఫుల్ స్క్రీన్ ఫోటో స్లైడ్‌షో ప్రదర్శన' },
+                { key: 'showAbout', label: 'ఆలయ విశేషాలు (About Temple)', desc: 'ఆలయ చరిత్ర & ట్రస్ట్ రిజిస్ట్రేషన్ వివరాలు' },
+                { key: 'showDonations', label: 'ఈ-హుండి & విరాళాల వర్గాలు (Donations & E-Hundi)', desc: 'PhonePe QR స్కేనర్, బ్యాంక్ ఖాతా & విరాళాల డ్రాప్‌డౌన్' },
+                { key: 'showCommittee', label: 'కమిటీ సభ్యులు (Committee Members)', desc: 'పాలక మండలి సభ్యులు, అధ్యక్షులు & హోదాలు' },
+                { key: 'showTerms', label: 'ఆలయ నిబంధనలు (Terms & Conditions)', desc: 'విరాళాల పారదర్శకత & నిబంధనలు' },
+                { key: 'showEvents', label: 'వార్షిక ఉత్సవాలు (Events & Festivals)', desc: 'శ్రీరామనవమి & ధార్మిక కార్యక్రమాలు' },
+                { key: 'showGallery', label: 'ఫోటో గ్యాలరీ (Photo Gallery)', desc: 'శ్రీ రామాలయ నిర్మాణ ప్రగతి ఫోటోలు' },
+                { key: 'showNews', label: 'వార్తలు & ప్రకటనలు (News & Press Releases)', desc: 'తాజా పత్రికా ప్రకటనలు' },
+                { key: 'showReports', label: 'పారదర్శకత నివేదికలు (Financial Audit Reports)', desc: 'డబ్బుల జమ ఖర్చులు & లేడ్జర్' },
+                { key: 'showContact', label: 'అధికారిక చిరునామా & WhatsApp ఫారం (Contact & WhatsApp Form)', desc: 'చిరునామా, ఇమెయిల్ & WhatsApp డైరెక్ట్ మెసేజ్ ఫారం' }
+              ];
+
+              return (
+                <div className="space-y-6">
+                  <div className="gold-card border-3 border-[#FFD700] p-6 rounded-3xl bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E]">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Sliders className="w-8 h-8 text-[#FFD700]" />
+                      <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu">
+                        పబ్లిక్ వెబ్‌సైట్ డిస్‌ప్లే కంట్రోలర్ (Public Website Visibility Manager)
+                      </h3>
+                    </div>
+                    <p className="text-xs sm:text-sm text-gray-200 font-bold">
+                      ఇక్కడి టోగుల్ (Switch) ద్వారా పబ్లిక్ వెబ్‌సైట్‌లో ఏయే విభాగాలు లేదా పేజీలు కనిపించాలో అడ్మిన్ నేరుగా నియంత్రించవచ్చు.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {toggleItems.map(item => {
+                      const isON = settings[item.key] !== false;
+                      return (
+                        <div
+                          key={item.key}
+                          className={`p-5 rounded-2xl border-2 transition-all flex items-center justify-between gap-4 ${
+                            isON
+                              ? 'bg-gradient-to-r from-[#5C121E] to-[#2D080E] border-[#FFD700] shadow-xl'
+                              : 'bg-black/60 border-white/10 opacity-70'
+                          }`}
+                        >
+                          <div>
+                            <h4 className="text-base sm:text-lg font-black text-white heading-telugu flex items-center gap-2">
+                              <span>{item.label}</span>
+                            </h4>
+                            <p className="text-xs text-gray-300 font-semibold mt-1">{item.desc}</p>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleToggleWebsiteSetting(item.key)}
+                            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1.5 shrink-0 transition-transform active:scale-95 border ${
+                              isON
+                                ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)]'
+                                : 'bg-gray-800 text-gray-400 border-gray-600'
+                            }`}
+                          >
+                            {isON ? <ToggleRight className="w-6 h-6 text-black fill-emerald-950" /> : <ToggleLeft className="w-6 h-6" />}
+                            <span>{isON ? 'ప్రదర్శించు (VISIBLE)' : 'దాచు (HIDDEN)'}</span>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* TAB 10: GALLERY & SLIDESHOW IMAGES MANAGER */}
+            {activeTab === 'gallery-manager' && (() => {
+              const galleryList = db.galleryImages || defaultGalleryImages;
+
+              return (
+                <div className="space-y-8">
+                  {/* Upload Form */}
+                  <form onSubmit={handleAddGalleryImage} className="gold-card bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-3 border-[#FFD700] p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6">
+                    <div className="flex items-center gap-3 pb-3 border-b border-white/20">
+                      <Camera className="w-8 h-8 text-[#FFD700]" />
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu">కొత్త ఫోటో జోడించండి (Upload New Image to Gallery & Slideshow)</h3>
+                        <p className="text-xs sm:text-sm text-gray-200 font-bold">ఇక్కడ జోడించిన ఫోటోలు పబ్లిక్ వెబ్‌సైట్ స్లైడ్‌షో బానర్ మరియు గ్యాలరీలో ప్రదర్శించబడతాయి.</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-xs sm:text-sm font-black text-amber-200 mb-1">1. ఫోటో శీర్షిక (Image Title) *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="ఉదా: శ్రీ రామాలయ గర్భగుడి పూజ"
+                          value={newImgTitle}
+                          onChange={(e) => setNewImgTitle(e.target.value)}
+                          className="w-full bg-[#1A0306] border-2 border-white/20 rounded-xl p-3.5 text-sm sm:text-base text-white font-extrabold focus:border-[#FFD700]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs sm:text-sm font-black text-amber-200 mb-1">2. విభాగం టాగ్ (Category Tag)</label>
+                        <input
+                          type="text"
+                          placeholder="ఉదా: రాతి గోడల నిర్మాణం"
+                          value={newImgTag}
+                          onChange={(e) => setNewImgTag(e.target.value)}
+                          className="w-full bg-[#1A0306] border-2 border-white/20 rounded-xl p-3.5 text-sm sm:text-base text-white font-extrabold focus:border-[#FFD700]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Image Input Options */}
+                    <div className="space-y-4 bg-black/60 p-5 rounded-2xl border border-white/15">
+                      <label className="block text-xs sm:text-sm font-black text-amber-200">
+                        3. ఫోటో ఎంచుకోండి (Select Image via File Upload or URL) *
+                      </label>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Option A: File Upload */}
+                        <div className="p-4 rounded-xl border-2 border-dashed border-[#FFD700]/70 bg-[#1A0306] text-center flex flex-col items-center justify-center">
+                          <Upload className="w-8 h-8 text-amber-300 mb-2 animate-bounce" />
+                          <span className="text-xs sm:text-sm font-bold text-white mb-2">మీ కంప్యూటర్ నుండి ఫోటో అప్‌లోడ్ చేయండి</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileUploadForGallery}
+                            className="text-xs text-amber-200 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-[#FFD700] file:text-black cursor-pointer"
+                          />
+                        </div>
+
+                        {/* Option B: Image URL */}
+                        <div className="p-4 rounded-xl border-2 border-white/20 bg-[#1A0306] flex flex-col justify-center space-y-2">
+                          <span className="text-xs font-bold text-gray-300">లేదా ఇమేజ్ URL నమోదు చేయండి:</span>
+                          <input
+                            type="text"
+                            placeholder="https://... లేదా /assets/temple_photo_1.png"
+                            value={newImgSrc}
+                            onChange={(e) => setNewImgSrc(e.target.value)}
+                            className="w-full bg-black border border-white/20 rounded-xl p-3 text-xs sm:text-sm text-white font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Image Preview Box */}
+                      {newImgSrc && (
+                        <div className="mt-3 p-3 rounded-xl bg-black border border-emerald-400 flex items-center gap-4">
+                          <img src={newImgSrc} alt="Preview" className="w-24 h-16 object-cover rounded-lg border border-amber-300" />
+                          <div>
+                            <span className="text-xs font-black text-emerald-400 block">✓ ఫోటో ప్రివ్యూ సిద్ధంగా ఉంది</span>
+                            <span className="text-xs text-gray-300 font-mono">{newImgTitle || 'శీర్షిక నమోదు చేయబడలేదు'}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <button type="submit" className="btn-gold w-full py-4 text-base font-black rounded-2xl shadow-xl flex items-center justify-center gap-2">
+                      <Plus className="w-6 h-6" />
+                      <span>కొత్త ఫోటోను స్లైడ్‌షో & గ్యాలరీకి జోడించండి</span>
+                    </button>
+                  </form>
+
+                  {/* Existing Photos Grid */}
+                  <div className="gold-card bg-[#5C121E]/95 border-3 border-amber-400/80 p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl">
+                    <div className="flex justify-between items-center pb-3 border-b border-white/20">
+                      <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-3">
+                        <ImageIcon className="w-7 h-7 text-amber-400" />
+                        <span>ప్రస్తుత ఫోటోల జాబితా (Active Images - {galleryList.length})</span>
+                      </h3>
+                      <span className="text-xs font-mono font-black text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-400/50">
+                        {galleryList.length} Images
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {galleryList.map((img) => (
+                        <div key={img.id} className="gold-card !p-4 bg-black/60 border-2 border-white/20 rounded-2xl flex flex-col justify-between space-y-3">
+                          <div className="aspect-video rounded-xl overflow-hidden bg-black border border-white/20">
+                            <img src={img.src} alt={img.title} className="w-full h-full object-cover" />
+                          </div>
+                          <div>
+                            <span className="text-[11px] font-black text-amber-300 bg-[#5C121E] px-2.5 py-0.5 rounded-full border border-amber-400/40 inline-block mb-1">
+                              {img.tag}
+                            </span>
+                            <h4 className="text-sm font-black text-white heading-telugu line-clamp-2">{img.title}</h4>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteGalleryImage(img.id)}
+                            className="btn-outline text-xs !py-2 !px-3 text-red-400 border-red-500/50 hover:bg-red-600 hover:text-white rounded-xl w-full flex items-center justify-center gap-1.5 font-bold"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            <span>తొలగించండి (Delete)</span>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* TAB 8: AUDIT & DATABASE VERIFICATION */}
             {activeTab === 'audit' && (

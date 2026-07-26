@@ -21,6 +21,32 @@ const v1ClassicDonors = [
   { id: 'SRS-2026-016', donorName: 'Thaneru Munirathnam & Neelamma family', phone: '9866125609', email: 'sriramasevacommitteepvv@gmail.com', amount: 50000, date: '06-07-2026', seva: 'ఆలయ నిర్మాణ నిధి', mode: 'SBI Direct Transfer', city: 'పామినివాండ్లవూరు' }
 ];
 
+export const defaultWebsiteSettings = {
+  showSlideshow: true,
+  showAbout: true,
+  showDonations: true,
+  showCommittee: true,
+  showTerms: true,
+  showEvents: true,
+  showGallery: true,
+  showNews: true,
+  showReports: true,
+  showContact: true
+};
+
+export const defaultGalleryImages = [
+  { id: 'IMG-1', src: '/assets/temple_photo_1.png', title: 'శ్రీ రామాలయ శంకుస్థాపన పవిత్ర రాతి స్తంభాల పూజ', tag: 'పామినివాండ్లవూరు శంకుస్థాపన' },
+  { id: 'IMG-2', src: '/assets/temple_photo_2.png', title: 'గ్రామస్థులు & భక్తుల సమక్షంలో ఆలయ పునాది పూజా మహోత్సవం', tag: 'పవిత్ర శంకుస్థాపన మహోత్సవం' },
+  { id: 'IMG-3', src: '/assets/temple_photo_3.png', title: 'రాతి గోడల ఆలయ శంకుస్థాపన పునాది నిర్మాణం', tag: 'ఆలయ పునాది ప్రగతి' },
+  { id: 'IMG-4', src: '/assets/temple_photo_4.png', title: 'అలంకరించిన టేకు కలప ప్రధాన ద్వారబంధం', tag: 'ఆలయ ద్వారబంధం' },
+  { id: 'IMG-5', src: '/assets/temple_photo_5.png', title: 'పునాది గుంటలో పవిత్ర రాతి రాళ్ళ ప్రతిష్ఠాపన పూజ', tag: 'గర్భగుడి శంకుస్థాపన' },
+  { id: 'IMG-6', src: '/assets/temple_photo_6.png', title: 'ఆలయ పెద్దలు & భక్తుల పవిత్ర దర్శన దృశ్యం', tag: 'పామినివాండ్లవూరు గ్రామస్థులు' },
+  { id: 'IMG-7', src: '/assets/temple_photo_7.png', title: 'శ్రీ రామాలయ ప్రాంగణం & చెక్కిన రాతి నిర్మాణం', tag: 'ఆలయ ప్రాంగణ ప్రగతి' },
+  { id: 'IMG-8', src: '/assets/temple_photo_8.png', title: 'శ్రీ రామాలయ రాతి గోడలు & ద్వార బంధాల అమరిక', tag: 'రాతి గోడల నిర్మాణం' },
+  { id: 'IMG-9', src: '/assets/temple_photo_9.png', title: 'గర్భగుడి అంతర్భాగం & చెక్కిన రాతి గోడలు', tag: 'గర్భగుడి నిర్మాణం' },
+  { id: 'IMG-10', src: '/assets/temple_photo_10.png', title: 'శ్రీ రామాలయ పవిత్ర రాతి నిర్మాణం పూర్తయిన దృశ్యం', tag: 'ఆలయ రాతి నిర్మాణం' }
+];
+
 const initialDB = {
   devotees: [
     { id: 'DEV-1001', name: 'Thaneru Rajesh', phone: '9866125609', email: 'sriramasevacommitteepvv@gmail.com', city: 'పామినివాండ్లవూరు', registeredAt: '12-05-2026' },
@@ -39,6 +65,8 @@ const initialDB = {
     { id: 'VOL-1', name: 'Ramu T', phone: '9866125609', email: 'ramu@gmail.com', task: 'అన్నదానం పర్యవేక్షణ', status: 'Active' },
     { id: 'VOL-2', name: 'Siva K', phone: '8431806098', email: 'siva@gmail.com', task: 'నిర్మాణ పర్యవేక్షణ', status: 'Active' }
   ],
+  websiteSettings: { ...defaultWebsiteSettings },
+  galleryImages: [...defaultGalleryImages],
   auditLogs: [
     { id: 'LOG-1', timestamp: '2026-07-26 09:30:00', user: 'Admin', action: 'System Database Initialized with V1 Classic Donors' }
   ]
@@ -55,6 +83,14 @@ export const getDB = () => {
       parsed.expenses = parsed.expenses.filter(e => e.id !== 'EXP-101' && e.id !== 'EXP-102');
     }
     if (!parsed.expenses) parsed.expenses = [];
+
+    // Ensure websiteSettings and galleryImages exist
+    if (!parsed.websiteSettings) {
+      parsed.websiteSettings = { ...defaultWebsiteSettings };
+    }
+    if (!parsed.galleryImages || parsed.galleryImages.length === 0) {
+      parsed.galleryImages = [...defaultGalleryImages];
+    }
 
     // Ensure all V1 classic donors exist in donations list
     if (!parsed.donations || parsed.donations.length < 16) {
