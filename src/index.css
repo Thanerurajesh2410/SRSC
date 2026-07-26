@@ -434,3 +434,25 @@ header button, nav button, nav a {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
+
+/* ⚡ Flash News High-Visibility Attention-Grabbing Ticker Bar */
+.flash-news-banner {
+  background: linear-gradient(90deg, #8B0000 0%, #E65100 25%, #C62828 50%, #E65100 75%, #8B0000 100%);
+  border-bottom: 2px solid #FFD700;
+  box-shadow: 0 4px 25px rgba(230, 81, 0, 0.8);
+}
+
+.flash-news-content {
+  display: inline-block;
+  white-space: nowrap;
+  animation: flashMarquee 26s linear infinite;
+}
+
+.flash-news-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes flashMarquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
