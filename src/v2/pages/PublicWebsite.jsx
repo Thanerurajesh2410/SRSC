@@ -1240,47 +1240,51 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
         </div>
       )}
 
-      {/* 📷 PHONEPE STANDEE QR CODE FULL SCREEN ZOOM MODAL */}
+      {/* 📷 PHONEPE STANDEE QR CODE FULL SCREEN LARGE POPUP MODAL */}
       {showQrModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn" onClick={() => setShowQrModal(false)}>
-          <div className="bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] border-4 border-[#FFD700] p-6 sm:p-8 rounded-3xl max-w-md w-full shadow-2xl relative text-center text-white space-y-4" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-gradient-to-b from-[#4A0E17] via-[#2A060B] to-[#1A0306] border-4 border-[#FFD700] p-6 sm:p-10 rounded-3xl max-w-2xl w-full shadow-[0_0_80px_rgba(255,215,0,0.6)] relative text-center text-white space-y-6" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               onClick={() => setShowQrModal(false)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-red-600 hover:text-white transition-colors"
+              className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 text-white hover:bg-red-600 hover:text-white transition-colors"
             >
-              <X className="w-6 h-6" />
+              <X className="w-7 h-7" />
             </button>
 
-            <span className="inline-block px-4 py-1 rounded-full text-xs font-black bg-[#FFD700] text-black shadow-md">
-              🚩 PHONEPE OFFICIAL STANDEE QR SCANNER
-            </span>
+            <div className="space-y-2">
+              <span className="inline-block px-5 py-1.5 rounded-full text-xs sm:text-sm font-black bg-[#FFD700] text-black shadow-lg">
+                🚩 PHONEPE OFFICIAL STANDEE QR SCANNER
+              </span>
 
-            <h3 className="text-xl sm:text-2xl font-black text-white heading-telugu">
-              శ్రీ రామా సేవా కమిటీ పామినివాండ్లవూరు
-            </h3>
+              <h3 className="text-2xl sm:text-3xl font-black text-white heading-telugu">
+                శ్రీ రామా సేవా కమిటీ పామినివాండ్లవూరు
+              </h3>
+              <p className="text-xs sm:text-sm text-amber-200 font-bold">100% పారదర్శకత • నేరుగా ఆలయ అధికారిక బ్యాంక్ ఖాతాకు జమ</p>
+            </div>
 
-            <div className="bg-white p-4 rounded-3xl border-4 border-[#FFD700] shadow-2xl my-2 inline-block">
+            {/* High-Resolution Large QR Code Display Container */}
+            <div className="bg-white p-5 sm:p-6 rounded-3xl border-4 border-[#FFD700] shadow-2xl inline-block my-2">
               <img
                 src="/assets/phonepe_qr.png"
-                alt="PhonePe QR Standee Scanner Full View"
-                className="w-64 h-64 sm:w-72 sm:h-72 object-contain mx-auto"
+                alt="PhonePe QR Standee Scanner Large View"
+                className="w-72 h-72 sm:w-96 sm:h-96 object-contain mx-auto"
               />
             </div>
 
-            <div className="bg-black/70 p-3 rounded-2xl border border-white/20">
-              <span className="text-xs text-amber-200 font-bold block">అధికారిక UPI ID:</span>
-              <span className="text-sm sm:text-base font-mono font-black text-[#FFD700] block my-0.5">8431806098@ibl</span>
-              <span className="text-xs text-gray-300 font-semibold block">మొబైల్ ఫోన్‌తో PhonePe, GPay, Paytm ద్వారా స్కాన్ చేయండి</span>
+            <div className="bg-black/80 p-4 rounded-2xl border-2 border-white/20 max-w-md mx-auto space-y-1">
+              <span className="text-xs text-amber-300 font-bold uppercase block">అధికారిక UPI ID:</span>
+              <span className="text-base sm:text-xl font-mono font-black text-[#FFD700] block my-0.5">8431806098@ibl</span>
+              <span className="text-xs text-gray-300 font-semibold block">మొబైల్ ఫోన్‌లోని PhonePe, GPay, Paytm లేదా ఏ ఇతర UPI యాప్ ద్వారా స్కాన్ చేయండి</span>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-4 max-w-md mx-auto">
               <button
                 type="button"
                 onClick={() => copyToClipboard('8431806098@ibl', 'upi')}
-                className="btn-gold text-xs sm:text-sm w-full py-3 rounded-xl font-black flex items-center justify-center gap-2"
+                className="btn-gold text-sm sm:text-base w-full py-3.5 rounded-2xl font-black flex items-center justify-center gap-2 shadow-xl"
               >
-                {copiedUpi ? <CheckCircle2 className="w-4 h-4 text-emerald-950" /> : <Copy className="w-4 h-4" />}
+                {copiedUpi ? <CheckCircle2 className="w-5 h-5 text-emerald-950" /> : <Copy className="w-5 h-5" />}
                 <span>{copiedUpi ? "UPI ID కాపీ చేయబడింది!" : "UPI ID కాపీ చేయండి"}</span>
               </button>
             </div>
