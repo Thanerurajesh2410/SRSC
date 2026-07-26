@@ -39,17 +39,41 @@ export default function DevoteePortal({ t, showToast }) {
     setDbState(getDB());
   }, []);
 
-  // Download Receipt PDF Function (html2canvas + jsPDF)
+  // Download Receipt PDF Function (Auto-scaled to fit A4 page completely without bottom cutoff)
   const downloadReceiptPDF = async () => {
     if (!receiptModalRef.current || !selectedReceipt) return;
+    showToast("రశీదు PDF డౌన్‌లోడ్ ప్రారంభమైంది...");
     try {
-      showToast("రశీదు PDF డౌన్‌లోడ్ ప్రారంభమైంది...");
-      const canvas = await html2canvas(receiptModalRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-      const imgData = canvas.toDataURL('image/png');
+      const element = receiptModalRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200
+      });
+      const imgData = canvas.toDataURL('image/png', 1.0);
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      
+      const margin = 8;
+      const maxPdfWidth = pageWidth - (margin * 2);
+      const maxPdfHeight = pageHeight - (margin * 2);
+      
+      let imgWidth = maxPdfWidth;
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      if (imgHeight > maxPdfHeight) {
+        imgHeight = maxPdfHeight;
+        imgWidth = (canvas.width * imgHeight) / canvas.height;
+      }
+      
+      const xOffset = (pageWidth - imgWidth) / 2;
+      const yOffset = margin;
+      
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
       pdf.save(`SRI_RAMA_SEVA_RECEIPT_${selectedReceipt.id || 'DONATION'}.pdf`);
       showToast("రశీదు PDF విజయవంతంగా డౌన్‌లోడ్ చేయబడింది!");
     } catch (err) {
@@ -591,11 +615,6 @@ export default function DevoteePortal({ t, showToast }) {
                 </div>
 
                 <div className="grid grid-cols-3 border-b border-gray-400">
-                  <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆడిట్ లాగ్ ఐడీ (Audit Log No):</div>
-                  <div className="p-2.5 font-mono font-extrabold col-span-2 text-gray-800">LOG-2026-AUDIT-{(selectedReceipt.id || selectedReceipt.receiptNo || '001').replace(/\D/g, '')}</div>
-                </div>
-
-                <div className="grid grid-cols-3 border-b border-gray-400">
                   <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆలయ ట్రస్ట్ పేరు (Trust Name):</div>
                   <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU</div>
                 </div>
@@ -625,14 +644,9 @@ export default function DevoteePortal({ t, showToast }) {
                   <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">{selectedReceipt.seva || 'రాతి గోడల నిర్మాణం'}</div>
                 </div>
 
-                <div className="grid grid-cols-3 border-b border-gray-400">
+                <div className="grid grid-cols-3">
                   <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">చెల్లింపు మార్గం (Payment Mode):</div>
                   <div className="p-2.5 font-bold col-span-2 text-sky-800">{selectedReceipt.mode || 'PhonePe Standee QR / UPI'}</div>
-                </div>
-
-                <div className="grid grid-cols-3">
-                  <div className="p-2.5 font-bold bg-emerald-100 border-r border-gray-400 text-emerald-950">ఆడిట్ స్థితి (Audit Status):</div>
-                  <div className="p-2.5 font-black col-span-2 text-emerald-700">✓ VERIFIED & RECORDED IN TEMPLE AUDIT DATABASE</div>
                 </div>
               </div>
 

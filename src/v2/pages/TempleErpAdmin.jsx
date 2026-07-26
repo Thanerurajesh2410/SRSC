@@ -388,23 +388,45 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
     }
   };
 
-  // Pixel-Perfect A4 Landscape PDF Generation for Receipts
+  // Download Receipt PDF Function (Auto-scaled to fit A4 page completely without bottom cutoff)
   const downloadReceiptPDF = async () => {
-    if (!receiptRef.current) return;
-    showToast("రశీదు PDF సిద్ధమవుతోంది...");
+    if (!receiptRef.current || !generatedReceipt) return;
+    showToast("రశీదు PDF డౌన్‌లోడ్ ప్రారంభమైంది...");
     try {
-      const canvas = await html2canvas(receiptRef.current, { scale: 3, useCORS: true, backgroundColor: '#FFFDF0' });
-      const imgData = canvas.toDataURL('image/png');
-
-      const pdf = new jsPDF('l', 'mm', 'a4');
-      const imgWidth = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`Sri_Rama_ERP_Receipt_${generatedReceipt.receiptNo}.pdf`);
-      showToast("రశీదు PDF విజయవంతంగా డౌన్‌లోడ్ అయింది!");
+      const element = receiptRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200
+      });
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      
+      const margin = 8;
+      const maxPdfWidth = pageWidth - (margin * 2);
+      const maxPdfHeight = pageHeight - (margin * 2);
+      
+      let imgWidth = maxPdfWidth;
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      if (imgHeight > maxPdfHeight) {
+        imgHeight = maxPdfHeight;
+        imgWidth = (canvas.width * imgHeight) / canvas.height;
+      }
+      
+      const xOffset = (pageWidth - imgWidth) / 2;
+      const yOffset = margin;
+      
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
+      pdf.save(`SRI_RAMA_ERP_RECEIPT_${generatedReceipt.receiptNo}.pdf`);
+      showToast("రశీదు PDF విజయవంతంగా డౌన్‌లోడ్ చేయబడింది!");
     } catch (err) {
-      console.error(err);
+      console.error("PDF generation error:", err);
       showToast("PDF సృష్టించడంలో సమస్య వచ్చింది.");
     }
   };
@@ -834,11 +856,6 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                         </div>
 
                         <div className="grid grid-cols-3 border-b border-gray-400">
-                          <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆడిట్ లాగ్ ఐడీ (Audit Log No):</div>
-                          <div className="p-2.5 font-mono font-extrabold col-span-2 text-gray-800">LOG-2026-AUDIT-{generatedReceipt.receiptNo.replace(/\D/g, '')}</div>
-                        </div>
-
-                        <div className="grid grid-cols-3 border-b border-gray-400">
                           <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">ఆలయ ట్రస్ట్ పేరు (Trust Name):</div>
                           <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU</div>
                         </div>
@@ -868,14 +885,9 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                           <div className="p-2.5 font-bold col-span-2 text-[#5C121E]">{generatedReceipt.seva}</div>
                         </div>
 
-                        <div className="grid grid-cols-3 border-b border-gray-400">
+                        <div className="grid grid-cols-3">
                           <div className="p-2.5 font-bold bg-gray-100 border-r border-gray-400">చెల్లింపు మార్గం (Payment Mode):</div>
                           <div className="p-2.5 font-bold col-span-2 text-sky-800">{generatedReceipt.mode}</div>
-                        </div>
-
-                        <div className="grid grid-cols-3">
-                          <div className="p-2.5 font-bold bg-emerald-100 border-r border-gray-400 text-emerald-950">ఆడిట్ స్థితి (Audit Status):</div>
-                          <div className="p-2.5 font-black col-span-2 text-emerald-700">✓ VERIFIED & RECORDED IN TEMPLE AUDIT DATABASE</div>
                         </div>
                       </div>
 
