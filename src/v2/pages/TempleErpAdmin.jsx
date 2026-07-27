@@ -71,6 +71,102 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
   // Active Report Type for Download/Sharing
   const [activeReportType, setActiveReportType] = useState('financial');
 
+  // 🎨 Poster, Pamphlet & Donation Book Studio State
+  const designerCanvasRef = useRef(null);
+  const [designerType, setDesignerType] = useState('poster'); // 'poster' | 'pamphlet' | 'receipt_book'
+  
+  // Poster Fields
+  const [posterTitle, setPosterTitle] = useState('శ్రీ సీతారాములవారి ఆలయ శంకుస్థాపన & పునాది రాతి గోడల నిర్మాణ మహోత్సవం');
+  const [posterSubtitle, setPosterSubtitle] = useState('శ్రీ రామా సేవా కమిటీ & పామినివాండ్లవూరు గ్రామస్థుల దివ్య సమర్పణ');
+  const [posterDate, setPosterDate] = useState('తేదీ: 2026-08-15 (ఆదివారం) • సమయం: ఉదయం 9:00 గంటలకు');
+  const [posterVenue, setPosterVenue] = useState('స్థలం: పామినివాండ్లవూరు శ్రీ రామాలయ ప్రాంగణం, మంగళపల్లె పంచాయతీ, బంగారుపాళెం');
+  const [posterMessage, setPosterMessage] = useState('స్వహస్తాలతో శ్రీ రామాలయ రాతి గోడల నిర్మాణానికి విరాళం సమర్పించి శ్రీరాముని కృపకు పాత్రులు కాగలరని ప్రార్థన.');
+  const [posterChiefGuest, setPosterChiefGuest] = useState('ముఖ్య ఆహ్వానితులు: ఆలయ పెద్దలు, పురోహితులు & గ్రామ దాతలు');
+  const [posterPhone, setPosterPhone] = useState('9866125609 / 8431806098');
+  const [posterUpiId, setPosterUpiId] = useState('9866125609@ybl (PhonePe / GPay)');
+  const [posterTheme, setPosterTheme] = useState('divine_maroon'); // 'divine_maroon' | 'royal_gold' | 'sacred_saffron'
+
+  // Pamphlet Fields
+  const [pamphletTitle, setPamphletTitle] = useState('పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ దివ్య ఆహ్వాన పత్రిక & విరాళాల పిలుపు');
+  const [pamphletSubtitle, setPamphletSubtitle] = useState('శ్రీ రామా సేవా కమిటీ • చిత్తూరు జిల్లా - 517416');
+  const [pamphletHistory, setPamphletHistory] = useState('పామినివాండ్లవూరు గ్రామంలో శ్రీ రామాలయ నిర్మాణ పనులు అత్యంత భక్తిశ్రద్ధలతో గ్రానైట్ రాతి గోడలతో శరవేగంగా జరుగుచున్నవి. ప్రతి భక్తుడూ తన వంతు సహకారాన్ని అందించి రాతి రాళ్ళు, ఇటుకలు లేదా నిధి కానుకలను సమర్పించవలసిందిగా కోరుచున్నాము.');
+  const [pamphletSevas, setPamphletSevas] = useState('• రాతి గోడల విరాళం: ₹ 5,000/-\n• గర్భగుడి ఇటుకల కానుక: ₹ 2,101/-\n• అన్నదాన సేవా నిధి: ₹ 1,116/-\n• ఈ-హుండి కానుకలు: దాతల ఇష్టానుసారం');
+  const [pamphletContact, setPamphletContact] = useState('శ్రీ రామా సేవా కమిటీ సభ్యులు • ఫోన్: 9866125609 / 8431806098');
+
+  // Donation Receipt Book Template Fields
+  const [bookTrustName, setBookTrustName] = useState('SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU');
+  const [bookStartNo, setBookStartNo] = useState('1001');
+  const [bookSlipCount, setBookSlipCount] = useState(3);
+  const [bookNotice, setBookNotice] = useState('1. ఈ రశీదు పుస్తకం శ్రీ రామాలయ నిర్మాణ నిధికి అధికారికంగా జారీ చేయబడినది.\n2. విరాళం నగదు లేదా PhonePe / UPI ద్వారా స్వీకరించబడును.');
+
+  // Download Designer Canvas as High-Res PNG Image
+  const downloadDesignImage = async () => {
+    if (!designerCanvasRef.current) return;
+    showToast("పోస్టర్ / పాంప్లెట్ ఇమేజ్ ڈاؤنన్‌లోడ్ ప్రారంభమైంది...");
+    try {
+      const element = designerCanvasRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200
+      });
+      const link = document.createElement('a');
+      link.download = `Sri_Rama_${designerType.toUpperCase()}_DESIGN.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+      showToast("ఇమేజ్ (PNG) విజయవంతంగా డౌన్‌లోడ్ చేయబడింది!");
+    } catch (err) {
+      console.error(err);
+      showToast("ఇమేజ్ డౌన్‌లోడ్‌లో లోపం జరిగింది.");
+    }
+  };
+
+  // Download Designer Canvas as Printable PDF
+  const downloadDesignPDF = async () => {
+    if (!designerCanvasRef.current) return;
+    showToast("పోస్టర్ / పాంప్లెట్ PDF సిద్ధమవుతోంది...");
+    try {
+      const element = designerCanvasRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200
+      });
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      
+      const margin = 8;
+      const maxPdfWidth = pageWidth - (margin * 2);
+      const maxPdfHeight = pageHeight - (margin * 2);
+      
+      let imgWidth = maxPdfWidth;
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      if (imgHeight > maxPdfHeight) {
+        imgHeight = maxPdfHeight;
+        imgWidth = (canvas.width * imgHeight) / canvas.height;
+      }
+      
+      const xOffset = (pageWidth - imgWidth) / 2;
+      const yOffset = margin;
+      
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
+      pdf.save(`Sri_Rama_${designerType.toUpperCase()}_DESIGN.pdf`);
+      showToast("PDF విజయవంతంగా డౌన్‌లోడ్ చేయబడింది!");
+    } catch (err) {
+      console.error(err);
+      showToast("PDF డౌన్‌లోడ్‌లో లోపం జరిగింది.");
+    }
+  };
+
   useEffect(() => {
     setDbState(getDB());
   }, []);
@@ -630,6 +726,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                 { id: 'volunteers', label: '🤝 వాలంటీర్లు' },
                 { id: 'website-settings', label: '⚙️ వెబ్‌సైట్ విభాగాలు' },
                 { id: 'gallery-manager', label: '🖼️ గ్యాలరీ & స్లైడ్‌షో ఫోటోలు' },
+                { id: 'poster-designer', label: '🎨 పోస్టర్లు, పాంప్లెట్లు & రశీదు పుస్తకం' },
                 { id: 'audit', label: '📋 ఆడిట్ & డేటాబేస్' }
               ].map(tab => (
                 <button
@@ -1540,6 +1637,563 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                 </div>
               );
             })()}
+
+            {/* TAB 11: POSTER, PAMPHLET & DONATION BOOK DESIGN STUDIO */}
+            {activeTab === 'poster-designer' && (
+              <div className="space-y-8 animate-fadeIn">
+                {/* Studio Header Card */}
+                <div className="gold-card bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-3 border-[#FFD700] p-6 sm:p-8 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 rounded-2xl bg-[#FFD700]/20 border border-[#FFD700]/50 text-[#FFD700]">
+                      <Sparkles className="w-10 h-10 animate-pulse" />
+                    </div>
+                    <div>
+                      <span className="bg-amber-500 text-black font-black text-xs uppercase px-3 py-1 rounded-full inline-block mb-1">
+                        ✨ డిజైన్ స్టుడియో • POSTER & PAMPHLET STUDIO
+                      </span>
+                      <h2 className="text-2xl sm:text-3xl font-black text-[#FFD700] heading-telugu">
+                        పోస్టర్లు, పాంప్లెట్లు & రశీదు పుస్తకాల డిజైనర్
+                      </h2>
+                      <p className="text-sm text-gray-200 mt-1">
+                        ఆలయ శంకుస్థాపన పోస్టర్లు, విరాళాల పిలుపు పాంప్లెట్లు మరియు ప్రింటబుల్ రశీదు పుస్తకాలను ఇక్కడే కస్టమైజ్ చేసి PDF / PNG లలో ఉచితంగా డౌన్‌లోడ్ చేసుకోండి.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap items-center gap-3 shrink-0">
+                    <button
+                      type="button"
+                      onClick={downloadDesignImage}
+                      className="btn-gold text-sm py-3 px-5 rounded-2xl font-black flex items-center gap-2 shadow-xl"
+                    >
+                      <Camera className="w-5 h-5" />
+                      <span>ఇమేజ్ డౌన్‌లోడ్ (PNG)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={downloadDesignPDF}
+                      className="px-5 py-3 rounded-2xl font-black text-sm bg-emerald-600 text-white border-2 border-emerald-400 hover:bg-emerald-500 transition-all shadow-xl flex items-center gap-2"
+                    >
+                      <Download className="w-5 h-5" />
+                      <span>PDF డౌన్‌లోడ్ (Print PDF)</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Designer Type Selector Pills */}
+                <div className="flex flex-wrap gap-3 bg-[#3A0A11]/60 p-2 rounded-2xl border border-white/20">
+                  <button
+                    type="button"
+                    onClick={() => setDesignerType('poster')}
+                    className={`flex-1 min-w-[200px] py-3.5 px-6 rounded-xl font-extrabold text-base transition-all flex items-center justify-center gap-3 ${
+                      designerType === 'poster'
+                        ? 'bg-[#FFD700] text-[#5C121E] shadow-xl font-black scale-102 border-2 border-white'
+                        : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    <ImageIcon className="w-5 h-5" />
+                    <span>1. ఆలయ శంకుస్థాపన & నిర్మాణ పోస్టర్</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setDesignerType('pamphlet')}
+                    className={`flex-1 min-w-[200px] py-3.5 px-6 rounded-xl font-extrabold text-base transition-all flex items-center justify-center gap-3 ${
+                      designerType === 'pamphlet'
+                        ? 'bg-[#FFD700] text-[#5C121E] shadow-xl font-black scale-102 border-2 border-white'
+                        : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    <FileText className="w-5 h-5" />
+                    <span>2. ఆలయ ఆహ్వాన పత్రిక / పాంప్లెట్</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setDesignerType('receipt_book')}
+                    className={`flex-1 min-w-[200px] py-3.5 px-6 rounded-xl font-extrabold text-base transition-all flex items-center justify-center gap-3 ${
+                      designerType === 'receipt_book'
+                        ? 'bg-[#FFD700] text-[#5C121E] shadow-xl font-black scale-102 border-2 border-white'
+                        : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    <Receipt className="w-5 h-5" />
+                    <span>3. ప్రింటబుల్ రశీదు పుస్తకం (Receipt Book)</span>
+                  </button>
+                </div>
+
+                {/* Split Editor Grid: Controls on Left, Live Rendered Canvas on Right */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                  
+                  {/* LEFT COLUMN: CONTROLS & EDITABLE FORM (5 cols) */}
+                  <div className="lg:col-span-5 bg-gradient-to-b from-[#4A0E17] to-[#2A060B] border-3 border-[#FFD700]/60 p-6 rounded-3xl shadow-2xl space-y-6 text-white">
+                    
+                    {/* TYPE 1: POSTER FORM */}
+                    {designerType === 'poster' && (
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-black text-[#FFD700] border-b border-white/20 pb-2 heading-telugu">
+                          🎨 పోస్టర్ కస్టమైజేషన్ ఆప్షన్లు
+                        </h3>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ప్రధాన శీర్షిక (Main Title)</label>
+                          <input
+                            type="text"
+                            value={posterTitle}
+                            onChange={(e) => setPosterTitle(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ఉప శీర్షిక (Subtitle)</label>
+                          <input
+                            type="text"
+                            value={posterSubtitle}
+                            onChange={(e) => setPosterSubtitle(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">తేదీ & సమయం (Date & Time)</label>
+                          <input
+                            type="text"
+                            value={posterDate}
+                            onChange={(e) => setPosterDate(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">కార్యక్రమ స్థలం (Venue Location)</label>
+                          <input
+                            type="text"
+                            value={posterVenue}
+                            onChange={(e) => setPosterVenue(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">భక్తులకు పిలుపు సందేశం (Appeal Message)</label>
+                          <textarea
+                            rows={3}
+                            value={posterMessage}
+                            onChange={(e) => setPosterMessage(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ముఖ్య అతిథులు / పెద్దలు (Chief Guests)</label>
+                          <input
+                            type="text"
+                            value={posterChiefGuest}
+                            onChange={(e) => setPosterChiefGuest(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-bold text-amber-200 mb-1">సంప్రదించు ఫోన్</label>
+                            <input
+                              type="text"
+                              value={posterPhone}
+                              onChange={(e) => setPosterPhone(e.target.value)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2.5 text-xs text-white font-bold"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-amber-200 mb-1">PhonePe / UPI ID</label>
+                            <input
+                              type="text"
+                              value={posterUpiId}
+                              onChange={(e) => setPosterUpiId(e.target.value)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2.5 text-xs text-white font-bold"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">పోస్టర్ కలర్ థీమ్ (Theme Color)</label>
+                          <select
+                            value={posterTheme}
+                            onChange={(e) => setPosterTheme(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          >
+                            <option value="divine_maroon">రాయల్ మెరూన్ & గోల్డ్ (Royal Maroon)</option>
+                            <option value="royal_gold">స్వర్ణమయం గోల్డ్ (Golden Theme)</option>
+                            <option value="sacred_saffron">దివ్య కాషాయం (Sacred Saffron)</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TYPE 2: PAMPHLET FORM */}
+                    {designerType === 'pamphlet' && (
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-black text-[#FFD700] border-b border-white/20 pb-2 heading-telugu">
+                          📜 పాంప్లెట్ / ఆహ్వాన పత్రిక వివరాలు
+                        </h3>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">పాంప్లెట్ శీర్షిక (Title)</label>
+                          <input
+                            type="text"
+                            value={pamphletTitle}
+                            onChange={(e) => setPamphletTitle(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ఆలయ కమిటీ / గ్రామం వివరాలు</label>
+                          <input
+                            type="text"
+                            value={pamphletSubtitle}
+                            onChange={(e) => setPamphletSubtitle(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ఆలయ విశేషాలు & చరిత్ర వివరణ</label>
+                          <textarea
+                            rows={4}
+                            value={pamphletHistory}
+                            onChange={(e) => setPamphletHistory(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">విరాళాల వర్గాలు & సేవా వివరాలు (Seva List)</label>
+                          <textarea
+                            rows={4}
+                            value={pamphletSevas}
+                            onChange={(e) => setPamphletSevas(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-mono font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">కమిటీ సంప్రదింపు వివరాలు (Contacts)</label>
+                          <input
+                            type="text"
+                            value={pamphletContact}
+                            onChange={(e) => setPamphletContact(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TYPE 3: DONATION RECEIPT BOOK FORM */}
+                    {designerType === 'receipt_book' && (
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-black text-[#FFD700] border-b border-white/20 pb-2 heading-telugu">
+                          🧾 రశీదు పుస్తకం టెంప్లేట్ ఆప్షన్లు
+                        </h3>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ట్రస్ట్ / కమిటీ అధికారిక పేరు</label>
+                          <input
+                            type="text"
+                            value={bookTrustName}
+                            onChange={(e) => setBookTrustName(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ప్రారంభ రశీదు సంఖ్య (Starting Receipt No)</label>
+                          <input
+                            type="number"
+                            value={bookStartNo}
+                            onChange={(e) => setBookStartNo(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-mono font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ఒక పేజీకి రశీదు స్లిప్పుల సంఖ్య (Slips per Sheet)</label>
+                          <select
+                            value={bookSlipCount}
+                            onChange={(e) => setBookSlipCount(Number(e.target.value))}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          >
+                            <option value={2}>2 రశీదు స్లిప్పులు (2 Slips per A4)</option>
+                            <option value={3}>3 రశీదు స్లిప్పులు (3 Slips per A4)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">రశీదు పుస్తకం నిబంధనలు (Receipt Book Terms)</label>
+                          <textarea
+                            rows={3}
+                            value={bookNotice}
+                            onChange={(e) => setBookNotice(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
+
+                  {/* RIGHT COLUMN: LIVE RENDERED PRINTABLE CANVAS (7 cols) */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <div className="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/10">
+                      <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                        <Eye className="w-4 h-4" />
+                        <span>లైవ్ ప్రింట్ ప్రివ్యూ (Live Rendered Preview)</span>
+                      </span>
+                      <span className="text-xs text-gray-400 font-mono">A4 Ready • Print Quality</span>
+                    </div>
+
+                    {/* PRINTABLE CANVAS CONTAINER */}
+                    <div className="overflow-x-auto pb-4">
+                      <div
+                        ref={designerCanvasRef}
+                        className="w-[720px] mx-auto bg-white text-black p-6 sm:p-8 rounded-2xl shadow-2xl border-4 border-gray-900 relative overflow-hidden font-sans"
+                      >
+
+                        {/* TEMPLATE 1 RENDER: POSTER */}
+                        {designerType === 'poster' && (
+                          <div className={`p-6 rounded-xl border-4 ${
+                            posterTheme === 'royal_gold'
+                              ? 'bg-gradient-to-b from-amber-100 via-amber-50 to-amber-200 border-amber-600 text-amber-950'
+                              : posterTheme === 'sacred_saffron'
+                              ? 'bg-gradient-to-b from-orange-100 via-amber-50 to-orange-200 border-orange-600 text-orange-950'
+                              : 'bg-gradient-to-b from-[#5C121E] via-[#3A0A11] to-[#5C121E] border-[#FFD700] text-white'
+                          } relative overflow-hidden space-y-6`}>
+                            
+                            {/* Poster Watermark */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10 z-0">
+                              <img src="/assets/logo.jpg" alt="Logo Watermark" className="w-96 h-96 rounded-full object-cover grayscale" />
+                            </div>
+
+                            {/* Poster Header */}
+                            <div className="text-center space-y-2 relative z-10 border-b-2 border-current/20 pb-4">
+                              <div className="flex items-center justify-center gap-3">
+                                <img src="/assets/logo.jpg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-500 shadow-md" />
+                                <div>
+                                  <h3 className="text-2xl font-black uppercase tracking-wider heading-telugu">శ్రీ రామా సేవా కమిటీ</h3>
+                                  <p className="text-xs font-bold opacity-80">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Poster Title Banner */}
+                            <div className="text-center space-y-3 relative z-10 my-4">
+                              <span className="inline-block px-4 py-1 rounded-full text-xs font-black bg-amber-400 text-black uppercase shadow-lg">
+                                🚩 శ్రీరామ దివ్య సంకల్పం
+                              </span>
+                              <h1 className="text-2xl sm:text-3xl font-black leading-snug heading-telugu drop-shadow-md">
+                                {posterTitle}
+                              </h1>
+                              <p className="text-sm font-bold opacity-90">{posterSubtitle}</p>
+                            </div>
+
+                            {/* Event Details Highlight Box */}
+                            <div className="bg-black/20 backdrop-blur-sm border-2 border-current/30 p-4 rounded-2xl space-y-2 text-center relative z-10 text-sm font-extrabold">
+                              <p className="text-amber-300 text-base">{posterDate}</p>
+                              <p className="text-xs opacity-90">{posterVenue}</p>
+                              <p className="text-xs opacity-80 border-t border-current/20 pt-2 mt-2">{posterChiefGuest}</p>
+                            </div>
+
+                            {/* Appeal Message */}
+                            <div className="p-4 rounded-xl bg-white/10 border border-current/20 text-center relative z-10">
+                              <p className="text-sm font-bold leading-relaxed">{posterMessage}</p>
+                            </div>
+
+                            {/* QR Code & Donation Box */}
+                            <div className="bg-white text-black p-4 rounded-2xl flex items-center justify-between gap-4 border-2 border-amber-500 shadow-xl relative z-10">
+                              <div className="space-y-1 text-left">
+                                <span className="bg-emerald-600 text-white font-black text-[10px] uppercase px-2 py-0.5 rounded">
+                                  ✓ ఈ-హుండి & PhonePe QR
+                                </span>
+                                <h4 className="text-sm font-black text-[#5C121E]">విరాళం కానుక చెల్లించండి</h4>
+                                <p className="text-xs font-mono font-bold text-sky-900">UPI: {posterUpiId}</p>
+                                <p className="text-xs font-bold text-gray-700">ఫోన్ / వాట్సాప్: {posterPhone}</p>
+                              </div>
+                              <img src="/assets/phonepe_qr.png" alt="PhonePe QR" className="w-24 h-24 rounded-lg border-2 border-amber-600 shadow-md shrink-0" />
+                            </div>
+
+                            <div className="text-center text-[11px] font-bold opacity-70 relative z-10 pt-2">
+                              శ్రీ రామా సేవా కమిటీ, పామినివాండ్లవూరు • సర్వే జనాః సుఖినో భవంతు
+                            </div>
+                          </div>
+                        )}
+
+                        {/* TEMPLATE 2 RENDER: PAMPHLET / FLYER */}
+                        {designerType === 'pamphlet' && (
+                          <div className="bg-amber-50 text-gray-900 p-6 rounded-xl border-3 border-amber-800 space-y-6 relative overflow-hidden">
+                            
+                            {/* Pamphlet Watermark */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10 z-0">
+                              <img src="/assets/logo.jpg" alt="Logo Watermark" className="w-96 h-96 rounded-full object-cover grayscale" />
+                            </div>
+
+                            {/* Pamphlet Header */}
+                            <div className="flex items-center justify-between border-b-2 border-amber-800 pb-4 relative z-10">
+                              <div className="flex items-center gap-3">
+                                <img src="/assets/logo.jpg" alt="Logo" className="w-14 h-14 rounded-full border-2 border-amber-600" />
+                                <div>
+                                  <h3 className="text-lg font-black text-[#5C121E] heading-telugu">{pamphletTitle}</h3>
+                                  <p className="text-xs font-bold text-amber-900">{pamphletSubtitle}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Pamphlet Body: 2 Columns */}
+                            <div className="grid grid-cols-2 gap-5 relative z-10 text-xs">
+                              {/* Left Column: History & Appeal */}
+                              <div className="space-y-3 bg-white p-4 rounded-xl border border-amber-300 shadow-sm">
+                                <h4 className="font-black text-sm text-[#5C121E] border-b border-amber-200 pb-1 heading-telugu">
+                                  🏛️ ఆలయ విశేషాలు & నిర్మాణం
+                                </h4>
+                                <p className="leading-relaxed font-medium text-gray-800">{pamphletHistory}</p>
+                                <div className="bg-amber-100 p-2.5 rounded-lg border border-amber-300">
+                                  <p className="font-bold text-amber-950 text-[11px]">
+                                    శ్రీరామనవమి శుభ సందర్భాన గ్రామస్థులంతా ఏకమై గ్రానైట్ రాతి గోడలతో ఆలయాన్ని నిర్మిస్తున్నారు.
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Right Column: Sevas & Payment */}
+                              <div className="space-y-3 bg-white p-4 rounded-xl border border-amber-300 shadow-sm">
+                                <h4 className="font-black text-sm text-[#5C121E] border-b border-amber-200 pb-1 heading-telugu">
+                                  🙏 విరాళాల వివరాలు & సేవలు
+                                </h4>
+                                <pre className="font-sans text-xs whitespace-pre-wrap font-bold text-[#5C121E] bg-amber-50 p-2.5 rounded border border-amber-200">
+                                  {pamphletSevas}
+                                </pre>
+
+                                <div className="text-center pt-1">
+                                  <img src="/assets/phonepe_qr.png" alt="QR Code" className="w-20 h-20 mx-auto rounded border border-amber-600" />
+                                  <span className="text-[10px] font-bold text-gray-600 block mt-1">PhonePe QR స్కానర్</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Pamphlet Footer */}
+                            <div className="bg-[#5C121E] text-white p-3 rounded-xl text-center text-xs font-bold relative z-10">
+                              {pamphletContact}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* TEMPLATE 3 RENDER: PRINTABLE DONATION RECEIPT BOOK SLIPS */}
+                        {designerType === 'receipt_book' && (
+                          <div className="space-y-6 relative z-10">
+                            {Array.from({ length: bookSlipCount }).map((_, idx) => {
+                              const slipNo = `SRS-BOOK-${(parseInt(bookStartNo) || 1000) + idx}`;
+                              return (
+                                <div key={idx} className="space-y-2">
+                                  
+                                  {/* Receipt Book Slip Container */}
+                                  <div className="border-2 border-gray-900 rounded-lg p-3 bg-white flex text-[11px] font-sans relative overflow-hidden">
+                                    
+                                    {/* Stub / Counterfoil (Left Part 28%) */}
+                                    <div className="w-[28%] border-r-2 border-dashed border-gray-800 pr-3 space-y-2 bg-gray-50 p-2 rounded-l">
+                                      <div className="text-center border-b border-gray-400 pb-1">
+                                        <span className="font-black text-[#5C121E] text-[10px] block">దాత కౌంటర్ కాపీ</span>
+                                        <span className="font-mono font-black text-xs text-black">{slipNo}</span>
+                                      </div>
+                                      
+                                      <div className="space-y-1 text-[10px]">
+                                        <p><span className="font-bold">తేదీ:</span> ___________</p>
+                                        <p><span className="font-bold">పేరు:</span> ___________</p>
+                                        <p><span className="font-bold">మొత్తం:</span> ₹ _________</p>
+                                        <p><span className="font-bold">సేవ:</span> ____________</p>
+                                      </div>
+
+                                      <div className="text-center pt-3 border-t border-gray-300 text-[9px] font-bold text-gray-600">
+                                        వసూలుదారు సంతకం
+                                      </div>
+                                    </div>
+
+                                    {/* Main Receipt Voucher (Right Part 72%) */}
+                                    <div className="w-[72%] pl-3 space-y-2.5 relative">
+                                      
+                                      {/* Slip Watermark */}
+                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-5 z-0">
+                                        <img src="/assets/logo.jpg" alt="Logo" className="w-48 h-48 rounded-full grayscale" />
+                                      </div>
+
+                                      {/* Slip Header */}
+                                      <div className="flex justify-between items-start border-b border-gray-800 pb-1.5 relative z-10">
+                                        <div className="flex items-center gap-2">
+                                          <img src="/assets/logo.jpg" alt="Logo" className="w-8 h-8 rounded-full border border-amber-600" />
+                                          <div>
+                                            <h4 className="font-black text-[#5C121E] text-xs heading-telugu">{bookTrustName}</h4>
+                                            <p className="text-[9px] text-gray-600 font-bold">పామినివాండ్లవూరు • విరాళం రశీదు పుస్తకం</p>
+                                          </div>
+                                        </div>
+                                        <div className="text-right">
+                                          <span className="text-[9px] font-bold text-gray-500 block">రశీదు సంఖ్య:</span>
+                                          <span className="font-mono font-black text-xs text-[#5C121E]">{slipNo}</span>
+                                        </div>
+                                      </div>
+
+                                      {/* Fill-in Fields */}
+                                      <div className="space-y-1.5 text-[11px] font-medium text-gray-900 relative z-10">
+                                        <div className="flex justify-between">
+                                          <span>శ్రీ / శ్రీమతి: <strong className="border-b border-dotted border-black px-4 font-normal">____________________________________</strong></span>
+                                          <span>తేదీ: <strong className="font-mono">____/____/2026</strong></span>
+                                        </div>
+
+                                        <div className="flex justify-between">
+                                          <span>గ్రామం: <strong>_____________________</strong></span>
+                                          <span>ఫోన్: <strong>_____________________</strong></span>
+                                        </div>
+
+                                        <div>
+                                          <span>విరాళం కానుక (అక్షరాలా రూపాయిలు): <strong>__________________________________________</strong></span>
+                                        </div>
+
+                                        <div className="flex justify-between items-center bg-gray-100 p-1.5 rounded border border-gray-300">
+                                          <span className="font-bold text-[#5C121E]">మొత్తం (Rs.): <strong className="font-mono text-sm text-emerald-800">₹ ______________ /-</strong></span>
+                                          <span>విభాగం: <strong>_______________________</strong></span>
+                                        </div>
+                                      </div>
+
+                                      {/* Footer Signatures */}
+                                      <div className="flex justify-between items-end text-[9px] text-gray-600 font-bold pt-1 border-t border-gray-300 relative z-10">
+                                        <span>కానుక స్వీకరించిన వారి సంతకం</span>
+                                        <span className="text-[#5C121E] font-black">శ్రీ రామా సేవా కమిటీ</span>
+                                      </div>
+
+                                    </div>
+
+                                  </div>
+
+                                  {/* Scissor Cut Line Divider */}
+                                  {idx < bookSlipCount - 1 && (
+                                    <div className="flex items-center gap-2 text-[10px] text-gray-400 font-mono py-1">
+                                      <span>✂️-------------------------------------------------------------------------------------------------------</span>
+                                    </div>
+                                  )}
+
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            )}
 
             {/* TAB 8: AUDIT & DATABASE VERIFICATION */}
             {activeTab === 'audit' && (
