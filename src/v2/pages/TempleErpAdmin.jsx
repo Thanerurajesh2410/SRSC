@@ -86,12 +86,29 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [posterUpiId, setPosterUpiId] = useState('9866125609@ybl (PhonePe / GPay)');
   const [posterTheme, setPosterTheme] = useState('divine_maroon'); // 'divine_maroon' | 'royal_gold' | 'sacred_saffron'
 
-  // Pamphlet Fields
-  const [pamphletTitle, setPamphletTitle] = useState('పామినివాండ్లవూరు శ్రీ రామాలయ నిర్మాణ దివ్య ఆహ్వాన పత్రిక & విరాళాల పిలుపు');
-  const [pamphletSubtitle, setPamphletSubtitle] = useState('శ్రీ రామా సేవా కమిటీ • చిత్తూరు జిల్లా - 517416');
-  const [pamphletHistory, setPamphletHistory] = useState('పామినివాండ్లవూరు గ్రామంలో శ్రీ రామాలయ నిర్మాణ పనులు అత్యంత భక్తిశ్రద్ధలతో గ్రానైట్ రాతి గోడలతో శరవేగంగా జరుగుచున్నవి. ప్రతి భక్తుడూ తన వంతు సహకారాన్ని అందించి రాతి రాళ్ళు, ఇటుకలు లేదా నిధి కానుకలను సమర్పించవలసిందిగా కోరుచున్నాము.');
-  const [pamphletSevas, setPamphletSevas] = useState('• రాతి గోడల విరాళం: ₹ 5,000/-\n• గర్భగుడి ఇటుకల కానుక: ₹ 2,101/-\n• అన్నదాన సేవా నిధి: ₹ 1,116/-\n• ఈ-హుండి కానుకలు: దాతల ఇష్టానుసారం');
-  const [pamphletContact, setPamphletContact] = useState('శ్రీ రామా సేవా కమిటీ సభ్యులు • ఫోన్: 9866125609 / 8431806098');
+  // Pamphlet Fields (Matching Reference Traditional Template)
+  const [pamphletMainTitle, setPamphletMainTitle] = useState('శ్రీ సీతారామచంద్ర స్వామి వారి దేవస్థానం నిర్మాణానికి మీ సహాయం కావాలి');
+  const [pamphletSubTag, setPamphletSubTag] = useState('ఒక్క అడుగు భక్తితో... ఒక్క విరాళం శాశ్వత సేవగా...');
+  const [pamphletAppealText, setPamphletAppealText] = useState('మా గ్రామ ప్రజల దీర్ఘకాల స్వప్నమైన శ్రీ సీతారామచంద్ర స్వామి వారి దేవాలయ నిర్మాణం భక్తుల సహకారంతో, సేవాభావంతో ముందుకు సాగుతోంది. భగవంతుని ఆరాధనకై, ఆధ్యాత్మిక వాతావరణానికి, భవిష్యత్ తరాలకు ఆధ్యాత్మిక వారసత్వాన్ని అందించేందుకు ఈ పుణ్యకార్యంలో మీ పినియాద సహాయం అందించగలరు.');
+  const [pamphletVillage, setPamphletVillage] = useState('పామినివాండ్లవూరు గ్రామం');
+  const [pamphletDeityName, setPamphletDeityName] = useState('శ్రీ సీతారామచంద్ర స్వామి వారు');
+  const [pamphletStatus, setPamphletStatus] = useState('స్థల శుద్ధి పూర్తి, నిర్మాణ పనులు ప్రారంభ దశలో');
+  const [pamphletHelpTypes, setPamphletHelpTypes] = useState('ఆర్థిక సహాయం, సామగ్రి, సేవా సహాయం, శ్రమదానం');
+  const [pamphletSideNotice, setPamphletSideNotice] = useState('మీ చిన్న సహాయం భగవంతుని సన్నిధిలో అపార పుణ్యఫలం అందిస్తుంది');
+  
+  // Bank & UPI Details
+  const [pamphletTrustName, setPamphletTrustName] = useState('SRI RAMA SEVA COMMITTEE');
+  const [pamphletBankName, setPamphletBankName] = useState('State Bank of India');
+  const [pamphletAccNo, setPamphletAccNo] = useState('12345678909');
+  const [pamphletIfsc, setPamphletIfsc] = useState('SBIN0001234');
+  const [pamphletBranch, setPamphletBranch] = useState('Bangarupalem / Chittoor Main');
+  const [pamphletUpiId, setPamphletUpiId] = useState('9866125609@ybl');
+
+  // Committee Contacts
+  const [pamphletPresident, setPamphletPresident] = useState('అధ్యక్షులు: 9866125609');
+  const [pamphletSecretary, setPamphletSecretary] = useState('కార్యదర్శి: 8431806098');
+  const [pamphletTreasurer, setPamphletTreasurer] = useState('కోశాధికారి: 9866125609');
+  const [pamphletMembers, setPamphletMembers] = useState('సభ్యులు: పామినివాండ్లవూరు గ్రామ పెద్దలు');
 
   // Donation Receipt Book Template Fields
   const [bookTrustName, setBookTrustName] = useState('SRI RAMA SEVA COMMITTEE PAMINIVANDLAVOORU');
@@ -1833,60 +1850,153 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                       </div>
                     )}
 
-                    {/* TYPE 2: PAMPHLET FORM */}
+                    {/* TYPE 2: PAMPHLET FORM (Matching Reference Traditional Template) */}
                     {designerType === 'pamphlet' && (
                       <div className="space-y-4">
                         <h3 className="text-lg font-black text-[#FFD700] border-b border-white/20 pb-2 heading-telugu">
-                          📜 పాంప్లెట్ / ఆహ్వాన పత్రిక వివరాలు
+                          📜 సంప్రదాయ ఆలయ ఆహ్వాన పత్రిక / పాంప్లెట్ వివరాలు
                         </h3>
 
                         <div>
-                          <label className="block text-xs font-bold text-amber-200 mb-1">పాంప్లెట్ శీర్షిక (Title)</label>
-                          <input
-                            type="text"
-                            value={pamphletTitle}
-                            onChange={(e) => setPamphletTitle(e.target.value)}
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ప్రధాన శీర్షిక (Main Banner Title)</label>
+                          <textarea
+                            rows={2}
+                            value={pamphletMainTitle}
+                            onChange={(e) => setPamphletMainTitle(e.target.value)}
                             className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-amber-200 mb-1">ఆలయ కమిటీ / గ్రామం వివరాలు</label>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">ఉప శీర్షిక (Sub Tagline)</label>
                           <input
                             type="text"
-                            value={pamphletSubtitle}
-                            onChange={(e) => setPamphletSubtitle(e.target.value)}
+                            value={pamphletSubTag}
+                            onChange={(e) => setPamphletSubTag(e.target.value)}
                             className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-amber-200 mb-1">ఆలయ విశేషాలు & చరిత్ర వివరణ</label>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">భక్తులకు పిలుపు సందేశం (Appeal Message Paragraph)</label>
                           <textarea
                             rows={4}
-                            value={pamphletHistory}
-                            onChange={(e) => setPamphletHistory(e.target.value)}
+                            value={pamphletAppealText}
+                            onChange={(e) => setPamphletAppealText(e.target.value)}
                             className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
                           />
                         </div>
 
-                        <div>
-                          <label className="block text-xs font-bold text-amber-200 mb-1">విరాళాల వర్గాలు & సేవా వివరాలు (Seva List)</label>
-                          <textarea
-                            rows={4}
-                            value={pamphletSevas}
-                            onChange={(e) => setPamphletSevas(e.target.value)}
-                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-mono font-bold"
-                          />
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-bold text-amber-200 mb-1">గ్రామం పేరు</label>
+                            <input
+                              type="text"
+                              value={pamphletVillage}
+                              onChange={(e) => setPamphletVillage(e.target.value)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2.5 text-xs text-white font-bold"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-amber-200 mb-1">ముఖ్య దేవుడు</label>
+                            <input
+                              type="text"
+                              value={pamphletDeityName}
+                              onChange={(e) => setPamphletDeityName(e.target.value)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2.5 text-xs text-white font-bold"
+                            />
+                          </div>
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-amber-200 mb-1">కమిటీ సంప్రదింపు వివరాలు (Contacts)</label>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">నిర్మాణ పురోగతి స్థితి</label>
                           <input
                             type="text"
-                            value={pamphletContact}
-                            onChange={(e) => setPamphletContact(e.target.value)}
-                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-sm text-white font-bold"
+                            value={pamphletStatus}
+                            onChange={(e) => setPamphletStatus(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-xs text-white font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-amber-200 mb-1">మీ సహకారం మార్గాలు</label>
+                          <input
+                            type="text"
+                            value={pamphletHelpTypes}
+                            onChange={(e) => setPamphletHelpTypes(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-3 text-xs text-white font-bold"
+                          />
+                        </div>
+
+                        <div className="border-t border-white/20 pt-3 space-y-3">
+                          <h4 className="text-xs font-black text-amber-300">🏦 బ్యాంకు & UPI వివరాలు</h4>
+                          
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[11px] font-bold text-amber-200 mb-1">ఖాతా పేరు</label>
+                              <input
+                                type="text"
+                                value={pamphletTrustName}
+                                onChange={(e) => setPamphletTrustName(e.target.value)}
+                                className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-white font-bold"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[11px] font-bold text-amber-200 mb-1">బ్యాంకు పేరు</label>
+                              <input
+                                type="text"
+                                value={pamphletBankName}
+                                onChange={(e) => setPamphletBankName(e.target.value)}
+                                className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-white font-bold"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[11px] font-bold text-amber-200 mb-1">ఖాతా సంఖ్య</label>
+                              <input
+                                type="text"
+                                value={pamphletAccNo}
+                                onChange={(e) => setPamphletAccNo(e.target.value)}
+                                className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-white font-mono font-bold"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[11px] font-bold text-amber-200 mb-1">IFSC కోడ్</label>
+                              <input
+                                type="text"
+                                value={pamphletIfsc}
+                                onChange={(e) => setPamphletIfsc(e.target.value)}
+                                className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-white font-mono font-bold"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-bold text-amber-200 mb-1">PhonePe / GPay UPI ID</label>
+                            <input
+                              type="text"
+                              value={pamphletUpiId}
+                              onChange={(e) => setPamphletUpiId(e.target.value)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-white font-mono font-bold"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="border-t border-white/20 pt-3 space-y-3">
+                          <h4 className="text-xs font-black text-amber-300">📞 సంప్రదించవలసిన వారు (కమిటీ ఫోన్లు)</h4>
+                          <input
+                            type="text"
+                            value={pamphletPresident}
+                            onChange={(e) => setPamphletPresident(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-white font-bold mb-2"
+                          />
+                          <input
+                            type="text"
+                            value={pamphletSecretary}
+                            onChange={(e) => setPamphletSecretary(e.target.value)}
+                            className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-white font-bold"
                           />
                         </div>
                       </div>
@@ -2030,65 +2140,157 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                           </div>
                         )}
 
-                        {/* TEMPLATE 2 RENDER: PAMPHLET / FLYER */}
+                        {/* TEMPLATE 2 RENDER: TRADITIONAL TEMPLE FLYER / PAMPHLET (Matching Reference Image) */}
                         {designerType === 'pamphlet' && (
-                          <div className="bg-amber-50 text-gray-900 p-6 rounded-xl border-3 border-amber-800 space-y-6 relative overflow-hidden">
+                          <div className="bg-[#FFFDF0] text-gray-900 p-5 sm:p-6 rounded-2xl border-4 border-[#8B0000] outline outline-2 outline-[#FFD700] shadow-2xl space-y-4 relative overflow-hidden font-sans">
                             
-                            {/* Pamphlet Watermark */}
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10 z-0">
-                              <img src="/assets/logo.jpg" alt="Logo Watermark" className="w-96 h-96 rounded-full object-cover grayscale" />
+                            {/* Top Mantram Garlands Bar */}
+                            <div className="flex justify-between items-center text-[10px] sm:text-xs font-black text-amber-900 border-b-2 border-amber-600/30 pb-2 relative z-10">
+                              <span>శ్రీరామ జయ రామ్</span>
+                              <span className="text-[#8B0000] text-xs font-black">❖ శుభం భూయాత్ ❖</span>
+                              <span>రామో విగ్రహవాన్ ధర్మః</span>
                             </div>
 
-                            {/* Pamphlet Header */}
-                            <div className="flex items-center justify-between border-b-2 border-amber-800 pb-4 relative z-10">
-                              <div className="flex items-center gap-3">
-                                <img src="/assets/logo.jpg" alt="Logo" className="w-14 h-14 rounded-full border-2 border-amber-600" />
+                            {/* Central Mandapam Banner & Deity Header */}
+                            <div className="text-center relative z-10 space-y-2">
+                              <div className="relative mx-auto w-full max-w-md h-40 sm:h-48 rounded-2xl overflow-hidden border-4 border-[#FFD700] shadow-xl bg-gradient-to-b from-amber-900 to-[#5C121E] flex items-center justify-center">
+                                <img src="/assets/banner.jpg" alt="Sita Rama Mandapam" className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 flex items-end justify-center p-2">
+                                  <span className="text-[#FFD700] font-black text-xs sm:text-sm drop-shadow-md">
+                                    శ్రీ సీతారామచంద్ర స్వామి వారి దివ్య స్వరూపం
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Main Red Arch Banner */}
+                            <div className="bg-gradient-to-r from-[#7A0C1B] via-[#9E1428] to-[#7A0C1B] text-[#FFD700] border-2 border-[#FFD700] p-4 rounded-3xl text-center space-y-1.5 shadow-2xl relative z-10">
+                              <h2 className="text-lg sm:text-xl font-black heading-telugu drop-shadow-md leading-tight">
+                                {pamphletMainTitle}
+                              </h2>
+                              <div className="inline-block bg-emerald-800 text-white font-extrabold text-xs px-4 py-1 rounded-full shadow-md">
+                                {pamphletSubTag}
+                              </div>
+                            </div>
+
+                            {/* Appeal Message Paragraph */}
+                            <div className="bg-amber-100/80 border border-amber-400 p-3 rounded-xl text-center text-xs font-semibold leading-relaxed text-amber-950 relative z-10 shadow-sm">
+                              {pamphletAppealText}
+                            </div>
+
+                            {/* Devalayam Construction Details Card */}
+                            <div className="border-2 border-amber-700 rounded-xl overflow-hidden bg-white shadow-md relative z-10">
+                              <div className="bg-gradient-to-r from-[#7A0C1B] to-[#5C121E] text-[#FFD700] px-4 py-1.5 text-center font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+                                <span>❖ దేవాలయం నిర్మాణ వివరాలు ❖</span>
+                              </div>
+
+                              <div className="grid grid-cols-12 text-xs p-3 gap-3 items-center">
+                                <div className="col-span-8 space-y-1.5 font-bold text-gray-800 border-r border-amber-200 pr-3">
+                                  <div className="flex"><span className="w-28 text-amber-900">❖ దేవాలయం స్థలం</span><span className="mr-1">:</span><span>{pamphletVillage}</span></div>
+                                  <div className="flex"><span className="w-28 text-amber-900">❖ ముఖ్య దేవుడు</span><span className="mr-1">:</span><span className="text-[#8B0000]">{pamphletDeityName}</span></div>
+                                  <div className="flex"><span className="w-28 text-amber-900">❖ నిర్మాణ పురోగతి</span><span className="mr-1">:</span><span>{pamphletStatus}</span></div>
+                                  <div className="flex"><span className="w-28 text-amber-900">❖ మీ సహకారం</span><span className="mr-1">:</span><span>{pamphletHelpTypes}</span></div>
+                                </div>
+
+                                <div className="col-span-4 bg-red-900 text-[#FFD700] p-2.5 rounded-xl text-center font-extrabold text-[11px] leading-snug flex items-center justify-center shadow-md">
+                                  {pamphletSideNotice}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Donation Tiers Chips Box */}
+                            <div className="space-y-2 relative z-10">
+                              <div className="text-center font-black text-xs text-[#8B0000] uppercase tracking-wide">
+                                ❖ విరాళములు పంపించగలరు ❖
+                              </div>
+                              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center text-[10px] font-black">
+                                <div className="bg-amber-200 border border-amber-500 p-2 rounded-lg text-amber-950 shadow-sm">
+                                  <div className="text-xs text-[#8B0000]">₹ 501</div>
+                                  <div className="text-[9px] font-bold">అభినందన</div>
+                                </div>
+                                <div className="bg-amber-200 border border-amber-500 p-2 rounded-lg text-amber-950 shadow-sm">
+                                  <div className="text-xs text-[#8B0000]">₹ 1,001</div>
+                                  <div className="text-[9px] font-bold">ప్రత్యేక పూజ</div>
+                                </div>
+                                <div className="bg-amber-200 border border-amber-500 p-2 rounded-lg text-amber-950 shadow-sm">
+                                  <div className="text-xs text-[#8B0000]">₹ 5,001</div>
+                                  <div className="text-[9px] font-bold">అష్ట నామ సంకీర్తన</div>
+                                </div>
+                                <div className="bg-amber-200 border border-amber-500 p-2 rounded-lg text-amber-950 shadow-sm">
+                                  <div className="text-xs text-[#8B0000]">₹ 11,001</div>
+                                  <div className="text-[9px] font-bold">కుటుంబ పూజ</div>
+                                </div>
+                                <div className="bg-amber-200 border border-amber-500 p-2 rounded-lg text-amber-950 shadow-sm">
+                                  <div className="text-xs text-[#8B0000]">₹ 21,001</div>
+                                  <div className="text-[9px] font-bold">ప్రత్యేక గౌరవం</div>
+                                </div>
+                                <div className="bg-amber-300 border border-amber-600 p-2 rounded-lg text-amber-950 shadow-sm">
+                                  <div className="text-xs text-[#8B0000]">మీ ఇష్టమైన మొత్తం</div>
+                                  <div className="text-[9px] font-bold">(స్వచ్ఛంద విరాళం)</div>
+                                </div>
+                              </div>
+
+                              <div className="text-center text-[10px] font-bold text-amber-900">
+                                ప్రతి దాత పేరు దేవాలయ దాతల ఫలకంపై పొందుపరుస్తాము • ❖ ధర్మో రక్షతి రక్షితః ❖
+                              </div>
+                            </div>
+
+                            {/* Footer 2-Column Boxes: Bank & Contacts */}
+                            <div className="grid grid-cols-2 gap-3 text-xs relative z-10">
+                              
+                              {/* Left Box: Bank & QR Details */}
+                              <div className="border-2 border-emerald-800 rounded-xl p-3 bg-emerald-50/50 space-y-1.5">
+                                <div className="bg-emerald-800 text-white px-2 py-0.5 rounded text-[11px] font-black text-center mb-1">
+                                  విరాళములు పంపించవలసిన ఖాతా వివరాలు
+                                </div>
+                                <div className="space-y-1 text-[10px] font-bold text-gray-800">
+                                  <p><span className="text-emerald-950 font-black">ఖాతా పేరు:</span> {pamphletTrustName}</p>
+                                  <p><span className="text-emerald-950 font-black">బ్యాంకు పేరు:</span> {pamphletBankName}</p>
+                                  <p><span className="text-emerald-950 font-black">ఖాతా సంఖ్య:</span> <span className="font-mono font-black">{pamphletAccNo}</span></p>
+                                  <p><span className="text-emerald-950 font-black">IFSC కోడ్:</span> <span className="font-mono font-black">{pamphletIfsc}</span></p>
+                                  <p><span className="text-emerald-950 font-black">శాఖ:</span> {pamphletBranch}</p>
+                                </div>
+
+                                <div className="flex items-center gap-2 bg-white p-1.5 rounded border border-emerald-300 mt-2">
+                                  <img src="/assets/phonepe_qr.png" alt="PhonePe QR" className="w-14 h-14 rounded border border-gray-400 shrink-0" />
+                                  <div className="text-[9px] font-bold text-gray-800 space-y-0.5">
+                                    <span className="bg-purple-700 text-white px-1.5 py-0.5 rounded text-[8px]">PhonePe / GPay QR</span>
+                                    <p className="font-mono text-purple-900 font-black">{pamphletUpiId}</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Right Box: Contacts & Blessing */}
+                              <div className="border-2 border-amber-800 rounded-xl p-3 bg-amber-50/50 space-y-2 flex flex-col justify-between">
                                 <div>
-                                  <h3 className="text-lg font-black text-[#5C121E] heading-telugu">{pamphletTitle}</h3>
-                                  <p className="text-xs font-bold text-amber-900">{pamphletSubtitle}</p>
+                                  <div className="bg-amber-800 text-white px-2 py-0.5 rounded text-[11px] font-black text-center mb-1">
+                                    సంప్రదించవలసిన వారు 🙏
+                                  </div>
+                                  <div className="space-y-1 text-[10px] font-bold text-gray-800">
+                                    <p>{pamphletPresident}</p>
+                                    <p>{pamphletSecretary}</p>
+                                    <p>{pamphletTreasurer}</p>
+                                    <p>{pamphletMembers}</p>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            {/* Pamphlet Body: 2 Columns */}
-                            <div className="grid grid-cols-2 gap-5 relative z-10 text-xs">
-                              {/* Left Column: History & Appeal */}
-                              <div className="space-y-3 bg-white p-4 rounded-xl border border-amber-300 shadow-sm">
-                                <h4 className="font-black text-sm text-[#5C121E] border-b border-amber-200 pb-1 heading-telugu">
-                                  🏛️ ఆలయ విశేషాలు & నిర్మాణం
-                                </h4>
-                                <p className="leading-relaxed font-medium text-gray-800">{pamphletHistory}</p>
-                                <div className="bg-amber-100 p-2.5 rounded-lg border border-amber-300">
-                                  <p className="font-bold text-amber-950 text-[11px]">
-                                    శ్రీరామనవమి శుభ సందర్భాన గ్రామస్థులంతా ఏకమై గ్రానైట్ రాతి గోడలతో ఆలయాన్ని నిర్మిస్తున్నారు.
-                                  </p>
+                                <div className="bg-[#7A0C1B] text-[#FFD700] p-2 rounded-lg text-center text-[10px] font-extrabold leading-tight shadow-md">
+                                  మీరు చేసే సహాయం శ్రీ సీతారామచంద్ర స్వామి వారి అనుగ్రహాన్ని ప్రసాదిస్తుంది. || శ్రీరామ జయం ||
                                 </div>
                               </div>
 
-                              {/* Right Column: Sevas & Payment */}
-                              <div className="space-y-3 bg-white p-4 rounded-xl border border-amber-300 shadow-sm">
-                                <h4 className="font-black text-sm text-[#5C121E] border-b border-amber-200 pb-1 heading-telugu">
-                                  🙏 విరాళాల వివరాలు & సేవలు
-                                </h4>
-                                <pre className="font-sans text-xs whitespace-pre-wrap font-bold text-[#5C121E] bg-amber-50 p-2.5 rounded border border-amber-200">
-                                  {pamphletSevas}
-                                </pre>
-
-                                <div className="text-center pt-1">
-                                  <img src="/assets/phonepe_qr.png" alt="QR Code" className="w-20 h-20 mx-auto rounded border border-amber-600" />
-                                  <span className="text-[10px] font-bold text-gray-600 block mt-1">PhonePe QR స్కానర్</span>
-                                </div>
-                              </div>
                             </div>
 
-                            {/* Pamphlet Footer */}
-                            <div className="bg-[#5C121E] text-white p-3 rounded-xl text-center text-xs font-bold relative z-10">
-                              {pamphletContact}
+                            {/* Bottom Footer Banner */}
+                            <div className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-900 text-white p-2 rounded-xl text-center text-xs font-black relative z-10 shadow-md">
+                              <p className="text-[11px] font-bold opacity-90 mb-0.5">ఈ పుణ్యకార్యానికి అందరూ చేయూతనిచ్చి భాగస్వాములు కావలసినదిగా ప్రార్థన.</p>
+                              <span className="text-[#FFD700] text-sm uppercase tracking-widest block font-black">❖ జై శ్రీరామ్ ❖</span>
                             </div>
+
                           </div>
                         )}
 
-                        {/* TEMPLATE 3 RENDER: PRINTABLE DONATION RECEIPT BOOK SLIPS */}
+                        {/* TEMPLATE 3 RENDER: PRINTABLE DONATION RECEIPT BOOK SLIPS WITH LOGO WATERMARK */}
                         {designerType === 'receipt_book' && (
                           <div className="space-y-6 relative z-10">
                             {Array.from({ length: bookSlipCount }).map((_, idx) => {
@@ -2097,10 +2299,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                 <div key={idx} className="space-y-2">
                                   
                                   {/* Receipt Book Slip Container */}
-                                  <div className="border-2 border-gray-900 rounded-lg p-3 bg-white flex text-[11px] font-sans relative overflow-hidden">
+                                  <div className="border-2 border-gray-900 rounded-lg p-3 bg-white flex text-[11px] font-sans relative overflow-hidden shadow-sm">
                                     
+                                    {/* Prominent Logo Watermark */}
+                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
+                                      <img src="/assets/logo.jpg" alt="Logo Watermark" className="w-56 h-56 rounded-full object-cover border-4 border-amber-600/30" />
+                                    </div>
+
                                     {/* Stub / Counterfoil (Left Part 28%) */}
-                                    <div className="w-[28%] border-r-2 border-dashed border-gray-800 pr-3 space-y-2 bg-gray-50 p-2 rounded-l">
+                                    <div className="w-[28%] border-r-2 border-dashed border-gray-800 pr-3 space-y-2 bg-gray-50/90 p-2 rounded-l relative z-10">
                                       <div className="text-center border-b border-gray-400 pb-1">
                                         <span className="font-black text-[#5C121E] text-[10px] block">దాత కౌంటర్ కాపీ</span>
                                         <span className="font-mono font-black text-xs text-black">{slipNo}</span>
@@ -2119,17 +2326,12 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                     </div>
 
                                     {/* Main Receipt Voucher (Right Part 72%) */}
-                                    <div className="w-[72%] pl-3 space-y-2.5 relative">
+                                    <div className="w-[72%] pl-3 space-y-2.5 relative z-10">
                                       
-                                      {/* Slip Watermark */}
-                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-5 z-0">
-                                        <img src="/assets/logo.jpg" alt="Logo" className="w-48 h-48 rounded-full grayscale" />
-                                      </div>
-
                                       {/* Slip Header */}
-                                      <div className="flex justify-between items-start border-b border-gray-800 pb-1.5 relative z-10">
+                                      <div className="flex justify-between items-start border-b border-gray-800 pb-1.5">
                                         <div className="flex items-center gap-2">
-                                          <img src="/assets/logo.jpg" alt="Logo" className="w-8 h-8 rounded-full border border-amber-600" />
+                                          <img src="/assets/logo.jpg" alt="Logo" className="w-8 h-8 rounded-full border border-amber-600 shadow-sm" />
                                           <div>
                                             <h4 className="font-black text-[#5C121E] text-xs heading-telugu">{bookTrustName}</h4>
                                             <p className="text-[9px] text-gray-600 font-bold">పామినివాండ్లవూరు • విరాళం రశీదు పుస్తకం</p>
@@ -2142,7 +2344,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                       </div>
 
                                       {/* Fill-in Fields */}
-                                      <div className="space-y-1.5 text-[11px] font-medium text-gray-900 relative z-10">
+                                      <div className="space-y-1.5 text-[11px] font-medium text-gray-900">
                                         <div className="flex justify-between">
                                           <span>శ్రీ / శ్రీమతి: <strong className="border-b border-dotted border-black px-4 font-normal">____________________________________</strong></span>
                                           <span>తేదీ: <strong className="font-mono">____/____/2026</strong></span>
@@ -2157,14 +2359,14 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                           <span>విరాళం కానుక (అక్షరాలా రూపాయిలు): <strong>__________________________________________</strong></span>
                                         </div>
 
-                                        <div className="flex justify-between items-center bg-gray-100 p-1.5 rounded border border-gray-300">
+                                        <div className="flex justify-between items-center bg-gray-100/90 p-1.5 rounded border border-gray-300">
                                           <span className="font-bold text-[#5C121E]">మొత్తం (Rs.): <strong className="font-mono text-sm text-emerald-800">₹ ______________ /-</strong></span>
                                           <span>విభాగం: <strong>_______________________</strong></span>
                                         </div>
                                       </div>
 
                                       {/* Footer Signatures */}
-                                      <div className="flex justify-between items-end text-[9px] text-gray-600 font-bold pt-1 border-t border-gray-300 relative z-10">
+                                      <div className="flex justify-between items-end text-[9px] text-gray-600 font-bold pt-1 border-t border-gray-300">
                                         <span>కానుక స్వీకరించిన వారి సంతకం</span>
                                         <span className="text-[#5C121E] font-black">శ్రీ రామా సేవా కమిటీ</span>
                                       </div>
