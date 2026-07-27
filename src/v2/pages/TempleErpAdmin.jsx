@@ -116,6 +116,27 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [bookSlipCount, setBookSlipCount] = useState(3);
   const [bookNotice, setBookNotice] = useState('1. ఈ రశీదు పుస్తకం శ్రీ రామాలయ నిర్మాణ నిధికి అధికారికంగా జారీ చేయబడినది.\n2. విరాళం నగదు లేదా PhonePe / UPI ద్వారా స్వీకరించబడును.');
 
+  // Pamphlet Image & Background Customization & Canvas Editing State
+  const [pamphletBgImage, setPamphletBgImage] = useState('/assets/banner.jpg');
+  const [pamphletDeityHeaderImg, setPamphletDeityHeaderImg] = useState('/assets/banner.jpg');
+  const [pamphletWatermarkImg, setPamphletWatermarkImg] = useState('/assets/logo.jpg');
+  const [pamphletQrImg, setPamphletQrImg] = useState('/assets/phonepe_qr.png');
+  const [pamphletBgOpacity, setPamphletBgOpacity] = useState(85); // 85% opacity overlay
+  const [directCanvasEditMode, setDirectCanvasEditMode] = useState(true); // Direct inline editing on canvas preview
+
+  // Helper for uploading custom images
+  const handleCustomImageUpload = (setterFunction) => (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setterFunction(event.target.result);
+        showToast("కస్టమ్ చిత్రం విజయవంతంగా లోడ్ చేయబడింది!");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Download Designer Canvas as High-Res PNG Image
   const downloadDesignImage = async () => {
     if (!designerCanvasRef.current) return;
@@ -1852,11 +1873,88 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
 
                     {/* TYPE 2: PAMPHLET FORM (Matching Reference Traditional Template) */}
                     {designerType === 'pamphlet' && (
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-black text-[#FFD700] border-b border-white/20 pb-2 heading-telugu">
-                          📜 సంప్రదాయ ఆలయ ఆహ్వాన పత్రిక / పాంప్లెట్ వివరాలు
+                      <div className="space-y-5">
+                        <h3 className="text-lg font-black text-[#FFD700] border-b border-white/20 pb-2 heading-telugu flex items-center justify-between">
+                          <span>📜 ఆలయ ఆహ్వాన పత్రిక / పాంప్లెట్ డిజైనర్</span>
+                          <span className="text-xs bg-amber-500 text-black px-2 py-0.5 rounded font-mono font-bold">PRO STUDIO</span>
                         </h3>
 
+                        {/* Image & Background Customization Accordion Box */}
+                        <div className="bg-[#3A0A11] border-2 border-amber-500/60 p-4 rounded-2xl space-y-3">
+                          <h4 className="text-xs font-black text-[#FFD700] flex items-center gap-2">
+                            <ImageIcon className="w-4 h-4" />
+                            <span>🏛️ పాంప్లెట్ బ్యాక్‌గ్రౌండ్ & డివైన్ చిత్రాలు (Background & Images)</span>
+                          </h4>
+
+                          {/* Background Image Selection */}
+                          <div>
+                            <label className="block text-[11px] font-bold text-amber-200 mb-1">పాంప్లెట్ బ్యాక్‌గ్రౌండ్ ఆలయం ఇమేజ్ (Temple Background)</label>
+                            <div className="grid grid-cols-2 gap-2 mb-2">
+                              <button
+                                type="button"
+                                onClick={() => setPamphletBgImage('/assets/banner.jpg')}
+                                className={`text-xs p-2 rounded-xl border font-bold ${pamphletBgImage === '/assets/banner.jpg' ? 'bg-amber-400 text-black border-white' : 'bg-black/40 text-gray-200 border-white/20'}`}
+                              >
+                                🛕 ఆలయ శంకుస్థాపన
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setPamphletBgImage('/assets/logo.jpg')}
+                                className={`text-xs p-2 rounded-xl border font-bold ${pamphletBgImage === '/assets/logo.jpg' ? 'bg-amber-400 text-black border-white' : 'bg-black/40 text-gray-200 border-white/20'}`}
+                              >
+                                🕉️ శ్రీరామ లోగో బ్యాక్‌గ్రౌండ్
+                              </button>
+                            </div>
+                            
+                            <label className="block text-[11px] font-bold text-amber-300 mb-1">📤 మీ వద్ద ఉన్న ఆలయ ఇమేజ్ అప్‌లోడ్ చేయండి (Upload Custom Background):</label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleCustomImageUpload(setPamphletBgImage)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-amber-200 font-bold file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-400 file:text-black hover:file:bg-amber-300"
+                            />
+                          </div>
+
+                          {/* Background Opacity Slider */}
+                          <div>
+                            <div className="flex justify-between items-center text-[11px] font-bold text-amber-200 mb-1">
+                              <span>బ్యాక్‌గ్రౌండ్ ఇమేజ్ బ్రైట్‌నెస్ / కాంతి (Background Visibility):</span>
+                              <span className="font-mono text-amber-400">{pamphletBgOpacity}%</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="30"
+                              max="100"
+                              value={pamphletBgOpacity}
+                              onChange={(e) => setPamphletBgOpacity(Number(e.target.value))}
+                              className="w-full accent-amber-400 cursor-pointer"
+                            />
+                          </div>
+
+                          {/* Header Deity Image Upload */}
+                          <div className="border-t border-white/10 pt-2 space-y-2">
+                            <label className="block text-[11px] font-bold text-amber-300">🖼️ పైన కనిపించే స్వామివారి ఇమేజ్ (Header Deity Photo Upload):</label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleCustomImageUpload(setPamphletDeityHeaderImg)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-amber-200 font-bold file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-400 file:text-black"
+                            />
+                          </div>
+
+                          {/* PhonePe QR Code Upload */}
+                          <div className="border-t border-white/10 pt-2 space-y-2">
+                            <label className="block text-[11px] font-bold text-amber-300">📱 PhonePe / GPay QR కోడ్ చిత్రం (Custom QR Code Upload):</label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleCustomImageUpload(setPamphletQrImg)}
+                              className="w-full bg-[#2A060B] border border-white/30 rounded-xl p-2 text-xs text-amber-200 font-bold file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-400 file:text-black"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Text Fields */}
                         <div>
                           <label className="block text-xs font-bold text-amber-200 mb-1">ప్రధాన శీర్షిక (Main Banner Title)</label>
                           <textarea
@@ -2057,12 +2155,25 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
 
                   {/* RIGHT COLUMN: LIVE RENDERED PRINTABLE CANVAS (7 cols) */}
                   <div className="lg:col-span-7 space-y-4">
-                    <div className="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/10">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-black/50 p-3.5 rounded-2xl border border-white/10 shadow-xl">
                       <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-4 h-4 text-amber-400" />
                         <span>లైవ్ ప్రింట్ ప్రివ్యూ (Live Rendered Preview)</span>
                       </span>
-                      <span className="text-xs text-gray-400 font-mono">A4 Ready • Print Quality</span>
+
+                      {/* On-Canvas Direct Editing Mode Toggle */}
+                      <button
+                        type="button"
+                        onClick={() => setDirectCanvasEditMode(!directCanvasEditMode)}
+                        className={`text-xs px-3 py-1.5 rounded-xl font-black transition-all flex items-center gap-1.5 ${
+                          directCanvasEditMode
+                            ? 'bg-amber-400 text-black border border-white shadow-md'
+                            : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                        }`}
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>{directCanvasEditMode ? '✏️ డైరెక్ట్ ఎడిటింగ్ మోడ్ ఆన్ (Canvas Editable)' : '🔒 లాక్ మోడ్'}</span>
+                      </button>
                     </div>
 
                     {/* PRINTABLE CANVAS CONTAINER */}
@@ -2103,22 +2214,62 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                               <span className="inline-block px-4 py-1 rounded-full text-xs font-black bg-amber-400 text-black uppercase shadow-lg">
                                 🚩 శ్రీరామ దివ్య సంకల్పం
                               </span>
-                              <h1 className="text-2xl sm:text-3xl font-black leading-snug heading-telugu drop-shadow-md">
+                              <h1
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPosterTitle(e.currentTarget.innerText)}
+                                className={`text-2xl sm:text-3xl font-black leading-snug heading-telugu drop-shadow-md outline-none ${directCanvasEditMode ? 'hover:outline-2 hover:outline-dashed hover:outline-amber-400 rounded px-1' : ''}`}
+                              >
                                 {posterTitle}
                               </h1>
-                              <p className="text-sm font-bold opacity-90">{posterSubtitle}</p>
+                              <p
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPosterSubtitle(e.currentTarget.innerText)}
+                                className={`text-sm font-bold opacity-90 outline-none ${directCanvasEditMode ? 'hover:outline-2 hover:outline-dashed hover:outline-amber-400 rounded px-1' : ''}`}
+                              >
+                                {posterSubtitle}
+                              </p>
                             </div>
 
                             {/* Event Details Highlight Box */}
                             <div className="bg-black/20 backdrop-blur-sm border-2 border-current/30 p-4 rounded-2xl space-y-2 text-center relative z-10 text-sm font-extrabold">
-                              <p className="text-amber-300 text-base">{posterDate}</p>
-                              <p className="text-xs opacity-90">{posterVenue}</p>
-                              <p className="text-xs opacity-80 border-t border-current/20 pt-2 mt-2">{posterChiefGuest}</p>
+                              <p
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPosterDate(e.currentTarget.innerText)}
+                                className="text-amber-300 text-base outline-none"
+                              >
+                                {posterDate}
+                              </p>
+                              <p
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPosterVenue(e.currentTarget.innerText)}
+                                className="text-xs opacity-90 outline-none"
+                              >
+                                {posterVenue}
+                              </p>
+                              <p
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPosterChiefGuest(e.currentTarget.innerText)}
+                                className="text-xs opacity-80 border-t border-current/20 pt-2 mt-2 outline-none"
+                              >
+                                {posterChiefGuest}
+                              </p>
                             </div>
 
                             {/* Appeal Message */}
                             <div className="p-4 rounded-xl bg-white/10 border border-current/20 text-center relative z-10">
-                              <p className="text-sm font-bold leading-relaxed">{posterMessage}</p>
+                              <p
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPosterMessage(e.currentTarget.innerText)}
+                                className="text-sm font-bold leading-relaxed outline-none"
+                              >
+                                {posterMessage}
+                              </p>
                             </div>
 
                             {/* QR Code & Donation Box */}
@@ -2140,10 +2291,21 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                           </div>
                         )}
 
-                        {/* TEMPLATE 2 RENDER: TRADITIONAL TEMPLE FLYER / PAMPHLET (Matching Reference Image) */}
+                        {/* TEMPLATE 2 RENDER: TRADITIONAL TEMPLE FLYER / PAMPHLET (With Temple Background Image & On-Canvas Direct Edit) */}
                         {designerType === 'pamphlet' && (
-                          <div className="bg-[#FFFDF0] text-gray-900 p-5 sm:p-6 rounded-2xl border-4 border-[#8B0000] outline outline-2 outline-[#FFD700] shadow-2xl space-y-4 relative overflow-hidden font-sans">
+                          <div
+                            className="bg-[#FFFDF0] text-gray-900 p-5 sm:p-6 rounded-2xl border-4 border-[#8B0000] outline outline-2 outline-[#FFD700] shadow-2xl space-y-4 relative overflow-hidden font-sans bg-cover bg-center"
+                            style={{
+                              backgroundImage: pamphletBgImage ? `url(${pamphletBgImage})` : 'none',
+                            }}
+                          >
                             
+                            {/* Soft Temple Background Overlay */}
+                            <div 
+                              className="absolute inset-0 bg-[#FFFDF0] z-0 pointer-events-none transition-all"
+                              style={{ opacity: pamphletBgOpacity / 100 }}
+                            />
+
                             {/* Top Mantram Garlands Bar */}
                             <div className="flex justify-between items-center text-[10px] sm:text-xs font-black text-amber-900 border-b-2 border-amber-600/30 pb-2 relative z-10">
                               <span>శ్రీరామ జయ రామ్</span>
@@ -2154,7 +2316,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                             {/* Central Mandapam Banner & Deity Header */}
                             <div className="text-center relative z-10 space-y-2">
                               <div className="relative mx-auto w-full max-w-md h-40 sm:h-48 rounded-2xl overflow-hidden border-4 border-[#FFD700] shadow-xl bg-gradient-to-b from-amber-900 to-[#5C121E] flex items-center justify-center">
-                                <img src="/assets/banner.jpg" alt="Sita Rama Mandapam" className="w-full h-full object-cover" />
+                                <img src={pamphletDeityHeaderImg || '/assets/banner.jpg'} alt="Sita Rama Mandapam" className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 flex items-end justify-center p-2">
                                   <span className="text-[#FFD700] font-black text-xs sm:text-sm drop-shadow-md">
                                     శ్రీ సీతారామచంద్ర స్వామి వారి దివ్య స్వరూపం
@@ -2163,36 +2325,92 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                               </div>
                             </div>
 
-                            {/* Main Red Arch Banner */}
+                            {/* Main Red Arch Banner (Editable On-Canvas) */}
                             <div className="bg-gradient-to-r from-[#7A0C1B] via-[#9E1428] to-[#7A0C1B] text-[#FFD700] border-2 border-[#FFD700] p-4 rounded-3xl text-center space-y-1.5 shadow-2xl relative z-10">
-                              <h2 className="text-lg sm:text-xl font-black heading-telugu drop-shadow-md leading-tight">
+                              <h2
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPamphletMainTitle(e.currentTarget.innerText)}
+                                className={`text-lg sm:text-xl font-black heading-telugu drop-shadow-md leading-tight outline-none ${directCanvasEditMode ? 'hover:ring-2 hover:ring-amber-300 rounded px-1' : ''}`}
+                              >
                                 {pamphletMainTitle}
                               </h2>
-                              <div className="inline-block bg-emerald-800 text-white font-extrabold text-xs px-4 py-1 rounded-full shadow-md">
+                              <div
+                                contentEditable={directCanvasEditMode}
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPamphletSubTag(e.currentTarget.innerText)}
+                                className="inline-block bg-emerald-800 text-white font-extrabold text-xs px-4 py-1 rounded-full shadow-md outline-none"
+                              >
                                 {pamphletSubTag}
                               </div>
                             </div>
 
-                            {/* Appeal Message Paragraph */}
-                            <div className="bg-amber-100/80 border border-amber-400 p-3 rounded-xl text-center text-xs font-semibold leading-relaxed text-amber-950 relative z-10 shadow-sm">
+                            {/* Appeal Message Paragraph (Editable On-Canvas) */}
+                            <div
+                              contentEditable={directCanvasEditMode}
+                              suppressContentEditableWarning
+                              onBlur={(e) => setPamphletAppealText(e.currentTarget.innerText)}
+                              className={`bg-amber-100/90 border border-amber-400 p-3 rounded-xl text-center text-xs font-semibold leading-relaxed text-amber-950 relative z-10 shadow-sm outline-none ${directCanvasEditMode ? 'hover:ring-2 hover:ring-amber-500' : ''}`}
+                            >
                               {pamphletAppealText}
                             </div>
 
                             {/* Devalayam Construction Details Card */}
-                            <div className="border-2 border-amber-700 rounded-xl overflow-hidden bg-white shadow-md relative z-10">
+                            <div className="border-2 border-amber-700 rounded-xl overflow-hidden bg-white/95 shadow-md relative z-10">
                               <div className="bg-gradient-to-r from-[#7A0C1B] to-[#5C121E] text-[#FFD700] px-4 py-1.5 text-center font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2">
                                 <span>❖ దేవాలయం నిర్మాణ వివరాలు ❖</span>
                               </div>
 
                               <div className="grid grid-cols-12 text-xs p-3 gap-3 items-center">
                                 <div className="col-span-8 space-y-1.5 font-bold text-gray-800 border-r border-amber-200 pr-3">
-                                  <div className="flex"><span className="w-28 text-amber-900">❖ దేవాలయం స్థలం</span><span className="mr-1">:</span><span>{pamphletVillage}</span></div>
-                                  <div className="flex"><span className="w-28 text-amber-900">❖ ముఖ్య దేవుడు</span><span className="mr-1">:</span><span className="text-[#8B0000]">{pamphletDeityName}</span></div>
-                                  <div className="flex"><span className="w-28 text-amber-900">❖ నిర్మాణ పురోగతి</span><span className="mr-1">:</span><span>{pamphletStatus}</span></div>
-                                  <div className="flex"><span className="w-28 text-amber-900">❖ మీ సహకారం</span><span className="mr-1">:</span><span>{pamphletHelpTypes}</span></div>
+                                  <div className="flex">
+                                    <span className="w-28 text-amber-900 shrink-0">❖ దేవాలయం స్థలం</span>
+                                    <span className="mr-1">:</span>
+                                    <span
+                                      contentEditable={directCanvasEditMode}
+                                      suppressContentEditableWarning
+                                      onBlur={(e) => setPamphletVillage(e.currentTarget.innerText)}
+                                      className="outline-none"
+                                    >{pamphletVillage}</span>
+                                  </div>
+                                  <div className="flex">
+                                    <span className="w-28 text-amber-900 shrink-0">❖ ముఖ్య దేవుడు</span>
+                                    <span className="mr-1">:</span>
+                                    <span
+                                      contentEditable={directCanvasEditMode}
+                                      suppressContentEditableWarning
+                                      onBlur={(e) => setPamphletDeityName(e.currentTarget.innerText)}
+                                      className="text-[#8B0000] outline-none"
+                                    >{pamphletDeityName}</span>
+                                  </div>
+                                  <div className="flex">
+                                    <span className="w-28 text-amber-900 shrink-0">❖ నిర్మాణ పురోగతి</span>
+                                    <span className="mr-1">:</span>
+                                    <span
+                                      contentEditable={directCanvasEditMode}
+                                      suppressContentEditableWarning
+                                      onBlur={(e) => setPamphletStatus(e.currentTarget.innerText)}
+                                      className="outline-none"
+                                    >{pamphletStatus}</span>
+                                  </div>
+                                  <div className="flex">
+                                    <span className="w-28 text-amber-900 shrink-0">❖ మీ సహకారం</span>
+                                    <span className="mr-1">:</span>
+                                    <span
+                                      contentEditable={directCanvasEditMode}
+                                      suppressContentEditableWarning
+                                      onBlur={(e) => setPamphletHelpTypes(e.currentTarget.innerText)}
+                                      className="outline-none"
+                                    >{pamphletHelpTypes}</span>
+                                  </div>
                                 </div>
 
-                                <div className="col-span-4 bg-red-900 text-[#FFD700] p-2.5 rounded-xl text-center font-extrabold text-[11px] leading-snug flex items-center justify-center shadow-md">
+                                <div
+                                  contentEditable={directCanvasEditMode}
+                                  suppressContentEditableWarning
+                                  onBlur={(e) => setPamphletSideNotice(e.currentTarget.innerText)}
+                                  className="col-span-4 bg-red-900 text-[#FFD700] p-2.5 rounded-xl text-center font-extrabold text-[11px] leading-snug flex items-center justify-center shadow-md outline-none"
+                                >
                                   {pamphletSideNotice}
                                 </div>
                               </div>
@@ -2239,38 +2457,38 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                             <div className="grid grid-cols-2 gap-3 text-xs relative z-10">
                               
                               {/* Left Box: Bank & QR Details */}
-                              <div className="border-2 border-emerald-800 rounded-xl p-3 bg-emerald-50/50 space-y-1.5">
+                              <div className="border-2 border-emerald-800 rounded-xl p-3 bg-emerald-50/95 space-y-1.5">
                                 <div className="bg-emerald-800 text-white px-2 py-0.5 rounded text-[11px] font-black text-center mb-1">
                                   విరాళములు పంపించవలసిన ఖాతా వివరాలు
                                 </div>
                                 <div className="space-y-1 text-[10px] font-bold text-gray-800">
-                                  <p><span className="text-emerald-950 font-black">ఖాతా పేరు:</span> {pamphletTrustName}</p>
-                                  <p><span className="text-emerald-950 font-black">బ్యాంకు పేరు:</span> {pamphletBankName}</p>
-                                  <p><span className="text-emerald-950 font-black">ఖాతా సంఖ్య:</span> <span className="font-mono font-black">{pamphletAccNo}</span></p>
-                                  <p><span className="text-emerald-950 font-black">IFSC కోడ్:</span> <span className="font-mono font-black">{pamphletIfsc}</span></p>
-                                  <p><span className="text-emerald-950 font-black">శాఖ:</span> {pamphletBranch}</p>
+                                  <p><span className="text-emerald-950 font-black">ఖాతా పేరు:</span> <span contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletTrustName(e.currentTarget.innerText)} className="outline-none">{pamphletTrustName}</span></p>
+                                  <p><span className="text-emerald-950 font-black">బ్యాంకు పేరు:</span> <span contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletBankName(e.currentTarget.innerText)} className="outline-none">{pamphletBankName}</span></p>
+                                  <p><span className="text-emerald-950 font-black">ఖాతా సంఖ్య:</span> <span contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletAccNo(e.currentTarget.innerText)} className="font-mono font-black outline-none">{pamphletAccNo}</span></p>
+                                  <p><span className="text-emerald-950 font-black">IFSC కోడ్:</span> <span contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletIfsc(e.currentTarget.innerText)} className="font-mono font-black outline-none">{pamphletIfsc}</span></p>
+                                  <p><span className="text-emerald-950 font-black">శాఖ:</span> <span contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletBranch(e.currentTarget.innerText)} className="outline-none">{pamphletBranch}</span></p>
                                 </div>
 
                                 <div className="flex items-center gap-2 bg-white p-1.5 rounded border border-emerald-300 mt-2">
-                                  <img src="/assets/phonepe_qr.png" alt="PhonePe QR" className="w-14 h-14 rounded border border-gray-400 shrink-0" />
+                                  <img src={pamphletQrImg || '/assets/phonepe_qr.png'} alt="PhonePe QR" className="w-14 h-14 rounded border border-gray-400 shrink-0 object-cover" />
                                   <div className="text-[9px] font-bold text-gray-800 space-y-0.5">
                                     <span className="bg-purple-700 text-white px-1.5 py-0.5 rounded text-[8px]">PhonePe / GPay QR</span>
-                                    <p className="font-mono text-purple-900 font-black">{pamphletUpiId}</p>
+                                    <p contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletUpiId(e.currentTarget.innerText)} className="font-mono text-purple-900 font-black outline-none">{pamphletUpiId}</p>
                                   </div>
                                 </div>
                               </div>
 
                               {/* Right Box: Contacts & Blessing */}
-                              <div className="border-2 border-amber-800 rounded-xl p-3 bg-amber-50/50 space-y-2 flex flex-col justify-between">
+                              <div className="border-2 border-amber-800 rounded-xl p-3 bg-amber-50/95 space-y-2 flex flex-col justify-between">
                                 <div>
                                   <div className="bg-amber-800 text-white px-2 py-0.5 rounded text-[11px] font-black text-center mb-1">
                                     సంప్రదించవలసిన వారు 🙏
                                   </div>
                                   <div className="space-y-1 text-[10px] font-bold text-gray-800">
-                                    <p>{pamphletPresident}</p>
-                                    <p>{pamphletSecretary}</p>
-                                    <p>{pamphletTreasurer}</p>
-                                    <p>{pamphletMembers}</p>
+                                    <p contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletPresident(e.currentTarget.innerText)} className="outline-none">{pamphletPresident}</p>
+                                    <p contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletSecretary(e.currentTarget.innerText)} className="outline-none">{pamphletSecretary}</p>
+                                    <p contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletTreasurer(e.currentTarget.innerText)} className="outline-none">{pamphletTreasurer}</p>
+                                    <p contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletMembers(e.currentTarget.innerText)} className="outline-none">{pamphletMembers}</p>
                                   </div>
                                 </div>
 
@@ -2333,7 +2551,14 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                         <div className="flex items-center gap-2">
                                           <img src="/assets/logo.jpg" alt="Logo" className="w-8 h-8 rounded-full border border-amber-600 shadow-sm" />
                                           <div>
-                                            <h4 className="font-black text-[#5C121E] text-xs heading-telugu">{bookTrustName}</h4>
+                                            <h4 
+                                              contentEditable={directCanvasEditMode} 
+                                              suppressContentEditableWarning 
+                                              onBlur={(e) => setBookTrustName(e.currentTarget.innerText)} 
+                                              className="font-black text-[#5C121E] text-xs heading-telugu outline-none"
+                                            >
+                                              {bookTrustName}
+                                            </h4>
                                             <p className="text-[9px] text-gray-600 font-bold">పామినివాండ్లవూరు • విరాళం రశీదు పుస్తకం</p>
                                           </div>
                                         </div>
