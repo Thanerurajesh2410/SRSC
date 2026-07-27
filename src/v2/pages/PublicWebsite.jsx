@@ -26,7 +26,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
   // Dynamic Database Settings & Images from Admin
   const currentDB = getDB();
   const websiteSettings = currentDB.websiteSettings || {};
-  const activeGalleryImages = (currentDB.galleryImages && currentDB.galleryImages.length > 0) ? currentDB.galleryImages : slideshowImages;
+  const activeGalleryImages = Array.isArray(currentDB.galleryImages) ? currentDB.galleryImages : slideshowImages;
   
   // Slideshow State
   const [slideIdx, setSlideIdx] = useState(0);

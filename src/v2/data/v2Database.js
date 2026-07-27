@@ -88,8 +88,16 @@ export const getDB = () => {
     if (!parsed.websiteSettings) {
       parsed.websiteSettings = { ...defaultWebsiteSettings };
     }
-    if (!parsed.galleryImages || parsed.galleryImages.length === 0) {
+    if (!parsed.deletedGalleryImageIds) {
+      parsed.deletedGalleryImageIds = [];
+    }
+    if (!Array.isArray(parsed.galleryImages)) {
       parsed.galleryImages = [...defaultGalleryImages];
+    }
+    
+    // Filter out permanently deleted photos
+    if (parsed.deletedGalleryImageIds && parsed.deletedGalleryImageIds.length > 0) {
+      parsed.galleryImages = parsed.galleryImages.filter(img => !parsed.deletedGalleryImageIds.includes(String(img.id)));
     }
 
     // Ensure all V1 classic donors exist in donations list

@@ -344,12 +344,18 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
   const handleDeleteGalleryImage = (imageId) => {
     const currentDB = getDB();
     if (!currentDB.galleryImages) return;
+
+    if (!currentDB.deletedGalleryImageIds) currentDB.deletedGalleryImageIds = [];
+    if (!currentDB.deletedGalleryImageIds.includes(String(imageId))) {
+      currentDB.deletedGalleryImageIds.push(String(imageId));
+    }
+
     currentDB.galleryImages = currentDB.galleryImages.filter(img => String(img.id) !== String(imageId));
 
     saveDB(currentDB);
-    setDbState(currentDB);
+    setDbState({ ...currentDB });
     addAuditLog(userRole, `Deleted Gallery Image ID: ${imageId}`);
-    showToast("ఫోటో తొలగించబడింది!");
+    showToast("ఫోటో శాశ్వతంగా తొలగించబడింది!");
   };
 
   // Set Gallery Image as First Slide
@@ -1389,7 +1395,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
 
             {/* TAB 10: GALLERY & SLIDESHOW IMAGES MANAGER */}
             {activeTab === 'gallery-manager' && (() => {
-              const galleryList = db.galleryImages || defaultGalleryImages;
+              const galleryList = Array.isArray(db.galleryImages) ? db.galleryImages : defaultGalleryImages;
 
               return (
                 <div className="space-y-8">
