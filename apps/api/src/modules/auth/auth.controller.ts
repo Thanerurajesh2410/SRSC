@@ -1,69 +1,42 @@
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
+import { asyncHandler } from "../../utils/asyncHandler";
+import { sendResponse } from "../../utils/apiResponse";
 
-export class AuthController {
-  private service = new AuthService();
+const authService = new AuthService();
 
-  async register(req: Request, res: Response): Promise<Response> {
-    try {
-      const user = await this.service.register(req.body);
+export const register = asyncHandler(async (req: Request, res: Response) => {
+  const user = await authService.register(req.body);
 
-      return res.status(201).json({
-        success: true,
-        message: "User registered successfully",
-        data: {
-          id: user.id,
-          email: user.email,
-        },
-      });
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Registration failed",
-      });
+  sendResponse(
+    res,
+    201,
+    "User registered successfully",
+    {
+      id: user.id,
+      email: user.email,
     }
-  }
+  );
+});
 
-  async login(req: Request, res: Response): Promise<Response> {
-    try {
-      const result = await this.service.login(req.body);
+export const login = asyncHandler(async (req: Request, res: Response) => {
+  const result = await authService.login(req.body);
 
-      return res.status(200).json({
-        success: true,
-        message: "Login successful",
-        data: {
-          accessToken: result.accessToken,
-          user: {
-            id: result.user.id,
-            firstName: result.user.firstName,
-            email: result.user.email,
-            roleId: result.user.roleId,
-          },
-        },
-      });
-    } catch (error) {
-      return res.status(401).json({
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Invalid email or password",
-      });
-    }
-  }
-  async me(req: Request, res: Response): Promise<Response> {
-    try {
-      const user = await this.service.getProfile(req.user!.userId);
+  sendResponse(
+    res,
+    200,
+    "Login successful",
+    result
+  );
+});
 
-      return res.status(200).json({
-        success: true,
-        data: user,
-      });
-    } catch (error) {
-      return res.status(404).json({
-        success: false,
-        message:
-          error instanceof Error ? error.message : "User not found",
-      });
-    }
-  }
-};
+export const me = asyncHandler(async (req: Request, res: Response) => {
+  const user = await authService.getProfile(req.user!.userId);
+
+  sendResponse(
+    res,
+    200,
+    "Profile fetched successfully",
+    user
+  );
+});

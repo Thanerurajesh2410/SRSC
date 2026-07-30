@@ -29,3 +29,8 @@ Thumbs.db
 .vscode/settings.json
 .opencode/
 .qodo/
+.opencode
+
+# Temporary Backups & Archives
+apps/api.zip
+apps/web_backup/

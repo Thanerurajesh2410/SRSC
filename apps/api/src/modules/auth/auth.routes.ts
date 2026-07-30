@@ -1,23 +1,36 @@
 import { Router } from "express";
-import { AuthController } from "./auth.controller";
+import {
+  register,
+  login,
+  me,
+} from "./auth.controller";
 import { authenticate } from "../../middleware/authenticate";
+import { validate } from "../../middleware/validate";
+import {
+  registerSchema,
+  loginSchema,
+} from "./auth.validation";
 
 const router = Router();
 
-const controller = new AuthController();
+console.log("✅ auth.routes.ts loaded");
 
-// Hover over controller here
-console.log(controller);
+router.post(
+  "/register",
+  validate(registerSchema),
+  register
+);
 
-router.post("/register", controller.register.bind(controller));
-router.post("/login", controller.login.bind(controller));
-
-
+router.post(
+  "/login",
+  validate(loginSchema),
+  login
+);
 
 router.get(
-    "/me",
-    authenticate,
-    controller.me.bind(controller)
+  "/me",
+  authenticate,
+  me
 );
 
 export default router;

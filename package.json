@@ -15,6 +15,12 @@
   "author": "Rajesh",
   "license": "MIT",
   "devDependencies": {
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }

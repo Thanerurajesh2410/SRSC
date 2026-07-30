@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,58 +11,412 @@ datasource db {
 }
 
 model Role {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String  @id @default(cuid())
+  name        String  @unique
   description String?
-  isActive    Boolean  @default(true)
+  isActive    Boolean @default(true)
 
   permissions RolePermission[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
 }
 
 model Permission {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String  @id @default(cuid())
+  name        String  @unique
   description String?
-  isActive    Boolean  @default(true)
+  isActive    Boolean @default(true)
 
-  roles       RolePermission[]
+  roles RolePermission[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model RolePermission {
-  id           String @id @default(cuid())
+  id String @id @default(cuid())
 
   roleId       String
   permissionId String
 
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
-  createdAt    DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([roleId, permissionId])
 }
 
 model User {
-  id           String   @id @default(cuid())
-  firstName    String
-  lastName     String?
-  email        String   @unique
-  password     String
+  id        String  @id @default(cuid())
+  firstName String
+  lastName  String?
+  email     String  @unique
+  password  String
 
+  phone String?
+
+  isActive Boolean @default(true)
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Expense   Expense[]
+}
+
+model Committee {
+  id          String  @id @default(uuid())
+  name        String
+  designation String
+  phone       String?
+  email       String?
+  address     String?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([deletedAt])
+}
+
+model Donor {
+  id        String  @id @default(uuid())
+  donorCode String  @unique
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  city      String?
+  state     String?
+  pincode   String?
+  gotram    String?
+  star      String? // Nakshatram
+  notes     String?
+
+  familyMembers DonorFamilyMember[]
+  donations     Donation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DonorFamilyMember {
+  id           String  @id @default(uuid())
+  donorId      String
+  donor        Donor   @relation(fields: [donorId], references: [id], onDelete: Cascade)
+  name         String
+  relationship String?
   phone        String?
+  star         String?
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Donation {
+  id        String  @id @default(cuid())
+  receiptNo String  @unique
+  donorName String
+  mobile    String?
+  email     String?
+  address   String?
+
+  donorId String?
+  donor   Donor?  @relation(fields: [donorId], references: [id])
+
+  amount Decimal @db.Decimal(12, 2)
+
+  category    DonationCategory
+  paymentMode PaymentMode
+
+  purpose       String?
+  transactionId String?
+  donationDate  DateTime
+
+  remarks String?
+
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  razorpaySignature String?
+  paymentStatus     PaymentStatus @default(SUCCESS)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum DonationCategory {
+  GENERAL
+  TEMPLE_CONSTRUCTION
+  ANNADANAM
+  FESTIVAL
+  GOSHALA
+  SPECIAL_POOJA
+  CORPUS
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentMode {
+  CASH
+  UPI
+  BANK_TRANSFER
+  CHEQUE
+  ONLINE_RAZORPAY
+}
+
+model Expense {
+  id          String          @id @default(uuid())
+  expenseNo   String          @unique
+  title       String
+  category    ExpenseCategory
+  amount      Decimal         @db.Decimal(12, 2)
+  paymentMode PaymentMode
+  expenseDate DateTime
+  paidTo      String
+  remarks     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id])
+
+  @@map("expenses")
+}
+
+enum ExpenseCategory {
+  CONSTRUCTION
+  FESTIVAL
+  MAINTENANCE
+  ELECTRICITY
+  WATER
+  SALARY
+  DONATION_UTILIZATION
+  MISCELLANEOUS
+}
+
+model MaterialDonation {
+  id              String         @id @default(uuid())
+  receiptNo       String         @unique
+  donorName       String
+  mobile          String?
+  email           String?
+  address         String?
+  materialType    MaterialType
+  itemDescription String
+  quantity        Decimal        @db.Decimal(10, 2)
+  unit            String
+  estimatedValue  Decimal?       @db.Decimal(12, 2)
+  status          MaterialStatus @default(RECEIVED)
+  purpose         String?
+  donationDate    DateTime
+  remarks         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum MaterialType {
+  CEMENT
+  BRICKS
+  STEEL
+  SAND
+  GRANITE
+  WOOD
+  ELECTRICAL
+  LABOUR
+  OTHER
+}
+
+enum MaterialStatus {
+  RECEIVED
+  UTILIZED
+  PARTIALLY_USED
+}
+
+model ConstructionProject {
+  id                   String             @id @default(uuid())
+  name                 String
+  description          String?
+  estimatedCost        Decimal            @db.Decimal(12, 2)
+  actualCost           Decimal            @default(0) @db.Decimal(12, 2)
+  overallProgress      Int                @default(0)
+  status               ConstructionStatus @default(IN_PROGRESS)
+  targetCompletionDate DateTime?
+
+  progressLogs ConstructionProgressLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ConstructionProgressLog {
+  id              String              @id @default(uuid())
+  projectId       String
+  project         ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title           String
+  updateDate      DateTime            @default(now())
+  completedWork   String?
+  upcomingWork    String?
+  progressPercent Int                 @default(0)
+  imageUrl        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ConstructionStatus {
+  PLANNING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+}
+
+model Volunteer {
+  id            String          @id @default(uuid())
+  volunteerCode String          @unique
+  name          String
+  phone         String
+  email         String?
+  address       String?
+  skills        String?
+  dutyStatus    VolunteerStatus @default(AVAILABLE)
+  assignedDuty  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum VolunteerStatus {
+  AVAILABLE
+  ASSIGNED
+  ON_LEAVE
+}
+
+model Festival {
+  id            String         @id @default(uuid())
+  title         String
+  description   String?
+  startDate     DateTime
+  endDate       DateTime
+  budget        Decimal        @db.Decimal(12, 2)
+  totalExpenses Decimal        @default(0) @db.Decimal(12, 2)
+  sponsorsCount Int            @default(0)
+  status        FestivalStatus @default(UPCOMING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum FestivalStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+}
+
+model SevaBooking {
+  id          String      @id @default(uuid())
+  bookingNo   String      @unique
+  sevaType    SevaType
+  devoteeName String
+  phone       String?
+  email       String?
+  gotram      String?
+  star        String?
+  sevaDate    DateTime
+  amount      Decimal     @db.Decimal(12, 2)
+  paymentMode PaymentMode
+  status      SevaStatus  @default(CONFIRMED)
+  remarks     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SevaType {
+  DAILY_POOJA
+  ARCHANA
+  ABHISHEKAM
+  ANNADANAM
+  SPECIAL_KALYANAM
+}
+
+enum SevaStatus {
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model SiteSetting {
+  id              String   @id @default("default")
+  logoUrl         String?
+  upiQrUrl        String?
+  upiId           String?  @default("sriramasevatrust@sbi")
+  bankAccountName String?  @default("SRI RAMA SEVA TRUST")
+  bankName        String?  @default("State Bank of India (SBI)")
+  accountNumber   String?  @default("40982374619")
+  ifscCode        String?  @default("SBIN0004521")
+  branch          String?  @default("Temple Road Branch")
+
+  // Home Page Section Colors
+  bgHeader       String?  @default("#7c2d12")
+  bgHero         String?  @default("#180a04")
+  bgGallery      String?  @default("#120803")
+  bgSevas        String?  @default("#1c0e06")
+  bgAbout        String?  @default("#180a04")
+  bgConstruction String?  @default("#120803")
+  bgDonate       String?  @default("#1c0e06")
+  bgContact      String?  @default("#180a04")
+  bgFooter       String?  @default("#090502")
+  bgCard         String?  @default("#231107")
+
+  // Home Page Section Background Images
+  bgPageImage         String?
+  bgHeaderImage       String?
+  bgHeroImage         String?
+  bgGalleryImage      String?
+  bgSevasImage        String?
+  bgAboutImage        String?
+  bgConstructionImage String?
+  bgDonateImage       String?
+  bgContactImage      String?
+  bgFooterImage       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HomeSlide {
+  id           String   @id @default(uuid())
+  title        String
+  caption      String?
+  imageUrl     String
+  displayOrder Int      @default(0)
   isActive     Boolean  @default(true)
 
-  roleId       String
-  role         Role @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model Devotee {
+  id      String  @id @default(uuid())
+  name    String
+  phone   String  @unique
+  email   String?
+  address String?
+  gotram  String?
+  star    String? // Nakshatram
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

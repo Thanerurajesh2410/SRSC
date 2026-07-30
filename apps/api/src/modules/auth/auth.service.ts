@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { AuthRepository } from "./auth.repository";
 import { generateAccessToken } from "../../utils/jwt";
+import { AppError } from "../../errors/AppError";
 
 const repository = new AuthRepository();
 
@@ -61,7 +62,7 @@ export class AuthService {
     const user = await repository.findById(userId);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new AppError("User not found", 404);
     }
 
     return user;
