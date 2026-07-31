@@ -104,17 +104,19 @@ export default function AppHeader() {
             </IconButton>
           </Tooltip>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: "center", bgcolor: "rgba(255,255,255,0.2)", py: 0.5, px: 1.5, borderRadius: 5 }}>
-            <Avatar sx={{ width: 32, height: 32, bgcolor: "#fef3c7", color: "#7c2d12", fontWeight: 800, fontSize: "0.9rem" }}>
-              A
-            </Avatar>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 700, lineHeight: 1.1, color: "#fff", fontSize: "0.85rem" }}>
-                Admin User
-              </Typography>
-              <Chip label="SUPER ADMIN" size="small" sx={{ height: 16, fontSize: "0.6rem", bgcolor: "#fef3c7", color: "#7c2d12", fontWeight: 900 }} />
-            </Box>
-          </Stack>
+          <Tooltip title="SRSC (Super Admin) | sriramasevacommitteepvv@gmail.com | 9866125609">
+            <Stack direction="row" spacing={1} sx={{ alignItems: "center", bgcolor: "rgba(255,255,255,0.2)", py: 0.5, px: 1.5, borderRadius: 5, cursor: "pointer" }}>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: "#fef3c7", color: "#7c2d12", fontWeight: 900, fontSize: "0.85rem" }}>
+                S
+              </Avatar>
+              <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800, lineHeight: 1.1, color: "#fff", fontSize: "0.85rem" }}>
+                  SRSC
+                </Typography>
+                <Chip label="SUPER ADMIN" size="small" sx={{ height: 16, fontSize: "0.6rem", bgcolor: "#fef3c7", color: "#7c2d12", fontWeight: 900 }} />
+              </Box>
+            </Stack>
+          </Tooltip>
 
           <Tooltip title="Logout">
             <IconButton color="inherit" onClick={handleLogout} sx={{ bgcolor: "rgba(255,255,255,0.15)", "&:hover": { bgcolor: "#ef4444" } }}>

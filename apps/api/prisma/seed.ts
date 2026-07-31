@@ -260,13 +260,18 @@ async function main() {
 
   await prisma.user.upsert({
     where: {
-      email: "admin@temple.com",
+      email: "sriramasevacommitteepvv@gmail.com",
     },
-    update: {},
+    update: {
+      firstName: "SRSC",
+      lastName: "Super Admin",
+      phone: "9866125609",
+    },
     create: {
-      firstName: "System",
-      lastName: "Administrator",
-      email: "admin@temple.com",
+      firstName: "SRSC",
+      lastName: "Super Admin",
+      email: "sriramasevacommitteepvv@gmail.com",
+      phone: "9866125609",
       password: hashedPassword,
       roleId: adminRole.id,
       isActive: true,

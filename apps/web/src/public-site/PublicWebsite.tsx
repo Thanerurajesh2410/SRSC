@@ -29,7 +29,6 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PersonIcon from "@mui/icons-material/Person";
@@ -251,8 +250,11 @@ export default function PublicWebsite() {
   return (
     <Box
       sx={{
-        background: settings.bgPageImage ? `url(${settings.bgPageImage}) center/cover no-repeat fixed` : palette.bgPage,
-        color: palette.textPrimary,
+        backgroundImage: `linear-gradient(to bottom, rgba(254, 243, 199, 0.90), rgba(255, 251, 235, 0.95)), url('/lord_rama_background.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundAttachment: "fixed",
+        color: "#7c2d12",
         minHeight: "100vh",
         fontFamily: "'Outfit', 'Noto Sans Telugu', sans-serif",
         transition: "all 0.3s ease",
@@ -510,27 +512,6 @@ export default function PublicWebsite() {
               Donate for Construction
             </Button>
 
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<AutoAwesomeIcon />}
-              onClick={() => setSevaModalOpen(true)}
-              sx={{
-                px: 5,
-                py: 2,
-                fontSize: "1.2rem",
-                fontWeight: 900,
-                borderRadius: 4,
-                background: "linear-gradient(135deg, #b45309 0%, #7c2d12 100%)",
-                color: "#fef3c7",
-                border: "2px solid #fde68a",
-                boxShadow: "0 10px 30px rgba(180, 83, 9, 0.5)",
-                "&:hover": { transform: "translateY(-4px)" },
-                transition: "all 0.3s ease-in-out",
-              }}
-            >
-              Book Online Seva
-            </Button>
           </Stack>
         </Container>
       </Box>
