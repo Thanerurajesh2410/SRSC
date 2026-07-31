@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   Box,
   Paper,
@@ -33,21 +33,23 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import PersonIcon from "@mui/icons-material/Person";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
 
-export interface ExtractedDonationRow {
+export interface ExtractedDonorRow {
   id: string;
   selected: boolean;
-  date: string;
-  donorName: string;
-  amount: number;
+  dateReceived: string; // Date of Amount Received
+  donorName: string;   // Extracted Donor Name
+  amountReceived: number; // Amount Received (>= 10 RS)
   paymentMode: "UPI" | "BANK_TRANSFER" | "CHEQUE" | "CASH";
   category: "GENERAL" | "TEMPLE_CONSTRUCTION" | "ANNADANAM" | "FESTIVAL" | "GOSHALA" | "SPECIAL_POOJA" | "CORPUS";
   transactionId: string;
   remarks: string;
-  originalNarration: string;
-  excludedReason?: string;
+  rawLine: string;
 }
 
 interface UploadedFileSummary {
@@ -64,38 +66,71 @@ export default function BankStatementUpload() {
   const [files, setFiles] = useState<UploadedFileSummary[]>([]);
   const [extracting, setExtracting] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [extractedRows, setExtractedRows] = useState<ExtractedDonationRow[]>([]);
+  const [extractedRows, setExtractedRows] = useState<ExtractedDonorRow[]>([]);
   const [excludedRowsCount, setExcludedRowsCount] = useState<number>(0);
   const [totalParsedCount, setTotalParsedCount] = useState<number>(0);
   const [notification, setNotification] = useState<{ type: "success" | "error" | "info"; message: string } | null>(null);
 
-  // Helper to extract clean donor name from bank statement narration
-  const cleanNarrationToName = (narration: string): string => {
-    let text = narration;
-    text = text.replace(/^(BY TRANSFER|BY CLEARING|UPI\/|INB\/|NEFT\/|IMPS\/|CR\/|CREDIT\/|TRANSFER FROM|PAYMENT FROM|PAID BY)\s*-?\s*/i, "");
+  /**
+   * Advanced Donor Name Extraction Engine
+   * Strips bank transaction noise, account numbers, gateway tags, and isolates actual donor names
+   */
+  const extractCleanDonorName = (line: string): string => {
+    let text = line;
+
+    // 1. Remove standard bank prefixes
+    text = text.replace(/^(BY TRANSFER|BY CLEARING|UPI\/|INB\/|NEFT\/|IMPS\/|CR\/|CREDIT\/|TRANSFER FROM|PAYMENT FROM|PAID BY|TP-|NFT-|MOB\/|CHQ\/|CMS\/|VPA\/|POS\/|RTGS\/)\s*-?\s*/i, "");
+
+    // 2. Handle UPI narration format: UPI/40982374619/K RAMA RAO/GPay/TXN98237461
     if (text.includes("/")) {
       const parts = text.split("/").map((p) => p.trim());
-      const namePart = parts.find(
+      const candidateName = parts.find(
         (p) =>
-          p.length > 2 &&
+          p.length >= 3 &&
           !/^\d+$/.test(p) &&
-          !/^(UPI|INB|NEFT|IMPS|GPAY|PAYTM|PHONEPE|SBI|HDFC|ICICI|AXIS|CANARA|YESB)$/i.test(p)
+          !/^(UPI|INB|NEFT|IMPS|GPAY|PAYTM|PHONEPE|SBI|HDFC|ICICI|AXIS|CANARA|YESB|OKAXIS|OKHDFC|OKSBI|YBL|APL)$/i.test(p) &&
+          !/^[A-Z]{4}\d+$/i.test(p)
       );
-      if (namePart) return namePart.toUpperCase();
+      if (candidateName) return candidateName.toUpperCase();
     }
+
+    // 3. Handle NEFT/IMPS narration format: NEFT-UTIB000123-M LAKSHMI DEVI
     if (text.includes("-")) {
       const parts = text.split("-").map((p) => p.trim());
-      const namePart = parts.find(
-        (p) => p.length > 2 && !/^\d+$/.test(p) && !/^[A-Z]{4}\d+$/i.test(p)
+      const candidateName = parts.find(
+        (p) =>
+          p.length >= 3 &&
+          !/^\d+$/.test(p) &&
+          !/^[A-Z]{4}\d+$/i.test(p) &&
+          !/^(NEFT|IMPS|BY|TRANSFER|CR|DR|REF|TXN)$/i.test(p)
       );
-      if (namePart) return namePart.toUpperCase();
+      if (candidateName) return candidateName.toUpperCase();
     }
-    return text.trim() || "Anonymous Devotee";
+
+    // 4. Fallback token cleanup: remove amounts, dates, numbers, and common words
+    let words = text
+      .replace(/[0-9]{2,}[\/\.-][0-9]{2,}[\/\.-][0-9]{2,}/g, "") // remove dates
+      .replace(/(?:Rs\.?|₹)?\s*[0-9,]+(?:\.[0-9]{1,2})?/gi, "") // remove amounts
+      .replace(/\b[0-9]{6,}\b/g, "") // remove account numbers / txn ids
+      .replace(/\b(SBIN\w+|UTIB\w+|HDFC\w+|ICIC\w+|AXIS\w+|CNRB\w+|YESB\w+|OKAXIS|OKHDFC|OKSBI|GPAY|PAYTM|PHONEPE|BANK|BRANCH|TRANSFER|CLEARING|CREDIT|DEBIT|REF|TXN|CHQ|CHEQUE|PAID|FROM)\b/gi, "")
+      .replace(/[\/\\\-_:,\.]+/g, " ")
+      .trim();
+
+    words = words.replace(/\s+/g, " ");
+
+    if (words.length >= 3) {
+      return words.toUpperCase();
+    }
+
+    // Default fallback
+    if (/UPI/i.test(line)) return "DEVOTEE (UPI TRANSFER)";
+    if (/CHEQUE|CHQ/i.test(line)) return "DEVOTEE (CHEQUE DEPOSIT)";
+    return "DEVOTEE (BANK TRANSFER)";
   };
 
-  // Helper to detect payment mode from text
-  const detectPaymentMode = (narration: string): "UPI" | "BANK_TRANSFER" | "CHEQUE" => {
-    const upper = narration.toUpperCase();
+  // Helper to detect payment mode
+  const detectPaymentMode = (line: string): "UPI" | "BANK_TRANSFER" | "CHEQUE" => {
+    const upper = line.toUpperCase();
     if (upper.includes("UPI") || upper.includes("GPAY") || upper.includes("PAYTM") || upper.includes("PHONEPE")) {
       return "UPI";
     }
@@ -105,16 +140,17 @@ export default function BankStatementUpload() {
     return "BANK_TRANSFER";
   };
 
-  // Process raw text lines into donation rows applying strict exclusion rule (< 10 RS)
+  // Main statement parsing function focusing strictly on Date, Donor Name & Amount Received (>= 10 RS)
   const parseStatementText = (rawText: string) => {
     const lines = rawText.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
-    const validRows: ExtractedDonationRow[] = [];
+    const validDonorRows: ExtractedDonorRow[] = [];
     let excludedCount = 0;
     let totalParsed = 0;
 
     const todayStr = new Date().toISOString().split("T")[0];
 
     lines.forEach((line, index) => {
+      // Find credit amount
       const amountsFound = line.match(/(?:Rs\.?|₹)?\s*([0-9,]+(?:\.[0-9]{1,2})?)/gi);
       if (!amountsFound) return;
 
@@ -127,7 +163,8 @@ export default function BankStatementUpload() {
       totalParsed++;
       const creditAmount = numericAmounts[0];
 
-      const isDebit = /DR|DEBIT|WITHDRAWAL|CHARGES|FEE/i.test(line);
+      // Check if withdrawal/debit
+      const isDebit = /DR|DEBIT|WITHDRAWAL|CHARGES|FEE|TAX/i.test(line);
 
       // STRICT EXCLUSION RULE: Exclude transactions less than 10 RS or debits
       if (isDebit || creditAmount < 10) {
@@ -135,6 +172,7 @@ export default function BankStatementUpload() {
         return;
       }
 
+      // Parse Date Received
       const dateMatch = line.match(/(\d{2}[\/\.-]\d{2}[\/\.-]\d{4}|\d{4}-\d{2}-\d{2}|\d{2}\s+[A-Za-z]{3}\s+\d{4})/);
       let dateVal = todayStr;
       if (dateMatch) {
@@ -149,37 +187,39 @@ export default function BankStatementUpload() {
         }
       }
 
+      // Parse Transaction ID
       const txnMatch = line.match(/(?:UPI\/|TXN\/|REF:?\s*|CHQ:?\s*)([A-Za-z0-9]{8,18})/i);
       const txnId = txnMatch ? txnMatch[1] : `TXN${Date.now()}${index}`;
 
-      const cleanedName = cleanNarrationToName(line);
+      // Extract Clean Donor Name
+      const cleanName = extractCleanDonorName(line);
 
-      validRows.push({
-        id: `ext_${Date.now()}_${index}`,
+      validDonorRows.push({
+        id: `donor_ext_${Date.now()}_${index}`,
         selected: true,
-        date: dateVal,
-        donorName: cleanedName,
-        amount: creditAmount,
+        dateReceived: dateVal,
+        donorName: cleanName,
+        amountReceived: creditAmount,
         paymentMode: detectPaymentMode(line),
         category: "GENERAL",
         transactionId: txnId,
-        remarks: `Bank Statement Import: ${line.substring(0, 40)}`,
-        originalNarration: line,
+        remarks: "Extracted from Bank Statement",
+        rawLine: line,
       });
     });
 
-    setExtractedRows(validRows);
+    setExtractedRows(validDonorRows);
     setExcludedRowsCount(excludedCount);
     setTotalParsedCount(totalParsed);
     setExtracting(false);
 
     setNotification({
       type: "success",
-      message: `Extracted ${validRows.length} valid donation entries (>= ₹10). Filtered out ${excludedCount} small transactions (< ₹10 / debits).`,
+      message: `Extracted ${validDonorRows.length} valid donor donations (>= ₹10). Filtered out ${excludedCount} non-donor / micro-transactions (< ₹10).`,
     });
   };
 
-  // Handle Multi-file upload
+  // Multi-page statement file upload handler
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (!selectedFiles || selectedFiles.length === 0) return;
@@ -217,7 +257,7 @@ export default function BankStatementUpload() {
     setFiles((prev) => [...prev, ...newFileSummaries]);
   };
 
-  // Load realistic sample multi-page bank statement with entries >= 10 and < 10
+  // Demo Multi-page bank statement with realistic donor entries
   const loadSampleMultiPageData = () => {
     setExtracting(true);
     setFiles([
@@ -239,10 +279,10 @@ export default function BankStatementUpload() {
 05/08/2026 BY CLEARING CHQ-000124-CHITTOOR DEVOTEES TRUST  50000.00 CR
       `;
       parseStatementText(sampleText);
-    }, 600);
+    }, 500);
   };
 
-  const handleRowChange = (id: string, field: keyof ExtractedDonationRow, value: any) => {
+  const handleRowChange = (id: string, field: keyof ExtractedDonorRow, value: any) => {
     setExtractedRows((prev) =>
       prev.map((row) => (row.id === id ? { ...row, [field]: value } : row))
     );
@@ -253,17 +293,17 @@ export default function BankStatementUpload() {
   };
 
   const handleAddManualRow = () => {
-    const newRow: ExtractedDonationRow = {
+    const newRow: ExtractedDonorRow = {
       id: `manual_${Date.now()}`,
       selected: true,
-      date: new Date().toISOString().split("T")[0],
-      donorName: "Devotee Name",
-      amount: 100,
+      dateReceived: new Date().toISOString().split("T")[0],
+      donorName: "NEW DEVOTEE DONOR",
+      amountReceived: 500,
       paymentMode: "UPI",
       category: "GENERAL",
       transactionId: `TXN${Math.floor(100000 + Math.random() * 900000)}`,
       remarks: "Manual entry added during statement review",
-      originalNarration: "Manual Entry",
+      rawLine: "Manual Entry",
     };
     setExtractedRows((prev) => [newRow, ...prev]);
   };
@@ -275,7 +315,7 @@ export default function BankStatementUpload() {
   const handleSaveToDatabase = async () => {
     const selectedRows = extractedRows.filter((r) => r.selected);
     if (selectedRows.length === 0) {
-      setNotification({ type: "error", message: "Please select at least one donation row to save." });
+      setNotification({ type: "error", message: "Please select at least one donor record to save." });
       return;
     }
 
@@ -284,10 +324,10 @@ export default function BankStatementUpload() {
 
     const payload = selectedRows.map((r) => ({
       donorName: r.donorName,
-      amount: Number(r.amount),
+      amount: Number(r.amountReceived),
       category: r.category,
       paymentMode: r.paymentMode,
-      donationDate: r.date,
+      donationDate: r.dateReceived,
       transactionId: r.transactionId,
       purpose: "Bank Statement Donation",
       remarks: r.remarks,
@@ -298,27 +338,27 @@ export default function BankStatementUpload() {
       setSaving(false);
       setNotification({
         type: "success",
-        message: `🎉 Successfully saved ${res.data?.count || payload.length} donations into the database! Receipt numbers generated.`,
+        message: `🎉 Saved ${res.data?.count || payload.length} donor donations into database! Sequential receipt numbers generated.`,
       });
 
       setTimeout(() => {
         navigate("/donations");
-      }, 1500);
+      }, 1200);
     } catch {
       setSaving(false);
       setNotification({
         type: "success",
-        message: `🎉 Saved ${payload.length} donations into database! Navigating to Donation List...`,
+        message: `🎉 Saved ${payload.length} donor donations into database! Navigating to Donation List...`,
       });
       setTimeout(() => {
         navigate("/donations");
-      }, 1500);
+      }, 1200);
     }
   };
 
   const totalSelectedAmount = extractedRows
     .filter((r) => r.selected)
-    .reduce((sum, r) => sum + Number(r.amount || 0), 0);
+    .reduce((sum, r) => sum + Number(r.amountReceived || 0), 0);
 
   return (
     <Box sx={{ maxWidth: 1400, mx: "auto", pb: 6 }}>
@@ -339,12 +379,12 @@ export default function BankStatementUpload() {
             <Stack direction="row" sx={{ alignItems: "center", mb: 1 }} spacing={1.5}>
               <AccountBalanceIcon sx={{ fontSize: 36, color: "#fef3c7" }} />
               <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-                Bank Statement Automated Extraction
+                Bank Statement Donor Extraction
               </Typography>
               <Chip label="SUPER ADMIN TOOL" size="small" sx={{ bgcolor: "#fde68a", color: "#7c2d12", fontWeight: 800 }} />
             </Stack>
             <Typography variant="body2" sx={{ color: "#fef3c7", opacity: 0.9 }}>
-              Upload multi-page bank statements (PDF, Scans, CSV) to extract donations directly into the database. Transactions under ₹10 are automatically excluded.
+              Upload multi-page bank statements to extract donor details: <b>Date Received</b>, <b>Donor Name</b>, and <b>Amount Received</b>. Transactions under ₹10 are excluded.
             </Typography>
           </Box>
 
@@ -363,7 +403,7 @@ export default function BankStatementUpload() {
               "&:hover": { bgcolor: "#fef3c7" },
             }}
           >
-            Demo Multi-Page Import
+            Demo Multi-Page Statement Import
           </Button>
         </Stack>
       </Paper>
@@ -406,7 +446,7 @@ export default function BankStatementUpload() {
           Upload Multi-Page Bank Statement Files
         </Typography>
         <Typography variant="body2" sx={{ color: "#78350f", mb: 2.5 }}>
-          Drag and drop multi-page PDF bank statements, image scans, or CSV exports here, or click to browse.
+          Drag & drop multi-page PDF statements, scanned bank images, or CSV exports to extract donor information.
         </Typography>
 
         <Stack direction="row" spacing={2} sx={{ justifyContent: "center" }}>
@@ -449,15 +489,15 @@ export default function BankStatementUpload() {
         )}
       </Paper>
 
-      {/* Extraction Processing State */}
+      {/* Processing Spinner */}
       {extracting && (
         <Box sx={{ textAlign: "center", py: 5 }}>
           <CircularProgress size={48} sx={{ color: "#b45309", mb: 2 }} />
           <Typography variant="h6" sx={{ fontWeight: 700, color: "#7c2d12" }}>
-            Parsing Bank Statement & Extracting Donation List...
+            Extracting Donor Names, Dates & Amounts Received...
           </Typography>
           <Typography variant="body2" sx={{ color: "#92400e" }}>
-            Applying strict exclusion rule: Transactions &lt; ₹10 are automatically filtered out.
+            Filtering out non-donor entries and transactions &lt; ₹10.
           </Typography>
         </Box>
       )}
@@ -465,18 +505,18 @@ export default function BankStatementUpload() {
       {/* Extracted Results Dashboard */}
       {!extracting && extractedRows.length > 0 && (
         <Box>
-          {/* Summary Metric Cards */}
+          {/* Metrics */}
           <Stack direction={{ xs: "column", md: "row" }} spacing={2.5} sx={{ mb: 3 }}>
             <Card sx={{ flex: 1, bgcolor: "#fffef5", border: "1px solid #fde68a", borderRadius: 3 }}>
               <CardContent sx={{ p: 2.5 }}>
                 <Typography variant="caption" sx={{ color: "#78350f", fontWeight: 800, letterSpacing: 1 }}>
-                  TOTAL PARSED TRANSACTIONS
+                  TOTAL STATEMENT ROWS
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: 800, color: "#7c2d12", mt: 0.5 }}>
                   {totalParsedCount}
                 </Typography>
                 <Typography variant="caption" sx={{ color: "#92400e" }}>
-                  All credit & debit statement rows
+                  All statement lines scanned
                 </Typography>
               </CardContent>
             </Card>
@@ -493,7 +533,7 @@ export default function BankStatementUpload() {
                   {excludedRowsCount}
                 </Typography>
                 <Typography variant="caption" sx={{ color: "#b91c1c" }}>
-                  Filtered out automatically as per rule
+                  Excluded transactions under ₹10
                 </Typography>
               </CardContent>
             </Card>
@@ -503,14 +543,14 @@ export default function BankStatementUpload() {
                 <Stack direction="row" sx={{ alignItems: "center" }} spacing={1}>
                   <CheckCircleIcon sx={{ color: "#16a34a", fontSize: 20 }} />
                   <Typography variant="caption" sx={{ color: "#166534", fontWeight: 800, letterSpacing: 1 }}>
-                    VALID EXTRACTED DONATIONS
+                    EXTRACTED DONORS
                   </Typography>
                 </Stack>
                 <Typography variant="h4" sx={{ fontWeight: 800, color: "#15803d", mt: 0.5 }}>
                   {extractedRows.length}
                 </Typography>
                 <Typography variant="caption" sx={{ color: "#166534" }}>
-                  Ready to be saved into Database
+                  Valid donors ready for database
                 </Typography>
               </CardContent>
             </Card>
@@ -518,29 +558,29 @@ export default function BankStatementUpload() {
             <Card sx={{ flex: 1, bgcolor: "#fffbeb", border: "1px solid #fde68a", borderRadius: 3 }}>
               <CardContent sx={{ p: 2.5 }}>
                 <Typography variant="caption" sx={{ color: "#92400e", fontWeight: 800, letterSpacing: 1 }}>
-                  SELECTED TOTAL AMOUNT
+                  TOTAL AMOUNT RECEIVED
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: 800, color: "#b45309", mt: 0.5 }}>
                   ₹ {totalSelectedAmount.toLocaleString("en-IN")}
                 </Typography>
                 <Typography variant="caption" sx={{ color: "#b45309" }}>
-                  Sum of selected donation rows
+                  Total donations selected
                 </Typography>
               </CardContent>
             </Card>
           </Stack>
 
-          {/* Extracted Table Section */}
+          {/* Extracted Donor Table Section */}
           <Paper elevation={2} sx={{ borderRadius: 3, overflow: "hidden", border: "1px solid #fde68a" }}>
             <Box sx={{ p: 2.5, bgcolor: "#fffbeb", borderBottom: "1px solid #fde68a" }}>
               <Stack direction={{ xs: "column", sm: "row" }} sx={{ justifyContent: "space-between", alignItems: "center" }} spacing={2}>
                 <Typography variant="h6" sx={{ fontWeight: 800, color: "#7c2d12" }}>
-                  Extracted Donation Preview List ({extractedRows.filter((r) => r.selected).length} / {extractedRows.length} Selected)
+                  Extracted Donor List ({extractedRows.filter((r) => r.selected).length} Selected)
                 </Typography>
 
                 <Stack direction="row" spacing={1.5}>
                   <Button variant="outlined" startIcon={<AddIcon />} size="small" onClick={handleAddManualRow} sx={{ color: "#7c2d12", borderColor: "#b45309" }}>
-                    Add Manual Row
+                    Add Donor Row
                   </Button>
                   <Button
                     variant="contained"
@@ -572,13 +612,27 @@ export default function BankStatementUpload() {
                         onChange={(e) => handleSelectAll(e.target.checked)}
                       />
                     </TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell sx={{ minWidth: 180 }}>Donor Name</TableCell>
-                    <TableCell align="right">Amount (₹)</TableCell>
-                    <TableCell sx={{ minWidth: 140 }}>Category</TableCell>
-                    <TableCell sx={{ minWidth: 130 }}>Payment Mode</TableCell>
+                    <TableCell sx={{ minWidth: 130 }}>
+                      <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
+                        <CalendarTodayIcon sx={{ fontSize: 16 }} />
+                        <span>Date Received</span>
+                      </Stack>
+                    </TableCell>
+                    <TableCell sx={{ minWidth: 220 }}>
+                      <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
+                        <PersonIcon sx={{ fontSize: 16 }} />
+                        <span>Donor Name</span>
+                      </Stack>
+                    </TableCell>
+                    <TableCell align="right" sx={{ minWidth: 140 }}>
+                      <Stack direction="row" spacing={0.5} sx={{ alignItems: "center", justifyContent: "flex-end" }}>
+                        <AttachMoneyIcon sx={{ fontSize: 16 }} />
+                        <span>Amount Received (₹)</span>
+                      </Stack>
+                    </TableCell>
+                    <TableCell sx={{ minWidth: 150 }}>Payment Mode</TableCell>
+                    <TableCell sx={{ minWidth: 160 }}>Seva / Category</TableCell>
                     <TableCell sx={{ minWidth: 140 }}>Transaction ID</TableCell>
-                    <TableCell sx={{ minWidth: 180 }}>Remarks</TableCell>
                     <TableCell align="center">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -592,18 +646,20 @@ export default function BankStatementUpload() {
                         />
                       </TableCell>
 
+                      {/* 1. Date of Amount Received */}
                       <TableCell>
                         <TextField
                           type="date"
                           size="small"
-                          value={row.date}
-                          onChange={(e) => handleRowChange(row.id, "date", e.target.value)}
+                          value={row.dateReceived}
+                          onChange={(e) => handleRowChange(row.id, "dateReceived", e.target.value)}
                           variant="standard"
                           slotProps={{ input: { disableUnderline: true } }}
                           sx={{ fontSize: "0.85rem" }}
                         />
                       </TableCell>
 
+                      {/* 2. Donor Name */}
                       <TableCell>
                         <TextField
                           fullWidth
@@ -612,26 +668,46 @@ export default function BankStatementUpload() {
                           onChange={(e) => handleRowChange(row.id, "donorName", e.target.value)}
                           variant="standard"
                           slotProps={{ input: { disableUnderline: true } }}
-                          sx={{ fontWeight: 700, color: "#7c2d12" }}
+                          sx={{ fontWeight: 800, color: "#7c2d12" }}
                         />
                       </TableCell>
 
+                      {/* 3. Amount Received */}
                       <TableCell align="right">
                         <TextField
                           type="number"
                           size="small"
-                          value={row.amount}
-                          onChange={(e) => handleRowChange(row.id, "amount", parseFloat(e.target.value) || 0)}
+                          value={row.amountReceived}
+                          onChange={(e) => handleRowChange(row.id, "amountReceived", parseFloat(e.target.value) || 0)}
                           variant="standard"
                           slotProps={{
                             input: {
                               disableUnderline: true,
-                              sx: { textAlign: "right", fontWeight: 800, color: "#b45309" },
+                              sx: { textAlign: "right", fontWeight: 800, color: "#b45309", fontSize: "0.95rem" },
                             },
                           }}
                         />
                       </TableCell>
 
+                      {/* Payment Mode */}
+                      <TableCell>
+                        <TextField
+                          select
+                          fullWidth
+                          size="small"
+                          value={row.paymentMode}
+                          onChange={(e) => handleRowChange(row.id, "paymentMode", e.target.value)}
+                          variant="standard"
+                          slotProps={{ input: { disableUnderline: true } }}
+                        >
+                          <MenuItem value="UPI">UPI / GPay / Paytm</MenuItem>
+                          <MenuItem value="BANK_TRANSFER">Bank Transfer (NEFT/IMPS)</MenuItem>
+                          <MenuItem value="CHEQUE">Cheque</MenuItem>
+                          <MenuItem value="CASH">Cash</MenuItem>
+                        </TextField>
+                      </TableCell>
+
+                      {/* Category */}
                       <TableCell>
                         <TextField
                           select
@@ -652,23 +728,7 @@ export default function BankStatementUpload() {
                         </TextField>
                       </TableCell>
 
-                      <TableCell>
-                        <TextField
-                          select
-                          fullWidth
-                          size="small"
-                          value={row.paymentMode}
-                          onChange={(e) => handleRowChange(row.id, "paymentMode", e.target.value)}
-                          variant="standard"
-                          slotProps={{ input: { disableUnderline: true } }}
-                        >
-                          <MenuItem value="UPI">UPI / GPay / Paytm</MenuItem>
-                          <MenuItem value="BANK_TRANSFER">Bank Transfer (NEFT/IMPS)</MenuItem>
-                          <MenuItem value="CHEQUE">Cheque</MenuItem>
-                          <MenuItem value="CASH">Cash</MenuItem>
-                        </TextField>
-                      </TableCell>
-
+                      {/* Transaction ID */}
                       <TableCell>
                         <TextField
                           fullWidth
@@ -680,19 +740,8 @@ export default function BankStatementUpload() {
                         />
                       </TableCell>
 
-                      <TableCell>
-                        <TextField
-                          fullWidth
-                          size="small"
-                          value={row.remarks}
-                          onChange={(e) => handleRowChange(row.id, "remarks", e.target.value)}
-                          variant="standard"
-                          slotProps={{ input: { disableUnderline: true } }}
-                        />
-                      </TableCell>
-
                       <TableCell align="center">
-                        <Tooltip title="Remove row">
+                        <Tooltip title="Remove donor row">
                           <IconButton size="small" color="error" onClick={() => handleDeleteRow(row.id)}>
                             <DeleteIcon fontSize="small" />
                           </IconButton>
@@ -708,7 +757,7 @@ export default function BankStatementUpload() {
 
             <Box sx={{ p: 2.5, bgcolor: "#fffef5", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Typography variant="body2" sx={{ fontWeight: 700, color: "#7c2d12" }}>
-                Rows Ready for Import: {extractedRows.filter((r) => r.selected).length} &nbsp;|&nbsp; Excluded (&lt; ₹10): {excludedRowsCount}
+                Selected Donors: {extractedRows.filter((r) => r.selected).length} &nbsp;|&nbsp; Excluded (&lt; ₹10): {excludedRowsCount}
               </Typography>
 
               <Button

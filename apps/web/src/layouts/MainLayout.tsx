@@ -3,13 +3,11 @@ import { Outlet } from "react-router-dom";
 
 import AppHeader from "../components/layout/AppHeader";
 import Footer from "../components/layout/Footer";
-import Sidebar from "../components/layout/Sidebar";
-
-const drawerWidth = 260;
+import Sidebar, { DRAWER_WIDTH } from "../components/layout/Sidebar";
 
 export default function MainLayout() {
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#fffef5" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", width: "100%", bgcolor: "#fafaf9" }}>
       <AppHeader />
 
       <Sidebar />
@@ -18,16 +16,18 @@ export default function MainLayout() {
         component="main"
         sx={{
           flexGrow: 1,
-          ml: `${drawerWidth}px`,
+          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+          ml: { sm: `${DRAWER_WIDTH}px` },
           minHeight: "100vh",
           bgcolor: "#fafaf9",
           display: "flex",
           flexDirection: "column",
+          boxSizing: "border-box",
         }}
       >
         <Toolbar />
 
-        <Box sx={{ p: 3, flexGrow: 1 }}>
+        <Box sx={{ p: { xs: 2, sm: 3 }, flexGrow: 1, width: "100%", boxSizing: "border-box" }}>
           <Outlet />
         </Box>
 

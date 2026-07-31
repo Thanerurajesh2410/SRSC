@@ -14,12 +14,14 @@ import {
   TextField,
   Typography,
   Chip,
+  Paper,
 } from "@mui/material";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonIcon from "@mui/icons-material/Person";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,7 +35,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [validationErr, setValidationErr] = useState<string | null>(null);
 
-  // Clear any existing session token on mount so login form is ALWAYS displayed
   useEffect(() => {
     auth.logout();
   }, []);
@@ -43,6 +44,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
@@ -51,6 +53,11 @@ export default function LoginPage() {
       password: "",
     },
   });
+
+  const handleFillDemo = () => {
+    setValue("email", "admin@temple.com");
+    setValue("password", "Admin@123");
+  };
 
   const onSubmit = (data: LoginRequest) => {
     setValidationErr(null);
@@ -72,36 +79,59 @@ export default function LoginPage() {
   return (
     <Box
       sx={{
+        width: "100%",
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundImage: `radial-gradient(circle at 50% 40%, rgba(245, 158, 11, 0.25) 0%, rgba(7, 10, 18, 0.95) 75%), url('/lord_rama_background.jpg')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center top",
-        py: 4,
+        bgcolor: "#0f172a",
+        background: "radial-gradient(ellipse at center, #1e293b 0%, #090d16 100%)",
+        py: { xs: 4, md: 8 },
         px: 2,
+        boxSizing: "border-box",
       }}
     >
-      <Container maxWidth="xs">
+      <Container maxWidth="sm" sx={{ width: "100%" }}>
         <Card
-          elevation={12}
+          elevation={24}
           sx={{
             borderRadius: 4,
-            bgcolor: "rgba(15, 23, 42, 0.94)",
+            bgcolor: "rgba(15, 23, 42, 0.95)",
             color: "#fef3c7",
             border: "2px solid #b45309",
-            boxShadow: "0 25px 60px rgba(180, 83, 9, 0.5)",
-            backdropFilter: "blur(14px)",
+            boxShadow: "0 20px 50px rgba(0, 0, 0, 0.8)",
+            backdropFilter: "blur(16px)",
+            overflow: "hidden",
           }}
         >
-          <CardContent sx={{ p: 4 }}>
+          {/* Header Banner */}
+          <Box
+            sx={{
+              py: 2.5,
+              px: 3,
+              background: "linear-gradient(135deg, #7c2d12 0%, #b45309 100%)",
+              borderBottom: "2px solid #fde68a",
+              textAlign: "center",
+            }}
+          >
+            <Stack direction="row" spacing={1.5} sx={{ justifyContent: "center", alignItems: "center" }}>
+              <AdminPanelSettingsIcon sx={{ fontSize: 32, color: "#fef3c7" }} />
+              <Typography variant="h5" sx={{ fontWeight: 900, color: "#fef3c7", letterSpacing: 0.5 }}>
+                SUPER ADMIN ERP LOGIN
+              </Typography>
+            </Stack>
+            <Typography variant="caption" sx={{ color: "#fde68a", opacity: 0.9, mt: 0.5, display: "block" }}>
+              Sri Rama Seva Committee — Integrated Temple Management System
+            </Typography>
+          </Box>
+
+          <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
             <Stack spacing={3}>
               <Box sx={{ textAlign: "center" }}>
                 <Box
                   sx={{
-                    width: 64,
-                    height: 64,
+                    width: 60,
+                    height: 60,
                     borderRadius: "50%",
                     background: "linear-gradient(135deg, #f59e0b 0%, #7c2d12 100%)",
                     color: "#fff",
@@ -109,20 +139,20 @@ export default function LoginPage() {
                     alignItems: "center",
                     justifyContent: "center",
                     fontWeight: 900,
-                    fontSize: 34,
+                    fontSize: 32,
                     mx: "auto",
-                    mb: 2,
+                    mb: 1.5,
                     border: "2px solid #fde68a",
-                    boxShadow: "0 0 25px rgba(245, 158, 11, 0.8)",
+                    boxShadow: "0 0 20px rgba(245, 158, 11, 0.6)",
                   }}
                 >
                   🛕
                 </Box>
 
                 <Chip
-                  label="SRI RAMA SEVA TRUST"
+                  label="SRI RAMA SEVA COMMITTEE"
                   sx={{
-                    mb: 1.5,
+                    mb: 1,
                     fontWeight: 900,
                     bgcolor: "#b45309",
                     color: "#fef3c7",
@@ -130,14 +160,30 @@ export default function LoginPage() {
                     fontSize: "0.75rem",
                   }}
                 />
-
-                <Typography variant="h5" sx={{ fontWeight: 900, color: "#fef3c7" }}>
-                  Admin ERP Sign In
-                </Typography>
-                <Typography variant="body2" color="#fde68a" sx={{ mt: 0.5 }}>
-                  Enter Username and Password to access Temple ERP
-                </Typography>
               </Box>
+
+              {/* Demo Credentials Quick Fill Banner */}
+              <Paper
+                elevation={0}
+                onClick={handleFillDemo}
+                sx={{
+                  p: 1.5,
+                  bgcolor: "rgba(180, 83, 9, 0.15)",
+                  border: "1px dashed #fde68a",
+                  borderRadius: 2.5,
+                  cursor: "pointer",
+                  textAlign: "center",
+                  transition: "all 0.2s ease-in-out",
+                  "&:hover": { bgcolor: "rgba(180, 83, 9, 0.25)" },
+                }}
+              >
+                <Typography variant="caption" sx={{ color: "#fde68a", fontWeight: 700, display: "block" }}>
+                  🔑 Quick Demo Login (Click to Autofill Admin Credentials)
+                </Typography>
+                <Typography variant="caption" sx={{ color: "#ffffff", fontWeight: 800 }}>
+                  Email: admin@temple.com | Password: Admin@123
+                </Typography>
+              </Paper>
 
               {(loginMutation.isError || validationErr) && (
                 <Alert severity="error" sx={{ bgcolor: "#451a03", color: "#fca5a5", border: "1px solid #ef4444" }}>
@@ -240,7 +286,7 @@ export default function LoginPage() {
                 color="inherit"
                 size="small"
                 onClick={() => navigate("/")}
-                sx={{ color: "#fde68a", textTransform: "none", fontSize: "0.85rem" }}
+                sx={{ color: "#fde68a", textTransform: "none", fontSize: "0.85rem", width: "100%" }}
               >
                 ← Back to Public Website
               </Button>
