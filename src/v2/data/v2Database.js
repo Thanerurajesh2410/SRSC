@@ -151,6 +151,73 @@ export const addAuditLog = (user, action) => {
     user,
     action
   };
+  if (!Array.isArray(db.auditLogs)) db.auditLogs = [];
   db.auditLogs.unshift(newLog);
   saveDB(db);
+};
+
+// Generate SQL Database Export Dump File
+export const generateSqlDump = (db) => {
+  const sanitize = (str) => {
+    if (str === null || str === undefined) return "NULL";
+    return "'" + String(str).replace(/'/g, "''") + "'";
+  };
+
+  let sql = `-- ============================================================================\n`;
+  sql += `-- SRI RAMA SEVA COMMITTEE TEMPLE DATABASE EXPORT\n`;
+  sql += `-- Export Date: ${new Date().toLocaleString('te-IN')}\n`;
+  sql += `-- ============================================================================\n\n`;
+
+  // Devotees SQL
+  if (db.devotees && db.devotees.length > 0) {
+    sql += `-- Devotees Records (${db.devotees.length})\n`;
+    db.devotees.forEach(d => {
+      sql += `INSERT INTO devotees (id, name, phone, email, city, registered_at) VALUES (${sanitize(d.id)}, ${sanitize(d.name)}, ${sanitize(d.phone)}, ${sanitize(d.email)}, ${sanitize(d.city)}, ${sanitize(d.registeredAt)});\n`;
+    });
+    sql += `\n`;
+  }
+
+  // Donations SQL
+  if (db.donations && db.donations.length > 0) {
+    sql += `-- Donations & Hundi Records (${db.donations.length})\n`;
+    db.donations.forEach(d => {
+      sql += `INSERT INTO donations (id, donor_name, phone, email, amount, date, seva, mode, city) VALUES (${sanitize(d.id)}, ${sanitize(d.donorName)}, ${sanitize(d.phone)}, ${sanitize(d.email)}, ${d.amount || 0}, ${sanitize(d.date)}, ${sanitize(d.seva)}, ${sanitize(d.mode)}, ${sanitize(d.city)});\n`;
+    });
+    sql += `\n`;
+  }
+
+  // Seva Bookings SQL
+  if (db.sevaBookings && db.sevaBookings.length > 0) {
+    sql += `-- Seva Bookings (${db.sevaBookings.length})\n`;
+    db.sevaBookings.forEach(s => {
+      sql += `INSERT INTO seva_bookings (id, devotee_name, phone, seva_name, date, amount, status) VALUES (${sanitize(s.id)}, ${sanitize(s.devoteeName)}, ${sanitize(s.phone)}, ${sanitize(s.sevaName)}, ${sanitize(s.date)}, ${s.amount || 0}, ${sanitize(s.status)});\n`;
+    });
+    sql += `\n`;
+  }
+
+  // Expenses SQL
+  if (db.expenses && db.expenses.length > 0) {
+    sql += `-- Construction Expenses (${db.expenses.length})\n`;
+    db.expenses.forEach(e => {
+      sql += `INSERT INTO expenses (id, category, amount, vendor, date, status, bill_no, notes) VALUES (${sanitize(e.id)}, ${sanitize(e.category)}, ${e.amount || 0}, ${sanitize(e.vendor)}, ${sanitize(e.date)}, ${sanitize(e.status)}, ${sanitize(e.billNo)}, ${sanitize(e.notes)});\n`;
+    });
+    sql += `\n`;
+  }
+
+  // Audit Logs SQL
+  if (db.auditLogs && db.auditLogs.length > 0) {
+    sql += `-- Audit Logs (${db.auditLogs.length})\n`;
+    db.auditLogs.forEach(l => {
+      sql += `INSERT INTO audit_logs (id, timestamp, user, action) VALUES (${sanitize(l.id)}, ${sanitize(l.timestamp)}, ${sanitize(l.user)}, ${sanitize(l.action)});\n`;
+    });
+    sql += `\n`;
+  }
+
+  return sql;
+};
+
+// Reset DB to initial seeded state
+export const resetToInitialDB = () => {
+  saveDB(initialDB);
+  return initialDB;
 };

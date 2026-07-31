@@ -3,7 +3,7 @@ import { LayoutDashboard, Users, Heart, DollarSign, Building2, Package, Award, S
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getDB, saveDB, validateUniqueDevotee, addAuditLog, defaultWebsiteSettings, defaultGalleryImages } from '../data/v2Database';
+import { getDB, saveDB, validateUniqueDevotee, addAuditLog, defaultWebsiteSettings, defaultGalleryImages, generateSqlDump, resetToInitialDB } from '../data/v2Database';
 
 export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [db, setDbState] = useState(getDB());
@@ -202,6 +202,69 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
     } catch (err) {
       console.error(err);
       showToast("PDF డౌన్‌లోడ్‌లో లోపం జరిగింది.");
+    }
+  };
+
+  // Download Database as JSON Backup
+  const downloadDatabaseJSON = () => {
+    const currentDB = getDB();
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentDB, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `sri_rama_temple_db_backup_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast("డేటాబేస్ JSON బ్యాకప్ ఫైల్ విజయవంతంగా డౌన్‌లోడ్ చేయబడింది!");
+  };
+
+  // Download Database as SQL Dump Script (.sql)
+  const downloadDatabaseSQL = () => {
+    const currentDB = getDB();
+    const sqlContent = generateSqlDump(currentDB);
+    const blob = new Blob([sqlContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `sri_rama_temple_db_dump_${new Date().toISOString().slice(0,10)}.sql`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast("డేటాబేస్ SQL డ్రిల్ ఫైల్ (sri_rama_temple_db.sql) డౌన్‌లోడ్ చేయబడింది!");
+  };
+
+  // Restore Database from uploaded JSON file
+  const handleRestoreDatabase = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const importedDB = JSON.parse(event.target.result);
+          if (importedDB && (importedDB.donations || importedDB.devotees)) {
+            saveDB(importedDB);
+            setDbState(importedDB);
+            addAuditLog(userRole, 'Restored Database from JSON File Backup');
+            showToast("డేటాబేస్ పునరుద్ధరించబడింది! (Database Restored Successfully)");
+          } else {
+            showToast("చెల్లని డేటాబేస్ ఫైల్ (Invalid Database File Format)");
+          }
+        } catch (err) {
+          showToast("ఫైల్ రీడ్ చేయడంలో లోపం జరిగింది");
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  // Factory Reset / Re-seed Database
+  const handleFactoryResetDB = () => {
+    if (window.confirm("మీరు ఖచ్చితంగా డేటాబేస్‌ను రీసెట్ చేయాలనుకుంటున్నారా? (రిజిస్టర్డ్ దాతలు & V1 క్లాసిక్ రికార్డులు పునరుద్ధరించబడతాయి)")) {
+      const fresh = resetToInitialDB();
+      setDbState(fresh);
+      addAuditLog(userRole, "Database Factory Reset & Seeded V1 Donors");
+      showToast("డేటాబేస్ విజయవంతంగా రీసెట్ & రీ-సీడ్ చేయబడింది!");
     }
   };
 
@@ -614,18 +677,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
     }
   };
 
-  // Download Full Database Backup JSON
-  const downloadDatabaseJSON = () => {
-    const currentDB = getDB();
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentDB, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `sri_rama_erp_database_backup_${new Date().toISOString().split('T')[0]}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-    showToast("డేటాబేస్ బ్యాకప్ (JSON) ఫైల్ డౌన్‌లోడ్ చేయబడింది!");
-  };
+
 
   // Total Calculations
   const totalDonationSum = db.donations.reduce((acc, curr) => {
@@ -2622,34 +2674,92 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
               </div>
             )}
 
-            {/* TAB 8: AUDIT & DATABASE VERIFICATION */}
+            {/* TAB 8: AUDIT & DATABASE MANAGEMENT SUITE */}
             {activeTab === 'audit' && (
-              <div className="space-y-4 text-xs">
+              <div className="space-y-6 text-xs animate-fadeIn">
                 
-                {/* Database Info & Download Card */}
-                <div className="gold-card border-2 border-[#FFD700] p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div>
-                    <h3 className="text-base font-bold text-[#FFD700] flex items-center gap-2">
-                      <Database className="w-5 h-5 text-amber-300" />
-                      <span>డేటాబేస్ తనిఖీ & బ్యాకప్ (Database Verification Suite)</span>
-                    </h3>
-                    <p className="text-xs text-gray-300 mt-1">
-                      బ్రౌజర్ లోకల్ స్టోరేజ్ కీ: <span className="font-mono text-amber-300 font-bold bg-black/60 px-2 py-0.5 rounded">sri_rama_erp_database_v2_v3</span>
-                    </p>
+                {/* Database Metrics Header Card */}
+                <div className="gold-card bg-gradient-to-r from-[#3A0A11] via-[#5C121E] to-[#3A0A11] border-3 border-[#FFD700] p-6 rounded-3xl shadow-2xl space-y-4">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/20 pb-4">
+                    <div>
+                      <span className="bg-emerald-600 text-white font-black text-[10px] uppercase px-3 py-1 rounded-full inline-block mb-1">
+                        ✓ ACTIVE DATABASE ENGINE • SQL & JSON SUPPORT
+                      </span>
+                      <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] flex items-center gap-2.5 heading-telugu">
+                        <Database className="w-7 h-7 text-amber-300 animate-pulse" />
+                        <span>శ్రీ రామాలయం సిస్టమ్ డేటాబేస్ మేనేజ్‌మెంట్ నివేదిక</span>
+                      </h3>
+                      <p className="text-xs text-gray-200 mt-1">
+                        స్టోరేజ్ కీ: <span className="font-mono text-amber-300 font-bold bg-black/60 px-2 py-0.5 rounded">sri_rama_erp_database_v2_v3</span> • స్థితి: <span className="text-emerald-400 font-bold">100% భద్రంగా ఆటో-సేవ్ అవుతోంది</span>
+                      </p>
+                    </div>
+
+                    {/* Database Action Buttons */}
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <button onClick={downloadDatabaseJSON} className="btn-gold text-xs py-2.5 px-4 font-black flex items-center gap-1.5 shadow-lg">
+                        <Download className="w-4 h-4" />
+                        <span>JSON బ్యాకప్ (.json)</span>
+                      </button>
+
+                      <button onClick={downloadDatabaseSQL} className="px-4 py-2.5 rounded-xl font-black text-xs bg-indigo-600 text-white border-2 border-indigo-400 hover:bg-indigo-500 transition-all shadow-lg flex items-center gap-1.5">
+                        <Database className="w-4 h-4" />
+                        <span>SQL డ్రిల్ ఫైల్ (.sql)</span>
+                      </button>
+
+                      <label className="px-4 py-2.5 rounded-xl font-black text-xs bg-emerald-700 text-white border-2 border-emerald-400 hover:bg-emerald-600 transition-all cursor-pointer shadow-lg flex items-center gap-1.5">
+                        <Upload className="w-4 h-4" />
+                        <span>రిస్టోర్ ఫైల్</span>
+                        <input type="file" accept=".json" onChange={handleRestoreDatabase} className="hidden" />
+                      </label>
+
+                      <button onClick={handleFactoryResetDB} className="px-3.5 py-2.5 rounded-xl font-black text-xs bg-rose-900/80 text-rose-200 border border-rose-500 hover:bg-rose-800 transition-all shadow-lg flex items-center gap-1">
+                        <Trash2 className="w-4 h-4" />
+                        <span>రీసెట్</span>
+                      </button>
+                    </div>
                   </div>
 
-                  <button onClick={downloadDatabaseJSON} className="btn-gold text-xs py-2 px-4 whitespace-nowrap">
-                    <Download className="w-4 h-4" /> పూర్తి డేటాబేస్ JSON డౌన్‌లోడ్
-                  </button>
+                  {/* Summary Database Counters Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                    <div className="bg-black/40 p-3 rounded-2xl border border-white/10 space-y-1">
+                      <span className="text-gray-400 text-[10px] font-bold block uppercase">మొత్తం భక్తులు (Devotees)</span>
+                      <span className="text-lg font-mono font-black text-amber-300">{db.devotees?.length || 0}</span>
+                    </div>
+
+                    <div className="bg-black/40 p-3 rounded-2xl border border-white/10 space-y-1">
+                      <span className="text-gray-400 text-[10px] font-bold block uppercase">విరాళాల రికార్డులు (Donations)</span>
+                      <span className="text-lg font-mono font-black text-emerald-400">{db.donations?.length || 0}</span>
+                    </div>
+
+                    <div className="bg-black/40 p-3 rounded-2xl border border-white/10 space-y-1">
+                      <span className="text-gray-400 text-[10px] font-bold block uppercase">సేవా బుకింగ్స్ (Sevas)</span>
+                      <span className="text-lg font-mono font-black text-sky-400">{db.sevaBookings?.length || 0}</span>
+                    </div>
+
+                    <div className="bg-black/40 p-3 rounded-2xl border border-white/10 space-y-1">
+                      <span className="text-gray-400 text-[10px] font-bold block uppercase">ఆడిట్ లాగ్ ఎంట్రీలు (Audit Logs)</span>
+                      <span className="text-lg font-mono font-black text-purple-300">{db.auditLogs?.length || 0}</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="gold-card space-y-4">
-                  <h3 className="text-lg font-bold text-[#FFD700]">రియల్-టైమ్ ఆడిట్ లాగ్ రికార్డులు ({db.auditLogs.length})</h3>
-                  <div className="space-y-2 max-h-72 overflow-y-auto">
-                    {db.auditLogs.map((log, idx) => (
-                      <div key={idx} className="flex justify-between p-2.5 rounded-lg bg-black/40 border border-white/10">
-                        <span className="text-white font-bold">{log.action}</span>
-                        <span className="text-amber-300 font-mono">{log.timestamp} ({log.user})</span>
+                {/* Audit Log Timeline Card */}
+                <div className="gold-card bg-[#3A0A11]/80 border-2 border-[#FFD700]/60 p-6 rounded-3xl shadow-xl space-y-4">
+                  <h3 className="text-lg font-black text-[#FFD700] heading-telugu flex items-center justify-between border-b border-white/20 pb-2">
+                    <span>📋 రియల్-టైమ్ ఆడిట్ లాగ్ రికార్డులు & ట్రాకింగ్ ({db.auditLogs?.length || 0})</span>
+                    <span className="text-xs font-mono font-normal text-amber-300">SECURE LOGS</span>
+                  </h3>
+
+                  <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                    {db.auditLogs && db.auditLogs.map((log, idx) => (
+                      <div key={idx} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 rounded-xl bg-black/50 border border-white/10 hover:border-amber-400/50 transition-all gap-2">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                          <span className="text-white font-bold text-xs">{log.action}</span>
+                        </div>
+                        <span className="text-amber-300 font-mono text-[11px] bg-black/60 px-2.5 py-1 rounded-lg shrink-0">
+                          {log.timestamp} ({log.user})
+                        </span>
                       </div>
                     ))}
                   </div>
