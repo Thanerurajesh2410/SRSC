@@ -32,7 +32,9 @@ import CollectionsIcon from "@mui/icons-material/Collections";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PaletteIcon from "@mui/icons-material/Palette";
 import ImageIcon from "@mui/icons-material/Image";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import api from "../../../services/api";
+import BankStatementUpload from "../../donations/components/BankStatementUpload";
 
 export interface SiteSettings {
   logoUrl?: string;
@@ -211,11 +213,12 @@ export default function SettingsPage() {
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
       <Paper sx={{ mb: 3, borderBottom: 1, borderColor: "divider", bgcolor: "#fffbeb" }}>
-        <Tabs value={tab} onChange={(_e, v) => setTab(v)} textColor="primary" indicatorColor="primary">
+        <Tabs value={tab} onChange={(_e, v) => setTab(v)} textColor="primary" indicatorColor="primary" variant="scrollable" scrollButtons="auto">
           <Tab label="Logo & QR Code Settings" icon={<QrCode2Icon />} iconPosition="start" sx={{ fontWeight: 700 }} />
           <Tab label="Home Photo Slideshow" icon={<CollectionsIcon />} iconPosition="start" sx={{ fontWeight: 700 }} />
           <Tab label="Home Page Block Colors" icon={<PaletteIcon />} iconPosition="start" sx={{ fontWeight: 700 }} />
           <Tab label="Block & Page Background Images" icon={<ImageIcon />} iconPosition="start" sx={{ fontWeight: 700 }} />
+          <Tab label="Bank Statement Upload" icon={<AccountBalanceIcon />} iconPosition="start" sx={{ fontWeight: 700 }} />
         </Tabs>
       </Paper>
 
@@ -443,7 +446,7 @@ export default function SettingsPage() {
             </Button>
           </form>
         </Paper>
-      ) : (
+      ) : tab === 3 ? (
         /* Tab 3: Block-Wise & Page Background Image Customizer */
         <Paper sx={{ p: 4, borderRadius: 3, border: "1px solid #fde68a" }}>
           <form onSubmit={handleSaveSettings}>
@@ -510,6 +513,9 @@ export default function SettingsPage() {
             </Button>
           </form>
         </Paper>
+      ) : (
+        /* Tab 4: Super Admin Bank Statement Upload */
+        <BankStatementUpload />
       )}
 
       {/* Add Slide Dialog */}

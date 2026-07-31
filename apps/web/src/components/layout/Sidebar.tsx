@@ -24,6 +24,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -53,6 +54,7 @@ const menuSections: MenuSection[] = [
     items: [
       { title: "Donations", icon: <VolunteerActivismIcon />, path: "/donations" },
       { title: "Receipts", icon: <ReceiptIcon />, path: "/receipts" },
+      { title: "Bank Statement Upload", icon: <AccountBalanceIcon />, path: "/admin/bank-statement" },
       { title: "Donors Directory", icon: <PersonIcon />, path: "/donors" },
       { title: "Material Donations", icon: <InventoryIcon />, path: "/materials" },
       { title: "Expenses", icon: <PaymentsIcon />, path: "/expenses" },
@@ -70,6 +72,7 @@ const menuSections: MenuSection[] = [
   {
     header: "ADMINISTRATION",
     items: [
+      { title: "Bank Statement Upload", icon: <AccountBalanceIcon />, path: "/admin/bank-statement" },
       { title: "Committee", icon: <GroupsIcon />, path: "/committee" },
       { title: "Volunteers", icon: <VolunteerActivismIcon />, path: "/volunteers" },
       { title: "User Control (RBAC)", icon: <AdminPanelSettingsIcon />, path: "/users" },

@@ -15,6 +15,7 @@ import SevaBookingPage from "../features/sevas/pages/SevaBookingPage";
 import UsersPage from "../features/users/pages/UsersPage";
 import SettingsPage from "../features/settings/pages/SettingsPage";
 import PrintableTemplatesPage from "../features/printing/pages/PrintableTemplatesPage";
+import BankStatementUploadPage from "../features/donations/pages/BankStatementUploadPage";
 import PublicWebsite from "../public-site/PublicWebsite";
 
 import MainLayout from "../layouts/MainLayout";
@@ -37,6 +38,8 @@ export default function AppRoutes() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/donations" element={<DonationListPage />} />
             <Route path="/receipts" element={<DonationListPage />} />
+            <Route path="/bank-statement" element={<BankStatementUploadPage />} />
+            <Route path="/admin/bank-statement" element={<BankStatementUploadPage />} />
             <Route path="/donors" element={<DonorsPage />} />
             <Route path="/materials" element={<MaterialsPage />} />
             <Route path="/construction" element={<ConstructionPage />} />

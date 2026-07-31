@@ -118,3 +118,23 @@ export const getDonationStats = async (
     next(error);
   }
 };
+
+export const createBulkDonations = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const items = Array.isArray(req.body) ? req.body : req.body.donations || [];
+    const result = await service.createBulk(items);
+
+    return res.status(201).json({
+      success: true,
+      message: `Successfully imported ${result.count} donations. Items under 10 Rs were excluded.`,
+      data: result.donations,
+      count: result.count,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

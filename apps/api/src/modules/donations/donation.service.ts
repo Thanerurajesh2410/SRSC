@@ -165,4 +165,44 @@ export class DonationService {
       donationCount: donations.length,
     };
   }
+
+  async createBulk(payloads: CreateDonationDto[]): Promise<{ count: number; donations: Donation[] }> {
+    // Business Rule: Strictly exclude transactions where amount < 10
+    const validPayloads = payloads.filter((p) => Number(p.amount) >= 10);
+
+    if (validPayloads.length === 0) {
+      return { count: 0, donations: [] };
+    }
+
+    const createdDonations: Donation[] = [];
+    let latestDonation = await this.repository.findLatestReceipt();
+    let currentReceipt = latestDonation?.receiptNo;
+
+    for (const payload of validPayloads) {
+      currentReceipt = generateReceiptNumber(currentReceipt);
+
+      const donationData: Prisma.DonationCreateInput = {
+        receiptNo: currentReceipt,
+        donorName: payload.donorName || "Anonymous Devotee",
+        mobile: payload.mobile || null,
+        email: payload.email || null,
+        address: payload.address || null,
+        amount: new Prisma.Decimal(payload.amount),
+        category: payload.category || DonationCategory.GENERAL,
+        paymentMode: payload.paymentMode || PaymentMode.BANK_TRANSFER,
+        purpose: payload.purpose || "Bank Statement Import",
+        transactionId: payload.transactionId || null,
+        donationDate: payload.donationDate ? new Date(payload.donationDate) : new Date(),
+        remarks: payload.remarks || "Extracted from Bank Statement",
+      };
+
+      const created = await this.repository.create(donationData);
+      createdDonations.push(created);
+    }
+
+    return {
+      count: createdDonations.length,
+      donations: createdDonations,
+    };
+  }
 }

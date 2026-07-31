@@ -1,6 +1,8 @@
 import { Button, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { Stack } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 interface DonationToolbarProps {
     search: string;
@@ -13,6 +15,8 @@ export default function DonationToolbar({
     onSearchChange,
     onAddClick,
 }: DonationToolbarProps) {
+    const navigate = useNavigate();
+
     return (
         <Stack
             direction="row"
@@ -25,19 +29,40 @@ export default function DonationToolbar({
                 gap: 2,
             }}>
             <TextField
-                fullWidth
-                placeholder="Search by donor name or receipt..."
+                sx={{ flexGrow: 1, maxWidth: 500 }}
+                placeholder="Search by donor name, transaction ID, or receipt..."
                 value={search}
                 onChange={(e) => onSearchChange(e.target.value)}
             />
 
-            <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={onAddClick}
-            >
-                Add Donation
-            </Button>
+            <Stack direction="row" spacing={1.5}>
+                <Button
+                    variant="outlined"
+                    startIcon={<AccountBalanceIcon />}
+                    onClick={() => navigate("/admin/bank-statement")}
+                    sx={{
+                        color: "#7c2d12",
+                        borderColor: "#b45309",
+                        fontWeight: 700,
+                        "&:hover": { borderColor: "#7c2d12", bgcolor: "#fffbeb" },
+                    }}
+                >
+                  Upload Bank Statement
+                </Button>
+
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={onAddClick}
+                    sx={{
+                        bgcolor: "#b45309",
+                        fontWeight: 700,
+                        "&:hover": { bgcolor: "#7c2d12" },
+                    }}
+                >
+                    Add Donation
+                </Button>
+            </Stack>
         </Stack>
     );
 }

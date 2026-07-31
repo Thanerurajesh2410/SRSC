@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   createDonation,
+  createBulkDonations,
   deleteDonation,
   getDonation,
   getDonations,
@@ -14,6 +15,8 @@ const router = Router();
 router.get("/", getDonations);
 
 router.get("/stats", getDonationStats);
+
+router.post("/bulk", createBulkDonations);
 
 router.get("/:id", getDonation);
 
