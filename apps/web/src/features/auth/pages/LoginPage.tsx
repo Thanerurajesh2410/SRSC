@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CircularProgress,
-  Container,
   IconButton,
   InputAdornment,
   Stack,
@@ -79,29 +78,45 @@ export default function LoginPage() {
   return (
     <Box
       sx={{
-        width: "100%",
-        minHeight: "100vh",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100vw",
+        height: "100vh",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        bgcolor: "#0f172a",
-        background: "radial-gradient(ellipse at center, #1e293b 0%, #090d16 100%)",
-        py: { xs: 4, md: 8 },
-        px: 2,
+        bgcolor: "#090d16",
+        background: "radial-gradient(circle at center, #1e293b 0%, #090d16 100%)",
         boxSizing: "border-box",
+        zIndex: 9999,
+        overflowY: "auto",
+        p: 2,
       }}
     >
-      <Container maxWidth="sm" sx={{ width: "100%" }}>
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 460,
+          mx: "auto",
+          my: "auto",
+        }}
+      >
         <Card
           elevation={24}
           sx={{
+            width: "100%",
             borderRadius: 4,
-            bgcolor: "rgba(15, 23, 42, 0.95)",
+            bgcolor: "rgba(15, 23, 42, 0.96)",
             color: "#fef3c7",
             border: "2px solid #b45309",
-            boxShadow: "0 20px 50px rgba(0, 0, 0, 0.8)",
+            boxShadow: "0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(180, 83, 9, 0.3)",
             backdropFilter: "blur(16px)",
             overflow: "hidden",
+            boxSizing: "border-box",
           }}
         >
           {/* Header Banner */}
@@ -130,8 +145,8 @@ export default function LoginPage() {
               <Box sx={{ textAlign: "center" }}>
                 <Box
                   sx={{
-                    width: 60,
-                    height: 60,
+                    width: 64,
+                    height: 64,
                     borderRadius: "50%",
                     background: "linear-gradient(135deg, #f59e0b 0%, #7c2d12 100%)",
                     color: "#fff",
@@ -139,11 +154,11 @@ export default function LoginPage() {
                     alignItems: "center",
                     justifyContent: "center",
                     fontWeight: 900,
-                    fontSize: 32,
+                    fontSize: 34,
                     mx: "auto",
                     mb: 1.5,
                     border: "2px solid #fde68a",
-                    boxShadow: "0 0 20px rgba(245, 158, 11, 0.6)",
+                    boxShadow: "0 0 25px rgba(245, 158, 11, 0.7)",
                   }}
                 >
                   🛕
@@ -168,16 +183,16 @@ export default function LoginPage() {
                 onClick={handleFillDemo}
                 sx={{
                   p: 1.5,
-                  bgcolor: "rgba(180, 83, 9, 0.15)",
+                  bgcolor: "rgba(180, 83, 9, 0.2)",
                   border: "1px dashed #fde68a",
                   borderRadius: 2.5,
                   cursor: "pointer",
                   textAlign: "center",
                   transition: "all 0.2s ease-in-out",
-                  "&:hover": { bgcolor: "rgba(180, 83, 9, 0.25)" },
+                  "&:hover": { bgcolor: "rgba(180, 83, 9, 0.35)", transform: "scale(1.01)" },
                 }}
               >
-                <Typography variant="caption" sx={{ color: "#fde68a", fontWeight: 700, display: "block" }}>
+                <Typography variant="caption" sx={{ color: "#fde68a", fontWeight: 800, display: "block" }}>
                   🔑 Quick Demo Login (Click to Autofill Admin Credentials)
                 </Typography>
                 <Typography variant="caption" sx={{ color: "#ffffff", fontWeight: 800 }}>
@@ -293,7 +308,7 @@ export default function LoginPage() {
             </Stack>
           </CardContent>
         </Card>
-      </Container>
+      </Box>
     </Box>
   );
 }
