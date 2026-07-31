@@ -35,8 +35,7 @@ jobs:
 
       - name: Build Web Application
         run: |
-          npm run build --workspace=web
-          cp apps/web/dist/index.html apps/web/dist/404.html
+          npm run build
         env:
           VITE_BASE_PATH: /SRSC/
 
