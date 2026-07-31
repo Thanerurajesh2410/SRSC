@@ -3,7 +3,7 @@ import { LayoutDashboard, Users, Heart, DollarSign, Building2, Package, Award, S
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getDB, saveDB, validateUniqueDevotee, addAuditLog, defaultWebsiteSettings, defaultGalleryImages, generateSqlDump, resetToInitialDB } from '../data/v2Database';
+import { getDB, saveDB, validateUniqueDevotee, addAuditLog, defaultWebsiteSettings, defaultGalleryImages, generateSqlDump, resetToInitialDB, getAssetUrl } from '../data/v2Database';
 
 export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [db, setDbState] = useState(getDB());
@@ -117,10 +117,10 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [bookNotice, setBookNotice] = useState('1. ఈ రశీదు పుస్తకం శ్రీ రామాలయ నిర్మాణ నిధికి అధికారికంగా జారీ చేయబడినది.\n2. విరాళం నగదు లేదా PhonePe / UPI ద్వారా స్వీకరించబడును.');
 
   // Pamphlet Image & Background Customization & Canvas Editing State
-  const [pamphletBgImage, setPamphletBgImage] = useState('/assets/banner.jpg');
-  const [pamphletDeityHeaderImg, setPamphletDeityHeaderImg] = useState('/assets/banner.jpg');
-  const [pamphletWatermarkImg, setPamphletWatermarkImg] = useState('/assets/logo.jpg');
-  const [pamphletQrImg, setPamphletQrImg] = useState('/assets/phonepe_qr.png');
+  const [pamphletBgImage, setPamphletBgImage] = useState(getAssetUrl('assets/banner.jpg'));
+  const [pamphletDeityHeaderImg, setPamphletDeityHeaderImg] = useState(getAssetUrl('assets/banner.jpg'));
+  const [pamphletWatermarkImg, setPamphletWatermarkImg] = useState(getAssetUrl('assets/logo.jpg'));
+  const [pamphletQrImg, setPamphletQrImg] = useState(getAssetUrl('assets/phonepe_qr.png'));
   const [pamphletBgOpacity, setPamphletBgOpacity] = useState(85); // 85% opacity overlay
   const [directCanvasEditMode, setDirectCanvasEditMode] = useState(true); // Direct inline editing on canvas preview
 

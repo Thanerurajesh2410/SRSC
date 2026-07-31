@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { User, LogIn, UserPlus, History, Award, Bell, ShieldCheck, Heart, Download, CheckCircle2, AlertCircle, Calendar, Plus, Mail, Phone, MapPin, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getDB, saveDB, validateUniqueDevotee, addAuditLog } from '../data/v2Database';
+import { getDB, saveDB, validateUniqueDevotee, addAuditLog, getAssetUrl } from '../data/v2Database';
 
 export default function DevoteePortal({ t, showToast }) {
   const [db, setDbState] = useState(getDB());
@@ -569,7 +569,7 @@ export default function DevoteePortal({ t, showToast }) {
               {/* Watermark Background Layer - Official Temple Logo */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
                 <div className="text-center">
-                  <img src="/assets/logo.jpg" alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
+                  <img src={getAssetUrl('assets/logo.jpg')} alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
                   <span className="text-3xl sm:text-4xl font-black uppercase text-[#5C121E] tracking-widest block mt-2">SRI RAMA SEVA COMMITTEE</span>
                   <span className="text-xl font-black text-amber-900 block mt-0.5">పామినివాండ్లవూరు</span>
                 </div>
@@ -578,7 +578,7 @@ export default function DevoteePortal({ t, showToast }) {
               {/* Header Section */}
               <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <img src="/assets/logo.jpg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
+                  <img src={getAssetUrl('assets/logo.jpg')} alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
                   <div>
                     <h3 className="text-lg sm:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ (SRI RAMA SEVA COMMITTEE)</h3>
                     <p className="text-xs font-bold text-gray-700">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>

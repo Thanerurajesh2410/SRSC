@@ -3,19 +3,19 @@ import { Building2, Heart, Calendar, FileText, Camera, ShieldCheck, MapPin, Mail
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getDB, saveDB, addAuditLog } from '../data/v2Database';
+import { getDB, saveDB, addAuditLog, getAssetUrl } from '../data/v2Database';
 
 const slideshowImages = [
-  { id: 1, src: '/assets/temple_photo_1.png', title: 'శ్రీ రామాలయ శంకుస్థాపన పవిత్ర రాతి స్తంభాల పూజ', tag: 'పామినివాండ్లవూరు శంకుస్థాపన' },
-  { id: 2, src: '/assets/temple_photo_2.png', title: 'గ్రామస్థులు & భక్తుల సమక్షంలో ఆలయ పునాది పూజా మహోత్సవం', tag: 'పవిత్ర శంకుస్థాపన మహోత్సవం' },
-  { id: 3, src: '/assets/temple_photo_3.png', title: 'రాతి గోడల ఆలయ శంకుస్థాపన పునాది నిర్మాణం', tag: 'ఆలయ పునాది ప్రగతి' },
-  { id: 4, src: '/assets/temple_photo_4.png', title: 'అలంకరించిన టేకు కలప ప్రధాన ద్వారబంధం', tag: 'ఆలయ ద్వారబంధం' },
-  { id: 5, src: '/assets/temple_photo_5.png', title: 'పునాది గుంటలో పవిత్ర రాతి రాళ్ళ ప్రతిష్ఠాపన పూజ', tag: 'గర్భగుడి శంకుస్థాపన' },
-  { id: 6, src: '/assets/temple_photo_6.png', title: 'ఆలయ పెద్దలు & భక్తుల పవిత్ర దర్శన దృశ్యం', tag: 'పామినివాండ్లవూరు గ్రామస్థులు' },
-  { id: 7, src: '/assets/temple_photo_7.png', title: 'శ్రీ రామాలయ ప్రాంగణం & చెక్కిన రాతి నిర్మాణం', tag: 'ఆలయ ప్రాంగణ ప్రగతి' },
-  { id: 8, src: '/assets/temple_photo_8.png', title: 'శ్రీ రామాలయ రాతి గోడలు & ద్వార బంధాల అమరిక', tag: 'రాతి గోడల నిర్మాణం' },
-  { id: 9, src: '/assets/temple_photo_9.png', title: 'గర్భగుడి అంతర్భాగం & చెక్కిన రాతి గోడలు', tag: 'గర్భగుడి నిర్మాణం' },
-  { id: 10, src: '/assets/temple_photo_10.png', title: 'శ్రీ రామాలయ పవిత్ర రాతి నిర్మాణం పూర్తయిన దృశ్యం', tag: 'ఆలయ రాతి నిర్మాణం' }
+  { id: 1, src: getAssetUrl('assets/temple_photo_1.png'), title: 'శ్రీ రామాలయ శంకుస్థాపన పవిత్ర రాతి స్తంభాల పూజ', tag: 'పామినివాండ్లవూరు శంకుస్థాపన' },
+  { id: 2, src: getAssetUrl('assets/temple_photo_2.png'), title: 'గ్రామస్థులు & భక్తుల సమక్షంలో ఆలయ పునాది పూజా మహోత్సవం', tag: 'పవిత్ర శంకుస్థాపన మహోత్సవం' },
+  { id: 3, src: getAssetUrl('assets/temple_photo_3.png'), title: 'రాతి గోడల ఆలయ శంకుస్థాపన పునాది నిర్మాణం', tag: 'ఆలయ పునాది ప్రగతి' },
+  { id: 4, src: getAssetUrl('assets/temple_photo_4.png'), title: 'అలంకరించిన టేకు కలప ప్రధాన ద్వారబంధం', tag: 'ఆలయ ద్వారబంధం' },
+  { id: 5, src: getAssetUrl('assets/temple_photo_5.png'), title: 'పునాది గుంటలో పవిత్ర రాతి రాళ్ళ ప్రతిష్ఠాపన పూజ', tag: 'గర్భగుడి శంకుస్థాపన' },
+  { id: 6, src: getAssetUrl('assets/temple_photo_6.png'), title: 'ఆలయ పెద్దలు & భక్తుల పవిత్ర దర్శన దృశ్యం', tag: 'పామినివాండ్లవూరు గ్రామస్థులు' },
+  { id: 7, src: getAssetUrl('assets/temple_photo_7.png'), title: 'శ్రీ రామాలయ ప్రాంగణం & చెక్కిన రాతి నిర్మాణం', tag: 'ఆలయ ప్రాంగణ ప్రగతి' },
+  { id: 8, src: getAssetUrl('assets/temple_photo_8.png'), title: 'శ్రీ రామాలయ రాతి గోడలు & ద్వార బంధాల అమరిక', tag: 'రాతి గోడల నిర్మాణం' },
+  { id: 9, src: getAssetUrl('assets/temple_photo_9.png'), title: 'గర్భగుడి అంతర్భాగం & చెక్కిన రాతి గోడలు', tag: 'గర్భగుడి నిర్మాణం' },
+  { id: 10, src: getAssetUrl('assets/temple_photo_10.png'), title: 'శ్రీ రామాలయ పవిత్ర రాతి నిర్మాణం పూర్తయిన దృశ్యం', tag: 'ఆలయ రాతి నిర్మాణం' }
 ];
 
 export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSection }) {
@@ -639,7 +639,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 {/* QR Display Container */}
                 <div className="bg-white p-6 rounded-3xl border-4 border-[#FFD700] shadow-2xl inline-block my-2 cursor-pointer hover:scale-105 transition-transform" onClick={() => setShowQrModal(true)}>
                   <img
-                    src="/assets/phonepe_qr.png"
+                    src={getAssetUrl('assets/phonepe_qr.png')}
                     alt="Sri Rama Seva Committee PhonePe Standee QR"
                     className="w-64 h-64 sm:w-80 sm:h-80 object-contain mx-auto"
                   />
@@ -1232,7 +1232,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               {/* Watermark Background Layer - Official Temple Logo */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
                 <div className="text-center">
-                  <img src="/assets/logo.jpg" alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
+                  <img src={getAssetUrl('assets/logo.jpg')} alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
                   <span className="text-3xl sm:text-4xl font-black uppercase text-[#5C121E] tracking-widest block mt-2">SRI RAMA SEVA COMMITTEE</span>
                   <span className="text-xl font-black text-amber-900 block mt-0.5">పామినివాండ్లవూరు</span>
                 </div>
@@ -1241,7 +1241,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               {/* Header Section */}
               <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <img src="/assets/logo.jpg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
+                  <img src={getAssetUrl('assets/logo.jpg')} alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
                   <div>
                     <h3 className="text-lg sm:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ (SRI RAMA SEVA COMMITTEE)</h3>
                     <p className="text-xs font-bold text-gray-700">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
@@ -1367,7 +1367,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
             {/* High-Resolution Large QR Code Display Container */}
             <div className="bg-white p-5 sm:p-6 rounded-3xl border-4 border-[#FFD700] shadow-2xl inline-block my-2">
               <img
-                src="/assets/phonepe_qr.png"
+                src={getAssetUrl('assets/phonepe_qr.png')}
                 alt="PhonePe QR Standee Scanner Large View"
                 className="w-72 h-72 sm:w-96 sm:h-96 object-contain mx-auto"
               />

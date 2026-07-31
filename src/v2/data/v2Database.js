@@ -1,6 +1,17 @@
 // Persistent Database Engine for Version 2 Sri Ramalayam ERP & Devotee Portal
 const DB_STORAGE_KEY = 'sri_rama_erp_database_v2_v3';
 
+// Asset URL Helper for Base URL & Subpath compatibility (GitHub Pages / Vercel / Local)
+export const getAssetUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('data:') || path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  const baseUrl = import.meta.env.BASE_URL || './';
+  return baseUrl.endsWith('/') ? `${baseUrl}${cleanPath}` : `${baseUrl}/${cleanPath}`;
+};
+
 // 🌟 Full 16 Authentic Donors List from V1 Classic Site
 const v1ClassicDonors = [
   { id: 'SRS-2026-001', donorName: 'Cash Deposit Self', phone: '9866125609', email: 'sriramasevacommitteepvv@gmail.com', amount: 1116, date: '12-06-2026', seva: 'నగదు జమ', mode: 'Cash Deposit', city: 'ఆలయ నిధి' },
