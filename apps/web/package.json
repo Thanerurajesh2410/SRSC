@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "echo \"No Web unit tests configured\"",
+    "test:e2e": "echo \"No E2E tests configured\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

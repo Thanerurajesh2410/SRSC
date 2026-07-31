@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "nodemon --watch src --exec \"ts-node --files\" src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "eslint src --ext .ts",
+    "prisma:generate": "prisma generate --schema=prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev",
+    "test": "echo \"No API unit tests configured\""
   },
   "keywords": [],
   "type": "commonjs",

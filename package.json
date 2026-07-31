@@ -8,9 +8,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "echo \"Root workspace\"",
-    "build": "echo \"Build workspace\"",
-    "test": "echo \"Tests workspace\""
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "prisma:generate": "npm run prisma:generate --workspace=apps/api --if-present",
+    "prisma:migrate": "npm run prisma:migrate --workspace=apps/api --if-present"
   },
   "author": "Rajesh",
   "license": "MIT",
