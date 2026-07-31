@@ -16,7 +16,6 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import PersonIcon from "@mui/icons-material/Person";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import EngineeringIcon from "@mui/icons-material/Engineering";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
@@ -63,7 +62,6 @@ const menuSections: MenuSection[] = [
   {
     header: "TEMPLE OPERATIONS",
     items: [
-      { title: "Seva Bookings", icon: <AutoAwesomeIcon />, path: "/sevas" },
       { title: "Festival Calendar", icon: <CelebrationIcon />, path: "/festivals" },
       { title: "Construction ERP", icon: <EngineeringIcon />, path: "/construction" },
       { title: "Print Templates", icon: <DescriptionIcon />, path: "/templates" },
@@ -72,7 +70,6 @@ const menuSections: MenuSection[] = [
   {
     header: "ADMINISTRATION",
     items: [
-      { title: "Bank Statement Upload", icon: <AccountBalanceIcon />, path: "/admin/bank-statement" },
       { title: "Committee", icon: <GroupsIcon />, path: "/committee" },
       { title: "Volunteers", icon: <VolunteerActivismIcon />, path: "/volunteers" },
       { title: "User Control (RBAC)", icon: <AdminPanelSettingsIcon />, path: "/users" },
@@ -94,7 +91,7 @@ export default function Sidebar() {
         "& .MuiDrawer-paper": {
           width: DRAWER_WIDTH,
           boxSizing: "border-box",
-          bgcolor: "#fffbeb",
+          bgcolor: "#fffef5",
           borderRight: "1px solid #fde68a",
           color: "#7c2d12",
           overflowX: "hidden",
@@ -131,16 +128,18 @@ export default function Sidebar() {
                     selected={isSelected}
                     onClick={() => navigate(menu.path)}
                     sx={{
-                      mb: 0.6,
-                      py: 1,
-                      px: 1.5,
-                      borderRadius: 2.5,
+                      mb: 0.8,
+                      height: 42,
+                      width: "100%",
+                      px: 1.8,
+                      borderRadius: "10px",
                       color: isSelected ? "#ffffff" : "#7c2d12",
                       background: isSelected
                         ? "linear-gradient(135deg, #b45309 0%, #7c2d12 100%)"
                         : "transparent",
                       boxShadow: isSelected ? "0 4px 12px rgba(180, 83, 9, 0.3)" : "none",
                       transition: "all 0.2s ease-in-out",
+                      boxSizing: "border-box",
                       "&:hover": {
                         background: isSelected
                           ? "linear-gradient(135deg, #d97706 0%, #9a3412 100%)"
@@ -172,8 +171,11 @@ export default function Sidebar() {
                           variant="body2"
                           sx={{
                             fontSize: "0.875rem",
-                            fontWeight: isSelected ? 700 : 600,
+                            fontWeight: isSelected ? 800 : 600,
                             letterSpacing: 0.2,
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           }}
                         >
                           {menu.title}

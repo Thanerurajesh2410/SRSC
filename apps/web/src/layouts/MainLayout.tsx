@@ -7,7 +7,7 @@ import Sidebar, { DRAWER_WIDTH } from "../components/layout/Sidebar";
 
 export default function MainLayout() {
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", width: "100%", bgcolor: "#fafaf9" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", width: "100vw", bgcolor: "#fafaf9", overflowX: "hidden" }}>
       <AppHeader />
 
       <Sidebar />
@@ -16,8 +16,8 @@ export default function MainLayout() {
         component="main"
         sx={{
           flexGrow: 1,
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-          ml: { sm: `${DRAWER_WIDTH}px` },
+          width: `calc(100% - ${DRAWER_WIDTH}px)`,
+          ml: `${DRAWER_WIDTH}px`,
           minHeight: "100vh",
           bgcolor: "#fafaf9",
           display: "flex",

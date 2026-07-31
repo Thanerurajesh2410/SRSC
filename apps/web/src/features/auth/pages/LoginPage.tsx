@@ -13,7 +13,6 @@ import {
   TextField,
   Typography,
   Chip,
-  Paper,
 } from "@mui/material";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -43,7 +42,6 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
@@ -52,11 +50,6 @@ export default function LoginPage() {
       password: "",
     },
   });
-
-  const handleFillDemo = () => {
-    setValue("email", "admin@temple.com");
-    setValue("password", "Admin@123");
-  };
 
   const onSubmit = (data: LoginRequest) => {
     setValidationErr(null);
@@ -89,8 +82,9 @@ export default function LoginPage() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        bgcolor: "#090d16",
-        background: "radial-gradient(circle at center, #1e293b 0%, #090d16 100%)",
+        backgroundImage: `linear-gradient(to bottom, rgba(254, 243, 199, 0.85), rgba(255, 251, 235, 0.92)), url('/lord_rama_background.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
         boxSizing: "border-box",
         zIndex: 9999,
         overflowY: "auto",
@@ -100,26 +94,25 @@ export default function LoginPage() {
       <Box
         sx={{
           width: "100%",
-          maxWidth: 460,
+          maxWidth: 450,
           mx: "auto",
           my: "auto",
         }}
       >
         <Card
-          elevation={24}
+          elevation={12}
           sx={{
             width: "100%",
             borderRadius: 4,
-            bgcolor: "rgba(15, 23, 42, 0.96)",
-            color: "#fef3c7",
-            border: "2px solid #b45309",
-            boxShadow: "0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(180, 83, 9, 0.3)",
-            backdropFilter: "blur(16px)",
+            bgcolor: "#ffffff",
+            color: "#7c2d12",
+            border: "2px solid #fde68a",
+            boxShadow: "0 20px 50px rgba(180, 83, 9, 0.2)",
             overflow: "hidden",
             boxSizing: "border-box",
           }}
         >
-          {/* Header Banner */}
+          {/* Light Header Banner */}
           <Box
             sx={{
               py: 2.5,
@@ -127,6 +120,7 @@ export default function LoginPage() {
               background: "linear-gradient(135deg, #7c2d12 0%, #b45309 100%)",
               borderBottom: "2px solid #fde68a",
               textAlign: "center",
+              color: "#ffffff",
             }}
           >
             <Stack direction="row" spacing={1.5} sx={{ justifyContent: "center", alignItems: "center" }}>
@@ -136,7 +130,7 @@ export default function LoginPage() {
               </Typography>
             </Stack>
             <Typography variant="caption" sx={{ color: "#fde68a", opacity: 0.9, mt: 0.5, display: "block" }}>
-              Sri Rama Seva Committee — Integrated Temple Management System
+              Sri Rama Seva Committee — Integrated Management System
             </Typography>
           </Box>
 
@@ -158,7 +152,7 @@ export default function LoginPage() {
                     mx: "auto",
                     mb: 1.5,
                     border: "2px solid #fde68a",
-                    boxShadow: "0 0 25px rgba(245, 158, 11, 0.7)",
+                    boxShadow: "0 4px 15px rgba(180, 83, 9, 0.3)",
                   }}
                 >
                   🛕
@@ -169,39 +163,16 @@ export default function LoginPage() {
                   sx={{
                     mb: 1,
                     fontWeight: 900,
-                    bgcolor: "#b45309",
-                    color: "#fef3c7",
-                    border: "1px solid #fde68a",
+                    bgcolor: "#fffbeb",
+                    color: "#7c2d12",
+                    border: "1px solid #b45309",
                     fontSize: "0.75rem",
                   }}
                 />
               </Box>
 
-              {/* Demo Credentials Quick Fill Banner */}
-              <Paper
-                elevation={0}
-                onClick={handleFillDemo}
-                sx={{
-                  p: 1.5,
-                  bgcolor: "rgba(180, 83, 9, 0.2)",
-                  border: "1px dashed #fde68a",
-                  borderRadius: 2.5,
-                  cursor: "pointer",
-                  textAlign: "center",
-                  transition: "all 0.2s ease-in-out",
-                  "&:hover": { bgcolor: "rgba(180, 83, 9, 0.35)", transform: "scale(1.01)" },
-                }}
-              >
-                <Typography variant="caption" sx={{ color: "#fde68a", fontWeight: 800, display: "block" }}>
-                  🔑 Quick Demo Login (Click to Autofill Admin Credentials)
-                </Typography>
-                <Typography variant="caption" sx={{ color: "#ffffff", fontWeight: 800 }}>
-                  Email: admin@temple.com | Password: Admin@123
-                </Typography>
-              </Paper>
-
               {(loginMutation.isError || validationErr) && (
-                <Alert severity="error" sx={{ bgcolor: "#451a03", color: "#fca5a5", border: "1px solid #ef4444" }}>
+                <Alert severity="error" sx={{ bgcolor: "#fef2f2", color: "#991b1b", border: "1px solid #fecaca" }}>
                   {validationErr || (loginMutation.error as Error)?.message || "Invalid Username or Password. Authentication failed."}
                 </Alert>
               )}
@@ -217,20 +188,18 @@ export default function LoginPage() {
                     error={!!errors.email}
                     helperText={errors.email?.message}
                     sx={{
-                      bgcolor: "#070a12",
+                      bgcolor: "#fffef5",
                       borderRadius: 1.5,
-                      input: { color: "#fff" },
-                      label: { color: "#fde68a" },
                       "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "rgba(245, 158, 11, 0.4)" },
-                        "&:hover fieldset": { borderColor: "#f59e0b" },
+                        "& fieldset": { borderColor: "#fde68a" },
+                        "&:hover fieldset": { borderColor: "#b45309" },
                       },
                     }}
                     slotProps={{
                       input: {
                         startAdornment: (
                           <InputAdornment position="start">
-                            <PersonIcon sx={{ color: "#f59e0b" }} />
+                            <PersonIcon sx={{ color: "#b45309" }} />
                           </InputAdornment>
                         ),
                       },
@@ -246,13 +215,11 @@ export default function LoginPage() {
                     error={!!errors.password}
                     helperText={errors.password?.message}
                     sx={{
-                      bgcolor: "#070a12",
+                      bgcolor: "#fffef5",
                       borderRadius: 1.5,
-                      input: { color: "#fff" },
-                      label: { color: "#fde68a" },
                       "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "rgba(245, 158, 11, 0.4)" },
-                        "&:hover fieldset": { borderColor: "#f59e0b" },
+                        "& fieldset": { borderColor: "#fde68a" },
+                        "&:hover fieldset": { borderColor: "#b45309" },
                       },
                     }}
                     slotProps={{
@@ -262,7 +229,7 @@ export default function LoginPage() {
                             <IconButton
                               onClick={() => setShowPassword((prev) => !prev)}
                               edge="end"
-                              sx={{ color: "#fde68a" }}
+                              sx={{ color: "#b45309" }}
                             >
                               {showPassword ? <VisibilityOff /> : <Visibility />}
                             </IconButton>
@@ -280,15 +247,16 @@ export default function LoginPage() {
                     startIcon={loginMutation.isPending ? <CircularProgress size={20} color="inherit" /> : <LockOutlinedIcon />}
                     disabled={loginMutation.isPending}
                     sx={{
-                      py: 1.6,
+                      py: 1.5,
+                      height: 46,
                       fontSize: "1rem",
-                      fontWeight: 900,
-                      background: "linear-gradient(135deg, #f59e0b 0%, #b45309 100%)",
-                      color: "#7c2d12",
-                      borderRadius: 3,
-                      boxShadow: "0 6px 20px rgba(245, 158, 11, 0.5)",
+                      fontWeight: 800,
+                      background: "linear-gradient(135deg, #b45309 0%, #7c2d12 100%)",
+                      color: "#ffffff",
+                      borderRadius: 2.5,
+                      boxShadow: "0 4px 14px rgba(180, 83, 9, 0.3)",
                       "&:hover": {
-                        background: "linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%)",
+                        background: "linear-gradient(135deg, #d97706 0%, #9a3412 100%)",
                       },
                     }}
                   >
@@ -301,7 +269,7 @@ export default function LoginPage() {
                 color="inherit"
                 size="small"
                 onClick={() => navigate("/")}
-                sx={{ color: "#fde68a", textTransform: "none", fontSize: "0.85rem", width: "100%" }}
+                sx={{ color: "#7c2d12", textTransform: "none", fontSize: "0.85rem", width: "100%", fontWeight: 700 }}
               >
                 ← Back to Public Website
               </Button>

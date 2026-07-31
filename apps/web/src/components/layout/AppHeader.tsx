@@ -16,7 +16,6 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import ThemeSelector from "../common/ThemeSelector";
 
 export default function AppHeader() {
   const navigate = useNavigate();
@@ -41,14 +40,14 @@ export default function AppHeader() {
       elevation={0}
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        background: "linear-gradient(135deg, #7c2d12 0%, #b45309 50%, #d97706 100%)",
+        background: "linear-gradient(135deg, #7c2d12 0%, #b45309 60%, #d97706 100%)",
         borderBottom: "2px solid #fde68a",
-        color: "#fff",
-        boxShadow: "0 4px 20px rgba(124, 45, 18, 0.3)",
+        color: "#ffffff",
+        boxShadow: "0 4px 20px rgba(180, 83, 9, 0.2)",
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Stack direction="row" spacing={2} sx={{ display: "flex", alignItems: "center" }}>
+        <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
           {logoUrl ? (
             <Box
               component="img"
@@ -87,27 +86,25 @@ export default function AppHeader() {
               SRI RAMALAYAM TEMPLE ERP
             </Typography>
             <Typography variant="caption" sx={{ color: "#fde68a", fontSize: "0.7rem", display: "block" }}>
-              Sri Rama Seva Trust Management System
+              Sri Rama Seva Committee Management System
             </Typography>
           </Box>
         </Stack>
 
-        <Stack direction="row" spacing={1.5} sx={{ display: "flex", alignItems: "center" }}>
-          <ThemeSelector />
-
+        <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
           <Tooltip title="View Public Website">
-            <IconButton color="inherit" onClick={() => navigate("/")} sx={{ bgcolor: "rgba(255,255,255,0.1)", "&:hover": { bgcolor: "rgba(255,255,255,0.2)" } }}>
+            <IconButton color="inherit" onClick={() => navigate("/")} sx={{ bgcolor: "rgba(255,255,255,0.15)", "&:hover": { bgcolor: "rgba(255,255,255,0.3)" } }}>
               <LanguageIcon />
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Notifications">
-            <IconButton color="inherit" sx={{ bgcolor: "rgba(255,255,255,0.1)", "&:hover": { bgcolor: "rgba(255,255,255,0.2)" } }}>
+            <IconButton color="inherit" sx={{ bgcolor: "rgba(255,255,255,0.15)", "&:hover": { bgcolor: "rgba(255,255,255,0.3)" } }}>
               <NotificationsIcon />
             </IconButton>
           </Tooltip>
 
-          <Stack direction="row" spacing={1} sx={{ display: "flex", alignItems: "center", bgcolor: "rgba(255,255,255,0.15)", py: 0.5, px: 1.5, borderRadius: 5 }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: "center", bgcolor: "rgba(255,255,255,0.2)", py: 0.5, px: 1.5, borderRadius: 5 }}>
             <Avatar sx={{ width: 32, height: 32, bgcolor: "#fef3c7", color: "#7c2d12", fontWeight: 800, fontSize: "0.9rem" }}>
               A
             </Avatar>
@@ -120,7 +117,7 @@ export default function AppHeader() {
           </Stack>
 
           <Tooltip title="Logout">
-            <IconButton color="inherit" onClick={handleLogout} sx={{ bgcolor: "rgba(255,255,255,0.1)", "&:hover": { bgcolor: "#ef4444" } }}>
+            <IconButton color="inherit" onClick={handleLogout} sx={{ bgcolor: "rgba(255,255,255,0.15)", "&:hover": { bgcolor: "#ef4444" } }}>
               <LogoutIcon />
             </IconButton>
           </Tooltip>

@@ -4,8 +4,6 @@ import {
   Typography,
   Container,
   Grid,
-  Card,
-  CardContent,
   Button,
   Stack,
   LinearProgress,
@@ -40,7 +38,6 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { auth } from "../utils/auth";
 import { useAppTheme } from "../context/ThemeContext";
-import ThemeSelector from "../components/common/ThemeSelector";
 import DevoteePortalModal from "./DevoteePortalModal";
 import { DonateModal } from "./DonateModal";
 
@@ -326,7 +323,6 @@ export default function PublicWebsite() {
                 { label: "Gallery", href: "#slideshow" },
                 { label: "Construction", href: "#construction" },
                 { label: "Committee", href: "#committee" },
-                { label: "Online Sevas", href: "#sevas" },
                 { label: "Donate", href: "#donate" },
                 { label: "Contact", href: "#contact" },
               ].map((item) => (
@@ -387,8 +383,6 @@ export default function PublicWebsite() {
               >
                 Devotee Portal
               </Button>
-
-              <ThemeSelector />
 
               <Button
                 variant="contained"
@@ -696,76 +690,7 @@ export default function PublicWebsite() {
         </Box>
       )}
 
-      {/* Block 4: Online Sevas Portal Section */}
-      <Box id="sevas" sx={{ py: 8, borderBottom: palette.border, backgroundColor: settings.bgSevas || "transparent", backgroundImage: settings.bgSevasImage ? `url(${settings.bgSevasImage})` : "none", backgroundSize: "cover" }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", mb: 6 }}>
-            <Typography variant="overline" color={palette.textAccent} sx={{ fontWeight: 900, letterSpacing: 2 }}>
-              SACRED DAILY POOJA & ABHISHEKAM
-            </Typography>
-            <Typography variant="h3" sx={{ fontWeight: 900, color: palette.textPrimary, fontFamily: "'Cinzel', serif" }}>
-              Book Online Sevas
-            </Typography>
-            <Typography variant="body1" color={palette.textSecondary} sx={{ mt: 1 }}>
-              Select your preferred Seva — Saved directly to database with instant digital receipt & Prasadam
-            </Typography>
-          </Box>
 
-          <Grid container spacing={3}>
-            {[
-              { title: "Nitya Abhishekam", amount: "₹ 1,116", desc: "Sacred Panchamrutha Abhishekam to Lord Sri Rama with Gotram & Nakshatram Sankalpam.", type: "ABHISHEKAM" },
-              { title: "Sahasra Nama Archana", amount: "₹ 516", desc: "Special Sahasranama Archana performed in devotee family name.", type: "ARCHANA" },
-              { title: "Nitya Annadana Seva", amount: "₹ 5,000", desc: "Sponsor free meals distribution to devotees visiting temple.", type: "ANNADANAM" },
-              { title: "Sitarama Kalyana Seva", amount: "₹ 10,000", desc: "Sponsor Celestial Kalyanam Seva for Lord Rama & Sita Devi.", type: "SPECIAL_KALYANAM" },
-            ].map((seva, idx) => (
-              <Grid key={idx} size={{ xs: 12, sm: 6, md: 3 }}>
-                <Card
-                  elevation={6}
-                  sx={{
-                    bgcolor: cardBgColor,
-                    color: palette.textPrimary,
-                    border: palette.border,
-                    borderRadius: 3,
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-                    transition: "transform 0.25s ease, boxShadow 0.25s ease",
-                    "&:hover": { transform: "translateY(-6px)", boxShadow: "0 15px 35px rgba(245, 158, 11, 0.4)", borderColor: "#ffffff" },
-                  }}
-                >
-                  <CardContent sx={{ p: 3 }}>
-                    <Chip label={seva.amount} sx={{ fontWeight: 900, mb: 2, bgcolor: "#f59e0b", color: "#451a03", fontSize: "0.9rem" }} />
-                    <Typography variant="h6" sx={{ fontWeight: 900, mb: 1, color: palette.textPrimary }}>{seva.title}</Typography>
-                    <Typography variant="body2" color={palette.textSecondary} sx={{ lineHeight: 1.6 }}>{seva.desc}</Typography>
-                  </CardContent>
-                  <Box sx={{ p: 3, pt: 0 }}>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      onClick={() => {
-                        setSevaForm((prev) => ({ ...prev, sevaType: seva.type }));
-                        setSevaModalOpen(true);
-                      }}
-                      sx={{
-                        background: palette.btnGradient,
-                        color: palette.btnText,
-                        fontWeight: 900,
-                        py: 1.2,
-                        borderRadius: 2,
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
-                      }}
-                    >
-                      Book This Seva
-                    </Button>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
 
       {/* Block 5: About Temple Section */}
       <Box id="about" sx={{ py: 8, borderBottom: palette.border, backgroundColor: settings.bgAbout || "transparent", backgroundImage: settings.bgAboutImage ? `url(${settings.bgAboutImage})` : "none", backgroundSize: "cover" }}>
