@@ -23,7 +23,7 @@ import PublicRoute from "./PublicRoute";
 
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         {/* Public Portal Website */}
         <Route path="/" element={<PublicWebsite />} />
