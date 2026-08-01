@@ -192,15 +192,22 @@ export default function DevoteePortal({ t, showToast }) {
             <div className="gold-card max-w-2xl md:max-w-3xl w-full !p-8 md:!p-12 border-4 border-[#FFD700] text-center shadow-[0_0_60px_rgba(255,215,0,0.45)] relative overflow-hidden bg-gradient-to-b from-[#4A0E17]/95 via-[#2D080E]/95 to-[#1A0306]/98 rounded-3xl">
               
               {/* Background God Photo Watermark Overlay */}
-              <div className="absolute inset-0 opacity-15 bg-[url('/assets/temple_bg.jpg')] bg-cover bg-center pointer-events-none" />
+              <div
+                className="absolute inset-0 opacity-15 bg-cover bg-center pointer-events-none"
+                style={{ backgroundImage: `url('${getAssetUrl('assets/temple_bg.jpg')}')` }}
+              />
 
               {/* Divine God Photo Emblem Header */}
               <div className="relative z-10 mb-6 flex flex-col items-center">
                 <div className="relative mb-3 group">
                   <div className="absolute -inset-2 bg-gradient-to-r from-[#FFD700] via-[#FF9933] to-[#FFD700] rounded-full blur-md opacity-85 group-hover:opacity-100 transition duration-500 animate-pulse" />
                   <img
-                    src="/assets/logo.jpg"
+                    src={getActiveLogo()}
                     alt="Sri Rama Seva Committee Official Logo"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                    }}
                     className="relative w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-[#FFD700] shadow-2xl object-cover bg-[#1A0306] p-0.5 ring-4 ring-[#FFD700]/60"
                   />
                   <div className="absolute -bottom-2 right-0 bg-[#5C121E] text-sky-400 p-2 rounded-full border-2 border-[#FFD700] shadow-lg">

@@ -407,8 +407,12 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
 
                   <div className="bg-black/70 p-5 rounded-2xl border-2 border-dashed border-[#FFD700] flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left shadow-2xl">
                     <img
-                      src="/assets/phonepe_qr.png"
+                      src={getActiveQrCode()}
                       alt="PhonePe QR Scanner"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getAssetUrl('assets/phonepe_qr.png');
+                      }}
                       className="w-36 h-36 rounded-xl object-contain bg-white p-1.5 border-2 border-amber-400 shadow-2xl cursor-pointer hover:scale-105 transition-transform"
                       onClick={() => setShowQrModal(true)}
                     />

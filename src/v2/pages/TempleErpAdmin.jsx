@@ -784,15 +784,22 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
             <div className="gold-card max-w-2xl md:max-w-3xl w-full !p-8 md:!p-12 border-4 border-[#FFD700] text-center shadow-[0_0_60px_rgba(255,215,0,0.45)] relative overflow-hidden bg-gradient-to-b from-[#4A0E17]/95 via-[#2D080E]/95 to-[#1A0306]/98 rounded-3xl">
               
               {/* Background God Photo Halo Watermark Overlay */}
-              <div className="absolute inset-0 opacity-15 bg-[url('/assets/temple_bg.jpg')] bg-cover bg-center pointer-events-none" />
+              <div
+                className="absolute inset-0 opacity-15 bg-cover bg-center pointer-events-none"
+                style={{ backgroundImage: `url('${getAssetUrl('assets/temple_bg.jpg')}')` }}
+              />
 
               {/* Divine God Photo Emblem Header */}
               <div className="relative z-10 mb-6 flex flex-col items-center">
                 <div className="relative mb-3 group">
                   <div className="absolute -inset-2 bg-gradient-to-r from-[#FFD700] via-[#FF9933] to-[#FFD700] rounded-full blur-md opacity-85 group-hover:opacity-100 transition duration-500 animate-pulse" />
                   <img
-                    src="/assets/logo.jpg"
+                    src={getActiveLogo()}
                     alt="Sri Rama Seva Committee Official Logo"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                    }}
                     className="relative w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-[#FFD700] shadow-2xl object-cover bg-[#1A0306] p-0.5 ring-4 ring-[#FFD700]/60"
                   />
                   <div className="absolute -bottom-2 right-1 bg-[#5C121E] text-[#FFD700] p-2 rounded-full border-2 border-[#FFD700] shadow-lg">
@@ -1088,7 +1095,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                       {/* Watermark Background Layer - Official Temple Logo */}
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
                         <div className="text-center">
-                          <img src="/assets/logo.jpg" alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
+                          <img
+                            src={getActiveLogo()}
+                            alt="Sri Rama Seva Committee Logo Watermark"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                            }}
+                            className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl"
+                          />
                           <span className="text-3xl sm:text-4xl font-black uppercase text-[#5C121E] tracking-widest block mt-2">SRI RAMA SEVA COMMITTEE</span>
                           <span className="text-xl font-black text-amber-900 block mt-0.5">పామినివాండ్లవూరు</span>
                         </div>
@@ -1097,7 +1112,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                       {/* Header Section */}
                       <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4 relative z-10">
                         <div className="flex items-center gap-3">
-                          <img src="/assets/logo.jpg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
+                          <img
+                            src={getActiveLogo()}
+                            alt="Logo"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                            }}
+                            className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md"
+                          />
                           <div>
                             <h3 className="text-lg sm:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ (SRI RAMA SEVA COMMITTEE)</h3>
                             <p className="text-xs font-bold text-gray-700">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
@@ -2638,7 +2661,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                 <p className="text-xs font-mono font-bold text-sky-900">UPI: {posterUpiId}</p>
                                 <p className="text-xs font-bold text-gray-700">ఫోన్ / వాట్సాప్: {posterPhone}</p>
                               </div>
-                              <img src="/assets/phonepe_qr.png" alt="PhonePe QR" className="w-24 h-24 rounded-lg border-2 border-amber-600 shadow-md shrink-0" />
+                              <img
+                                src={getActiveQrCode()}
+                                alt="PhonePe QR"
+                                onError={(e) => {
+                                  e.currentTarget.onerror = null;
+                                  e.currentTarget.src = getAssetUrl('assets/phonepe_qr.png');
+                                }}
+                                className="w-24 h-24 rounded-lg border-2 border-amber-600 shadow-md shrink-0"
+                              />
                             </div>
 
                             <div className="text-center text-[11px] font-bold opacity-70 relative z-10 pt-2">
@@ -2826,7 +2857,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                 </div>
 
                                 <div className="flex items-center gap-2 bg-white p-1.5 rounded border border-emerald-300 mt-2">
-                                  <img src={pamphletQrImg || '/assets/phonepe_qr.png'} alt="PhonePe QR" className="w-14 h-14 rounded border border-gray-400 shrink-0 object-cover" />
+                                  <img
+                                    src={pamphletQrImg || getActiveQrCode()}
+                                    alt="PhonePe QR"
+                                    onError={(e) => {
+                                      e.currentTarget.onerror = null;
+                                      e.currentTarget.src = getAssetUrl('assets/phonepe_qr.png');
+                                    }}
+                                    className="w-14 h-14 rounded border border-gray-400 shrink-0 object-cover"
+                                  />
                                   <div className="text-[9px] font-bold text-gray-800 space-y-0.5">
                                     <span className="bg-purple-700 text-white px-1.5 py-0.5 rounded text-[8px]">PhonePe / GPay QR</span>
                                     <p contentEditable={directCanvasEditMode} suppressContentEditableWarning onBlur={(e) => setPamphletUpiId(e.currentTarget.innerText)} className="font-mono text-purple-900 font-black outline-none">{pamphletUpiId}</p>
@@ -2837,7 +2876,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                               {/* Right Box: Contacts & Blessing */}
                               <div className="border-2 border-amber-800 rounded-xl p-3 bg-amber-50/95 space-y-2 flex flex-col justify-between">
                                 <div>
-                                  <div className="bg-amber-800 text-white px-2 py-0.5 rounded text-[11px] font-black text-center mb-1">
+                                  <div className="bg-amber-800 text-[#FFD700] text-center font-bold text-[11px] py-0.5 rounded">
                                     సంప్రదించవలసిన వారు 🙏
                                   </div>
                                   <div className="space-y-1 text-[10px] font-bold text-gray-800">
@@ -2877,7 +2916,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                     
                                     {/* Prominent Logo Watermark */}
                                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
-                                      <img src="/assets/logo.jpg" alt="Logo Watermark" className="w-56 h-56 rounded-full object-cover border-4 border-amber-600/30" />
+                                      <img
+                                        src={getActiveLogo()}
+                                        alt="Logo Watermark"
+                                        onError={(e) => {
+                                          e.currentTarget.onerror = null;
+                                          e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                                        }}
+                                        className="w-56 h-56 rounded-full object-cover border-4 border-amber-600/30"
+                                      />
                                     </div>
 
                                     {/* Stub / Counterfoil (Left Part 28%) */}
@@ -2905,7 +2952,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                                       {/* Slip Header */}
                                       <div className="flex justify-between items-start border-b border-gray-800 pb-1.5">
                                         <div className="flex items-center gap-2">
-                                          <img src="/assets/logo.jpg" alt="Logo" className="w-8 h-8 rounded-full border border-amber-600 shadow-sm" />
+                                          <img
+                                            src={getActiveLogo()}
+                                            alt="Logo"
+                                            onError={(e) => {
+                                              e.currentTarget.onerror = null;
+                                              e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                                            }}
+                                            className="w-8 h-8 rounded-full border border-amber-600 shadow-sm"
+                                          />
                                           <div>
                                             <h4 
                                               contentEditable={directCanvasEditMode} 

@@ -3,6 +3,7 @@ import { Lock, LogOut, Plus, Trash2, Receipt, Users, ShieldCheck, Download, Shar
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { getAssetUrl, getActiveLogo } from '../v2/data/v2Database';
 
 export default function AdminDashboard({ t, showToast, donorList, setDonorList, committeeList, setCommitteeList, onClose }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -521,12 +522,28 @@ export default function AdminDashboard({ t, showToast, donorList, setDonorList, 
                     >
                       {/* Watermark Background */}
                       <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-                        <img src="/assets/logo.jpg" alt="Watermark" className="w-96 h-96 object-contain" />
+                        <img
+                          src={getActiveLogo()}
+                          alt="Watermark"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                          }}
+                          className="w-96 h-96 object-contain"
+                        />
                       </div>
 
                       <div className="flex items-center justify-between border-b-2 border-[#5C121E]/30 pb-4 mb-5 relative z-10">
                         <div className="flex items-center gap-3">
-                          <img src="/assets/logo.jpg" alt="Logo" className="w-14 h-14 rounded-full border-2 border-amber-600 shadow-md" />
+                          <img
+                            src={getActiveLogo()}
+                            alt="Logo"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                            }}
+                            className="w-14 h-14 rounded-full border-2 border-amber-600 shadow-md"
+                          />
                           <div>
                             <h4 className="text-lg md:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ</h4>
                             <p className="text-xs font-bold text-amber-900">పామినివాండ్లవూరు, బంగారుపాళెం మండలం, చిత్తూరు జిల్లా</p>
