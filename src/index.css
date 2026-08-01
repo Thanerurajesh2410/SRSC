@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --primary-gold: #FFD700;
-  --primary-gold-light: #FFF5C0;
-  --primary-gold-dark: #B8860B;
-  --primary-saffron: #FF9933;
-  --primary-saffron-dark: #E65100;
+  --primary-gold: #F59E0B;
+  --primary-gold-light: #FDE68A;
+  --primary-gold-dark: #D97706;
+  --primary-saffron: #F59E0B;
+  --primary-saffron-dark: #B45309;
   --sacred-crimson: #900C3F;
   --sacred-maroon: #5C121E;
   --font-heading: 'Cinzel', serif;
@@ -70,44 +70,34 @@ body.theme-maroon .gold-card {
    THEME 2: Divine Sandalwood Cream / Ivory (Light Theme)
    ========================================================= */
 body.theme-cream {
-  background-color: #FFFDF0;
-  color: #2D080E;
+  background-color: #FAF5E9;
+  color: #2D050B;
   background-image: 
     radial-gradient(circle at 50% 0%, rgba(255, 153, 51, 0.18) 0%, transparent 50%),
-    linear-gradient(180deg, #FFFDF0 0%, #FFF5E1 50%, #FFECD0 100%),
-    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.06'%3E%3Cpath d='M50 5 C 25 5, 5 25, 5 50 C 5 75, 25 95, 50 95 C 75 95, 95 75, 95 50 Z'/%3E%3C/g%3E%3C/svg%3E");
+    radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 40%),
+    linear-gradient(180deg, #FAF5E9 0%, #FFFDF8 40%, #F5EBD7 100%),
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.05'%3E%3Cpath d='M50 5 C 25 5, 5 25, 5 50 C 5 75, 25 95, 50 95 C 75 95, 95 75, 95 50 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
 }
 
 body.theme-cream .gold-card {
-  background: #FFFFFF;
-  border: 1.5px solid rgba(184, 134, 11, 0.4);
-  color: #2D080E;
-  box-shadow: 0 10px 30px rgba(92, 18, 30, 0.1);
+  background: #FFFDF8;
+  border: 2px solid rgba(184, 134, 11, 0.35);
+  color: #2D050B;
+  box-shadow: 0 12px 35px rgba(92, 18, 30, 0.12);
 }
 
 body.theme-cream h1, body.theme-cream h2, body.theme-cream h3, body.theme-cream h4 {
-  color: #4A0E17 !important;
-}
-
-body.theme-cream p, body.theme-cream span, body.theme-cream td, body.theme-cream div {
-  color: #330A10;
-}
-
-body.theme-cream .text-white {
-  color: #4A0E17 !important;
-}
-
-body.theme-cream .text-gray-200, body.theme-cream .text-gray-300, body.theme-cream .text-gray-400 {
-  color: #4A151D !important;
+  color: #5C121E;
 }
 
 body.theme-cream header {
-  background: linear-gradient(90deg, #5C121E, #4A0E17, #5C121E);
+  background: linear-gradient(90deg, #4A0E17, #5C121E, #3A0A11);
   color: #FFFFFF;
 }
 
-body.theme-cream header h1, body.theme-cream header a, body.theme-cream header p {
-  color: #FFFFFF !important;
+body.theme-cream header h1, body.theme-cream header a, body.theme-cream header p, body.theme-cream header span {
+  color: #FFFFFF;
 }
 
 /* =========================================================
@@ -294,7 +284,7 @@ header button, nav button, nav a {
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
   color: #1A0306;
   font-weight: 800;
   padding: 0.9rem 1.8rem;
@@ -303,13 +293,13 @@ header button, nav button, nav a {
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
-  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.45);
+  box-shadow: 0 6px 25px rgba(245, 158, 11, 0.55);
 }
 
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 35px rgba(255, 215, 0, 0.7);
-  background: linear-gradient(135deg, #FFF5C0 0%, #FFD700 100%);
+  box-shadow: 0 10px 35px rgba(245, 158, 11, 0.8);
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 100%);
 }
 
 .btn-outline {

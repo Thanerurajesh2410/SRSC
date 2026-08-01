@@ -26,7 +26,9 @@ import { CheckCircle, Palette, MessageSquare, Layers } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState('te');
-  const [theme, setTheme] = useState('theme-maroon');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('sri_rama_theme') || 'theme-maroon';
+  });
   const [toastMessage, setToastMessage] = useState('');
   
   // Version Switcher State: 'v1' (Classic Site) or 'v2' (Enterprise ERP & Portal)
@@ -49,6 +51,7 @@ export default function App() {
 
   useEffect(() => {
     document.body.className = theme;
+    localStorage.setItem('sri_rama_theme', theme);
   }, [theme]);
 
   useEffect(() => {
@@ -134,6 +137,8 @@ export default function App() {
             setActiveModule={setV2Module}
             lang={lang}
             setLang={setLang}
+            theme={theme}
+            setTheme={setTheme}
             t={updatedT}
             v2T={v2T}
             onToggleVersion={toggleVersion}

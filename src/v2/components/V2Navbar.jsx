@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, Heart, Globe, Menu, X, Building2, Calendar, FileText, Camera, ShieldCheck, Sparkles, Phone, Lock, Zap, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, Heart, Globe, Menu, X, Building2, Calendar, FileText, Camera, ShieldCheck, Sparkles, Phone, Lock, Zap, Bell, Palette, Sun, Moon } from 'lucide-react';
+import { getAssetUrl } from '../data/v2Database';
 
-export default function V2Navbar({ activeModule, setActiveModule, lang, setLang, t, v2T, onToggleVersion }) {
+export default function V2Navbar({ activeModule, setActiveModule, lang, setLang, theme, setTheme, t, v2T, onToggleVersion }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleLang = () => {
     setLang(lang === 'te' ? 'en' : 'te');
+  };
+
+  const toggleTheme = () => {
+    if (setTheme) {
+      setTheme(theme === 'theme-cream' ? 'theme-maroon' : 'theme-cream');
+    }
   };
 
   return (
@@ -42,7 +49,7 @@ export default function V2Navbar({ activeModule, setActiveModule, lang, setLang,
           <div className="flex items-center gap-3 shrink-0 select-none cursor-pointer group" onClick={() => setActiveModule('public-home')}>
             <div className="relative shrink-0">
               <img
-                src="/assets/logo.jpg"
+                src={getAssetUrl('assets/logo.jpg')}
                 alt="Sri Rama Seva Committee Logo"
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-[#FFD700] shadow-xl object-cover bg-[#1A0306] p-0.5 ring-2 ring-[#FFD700]/60 transform group-hover:scale-105 transition-transform"
               />
@@ -108,6 +115,25 @@ export default function V2Navbar({ activeModule, setActiveModule, lang, setLang,
             >
               <Heart className="w-4 h-4 fill-current text-red-700" />
               <span>ఈ-హుండి విరాళం</span>
+            </button>
+
+            {/* Theme Toggle Button (Light Theme / Dark Theme) */}
+            <button
+              onClick={toggleTheme}
+              className="px-3.5 py-2 rounded-xl text-xs md:text-sm font-black bg-amber-400 text-amber-950 border-2 border-amber-300 hover:bg-amber-300 transition-all flex items-center gap-1.5 shrink-0 shadow-md"
+              title="థీమ్ మార్చుకోండి (Light / Dark Theme Toggle)"
+            >
+              {theme === 'theme-cream' ? (
+                <>
+                  <Moon className="w-4 h-4 text-amber-950" />
+                  <span>డార్క్ థీమ్</span>
+                </>
+              ) : (
+                <>
+                  <Sun className="w-4 h-4 text-amber-950" />
+                  <span>లైట్ థీమ్</span>
+                </>
+              )}
             </button>
 
           </div>
