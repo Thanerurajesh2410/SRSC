@@ -1516,7 +1516,15 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                 <div ref={reportRef} className="bg-[#FFFDF0] text-[#2D080E] p-8 sm:p-10 rounded-3xl border-4 border-[#FFD700] shadow-2xl relative max-w-full overflow-hidden">
                   <div className="flex justify-between border-b-2 border-[#5C121E]/30 pb-5 mb-5">
                     <div className="flex items-center gap-4">
-                      <img src="/assets/logo.jpg" alt="Logo" className="w-14 h-14 rounded-full border-2 border-amber-600" />
+                      <img
+                        src={getActiveLogo()}
+                        alt="Logo"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                        }}
+                        className="w-14 h-14 rounded-full border-2 border-amber-600 object-cover"
+                      />
                       <div>
                         <h3 className="text-2xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ పామినివాండ్లవూరు</h3>
                         <p className="text-sm font-bold text-amber-900">అధికారిక ERP {activeReportType.toUpperCase()} నివేదిక • {new Date().toLocaleDateString('te-IN')}</p>
@@ -2645,13 +2653,29 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                             
                             {/* Poster Watermark */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10 z-0">
-                              <img src="/assets/logo.jpg" alt="Logo Watermark" className="w-96 h-96 rounded-full object-cover grayscale" />
+                              <img
+                                src={getActiveLogo()}
+                                alt="Logo Watermark"
+                                onError={(e) => {
+                                  e.currentTarget.onerror = null;
+                                  e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                                }}
+                                className="w-96 h-96 rounded-full object-cover grayscale"
+                              />
                             </div>
 
                             {/* Poster Header */}
                             <div className="text-center space-y-2 relative z-10 border-b-2 border-current/20 pb-4">
                               <div className="flex items-center justify-center gap-3">
-                                <img src="/assets/logo.jpg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-500 shadow-md" />
+                                <img
+                                  src={getActiveLogo()}
+                                  alt="Logo"
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                                  }}
+                                  className="w-16 h-16 rounded-full border-2 border-amber-500 shadow-md object-cover"
+                                />
                                 <div>
                                   <h3 className="text-2xl font-black uppercase tracking-wider heading-telugu">శ్రీ రామా సేవా కమిటీ</h3>
                                   <p className="text-xs font-bold opacity-80">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
