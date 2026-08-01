@@ -580,19 +580,83 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
     showToast(`వెబ్‌సైట్ విభాగం మార్పు నవీకరించబడింది (${settingKey}: ${currentDB.websiteSettings[settingKey] ? 'ON' : 'OFF'})`);
   };
 
-  // Upload file converted to Base64 for Gallery Image
-  const handleFileUploadForGallery = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewImgSrc(reader.result);
-      showToast("ఫోటో విజయవంతంగా ఎంచుకోబడింది!");
-    };
-    reader.readAsDataURL(file);
+  // Helper to compress single image file to lightweight Base64 JPEG data URL
+  const compressGalleryImageFile = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const rawUrl = e.target.result;
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 850;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = () => resolve(rawUrl);
+        img.src = rawUrl;
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
-  // Add Gallery & Slideshow Image
+  // Upload single or multiple files for Gallery & Slideshow
+  const handleMultipleFileUploadForGallery = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    showToast(`${files.length} ఫోటోలు కాంప్రెస్ చేయబడుతున్నాయి, దయచేసి వేచివుండండి...`);
+
+    const currentDB = getDB();
+    if (!currentDB.galleryImages) currentDB.galleryImages = [];
+
+    const baseTitle = newImgTitle.trim() || 'ఆలయ శోభిత ఫోటో';
+    const baseTag = newImgTag.trim() || 'పామినివాండ్లవూరు ఆలయం';
+
+    let addedCount = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const compressedUrl = await compressGalleryImageFile(file);
+      const title = files.length === 1 ? baseTitle : `${baseTitle} - ${i + 1}`;
+
+      const newPhoto = {
+        id: 'IMG-' + (currentDB.galleryImages.length + 1) + '-' + Date.now().toString().slice(-4) + '-' + i,
+        src: compressedUrl,
+        title: title,
+        tag: baseTag
+      };
+
+      currentDB.galleryImages.push(newPhoto);
+      addedCount++;
+    }
+
+    saveDB(currentDB);
+    setDbState({ ...currentDB });
+    addAuditLog(userRole, `Batch Uploaded ${addedCount} Images to Gallery & Slideshow`);
+
+    setNewImgTitle('');
+    setNewImgTag('');
+    setNewImgSrc('');
+    e.target.value = ''; // Reset input
+    showToast(`🎉 ${addedCount} ఫోటోలు ఒకేసారి గ్యాలరీ & స్లైడ్‌షోకు విజవంతంగా జోడించబడ్డాయి!`);
+  };
+
+  // Add Gallery & Slideshow Image via URL
   const handleAddGalleryImage = (e) => {
     e.preventDefault();
     if (!newImgTitle || !newImgSrc) {
@@ -1731,26 +1795,33 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
 
                     {/* Image Input Options */}
                     <div className="space-y-4 bg-black/60 p-5 rounded-2xl border border-white/15">
-                      <label className="block text-xs sm:text-sm font-black text-amber-200">
-                        3. ఫోటో ఎంచుకోండి (Select Image via File Upload or URL) *
-                      </label>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <label className="block text-xs sm:text-sm font-black text-amber-200">
+                          3. ఫోటోలు ఎంచుకోండి (Select Multiple Images or Enter Single URL) *
+                        </label>
+                        <span className="text-[11px] font-black text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-400/50">
+                          ✨ ఒకేసారి అనేక ఫోటోలు (Multiple Photos Upload Supported)
+                        </span>
+                      </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Option A: File Upload */}
-                        <div className="p-4 rounded-xl border-2 border-dashed border-[#FFD700]/70 bg-[#1A0306] text-center flex flex-col items-center justify-center">
-                          <Upload className="w-8 h-8 text-amber-300 mb-2 animate-bounce" />
-                          <span className="text-xs sm:text-sm font-bold text-white mb-2">మీ కంప్యూటర్ నుండి ఫోటో అప్‌లోడ్ చేయండి</span>
+                        {/* Option A: Multiple Files Upload */}
+                        <div className="p-4 rounded-xl border-2 border-dashed border-[#FFD700] bg-[#1A0306] text-center flex flex-col items-center justify-center space-y-2">
+                          <Upload className="w-8 h-8 text-[#FFD700] animate-bounce" />
+                          <span className="text-xs sm:text-sm font-black text-white">ఒకేసారి అనేక ఫోటోలు ఎంచుకోండి (Multiple Upload)</span>
+                          <span className="text-[11px] font-bold text-amber-300">CTRL నొక్కి ఒకేసారి 2 లేదా అంతకంటే ఎక్కువ ఫోటోలు సెలెక్ట్ చేయవచ్చు</span>
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={handleFileUploadForGallery}
-                            className="text-xs text-amber-200 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-[#FFD700] file:text-black cursor-pointer"
+                            multiple
+                            onChange={handleMultipleFileUploadForGallery}
+                            className="text-xs text-amber-200 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-[#FFD700] file:text-black cursor-pointer shadow-lg"
                           />
                         </div>
 
                         {/* Option B: Image URL */}
                         <div className="p-4 rounded-xl border-2 border-white/20 bg-[#1A0306] flex flex-col justify-center space-y-2">
-                          <span className="text-xs font-bold text-gray-300">లేదా ఇమేజ్ URL నమోదు చేయండి:</span>
+                          <span className="text-xs font-bold text-gray-300">లేదా ఒక్క ఇమేజ్ URL నేరుగా నమోదు చేయండి:</span>
                           <input
                             type="text"
                             placeholder="https://... లేదా /assets/temple_photo_1.png"
@@ -1761,7 +1832,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                         </div>
                       </div>
 
-                      {/* Image Preview Box */}
+                      {/* Image Preview Box for URL entry */}
                       {newImgSrc && (
                         <div className="mt-3 p-3 rounded-xl bg-black border border-emerald-400 flex items-center gap-4">
                           <img src={newImgSrc} alt="Preview" className="w-24 h-16 object-cover rounded-lg border border-amber-300" />
@@ -1775,7 +1846,7 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
 
                     <button type="submit" className="btn-gold w-full py-4 text-base font-black rounded-2xl shadow-xl flex items-center justify-center gap-2">
                       <Plus className="w-6 h-6" />
-                      <span>కొత్త ఫోటోను స్లైడ్‌షో & గ్యాలరీకి జోడించండి</span>
+                      <span>URL ద్వారా ఫోటోను స్లైడ్‌షో & గ్యాలరీకి జోడించండి</span>
                     </button>
                   </form>
 
