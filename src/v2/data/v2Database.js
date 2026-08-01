@@ -7,9 +7,23 @@ export const getAssetUrl = (path) => {
   if (path.startsWith('data:') || path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
   const baseUrl = import.meta.env.BASE_URL || './';
-  return baseUrl.endsWith('/') ? `${baseUrl}${cleanPath}` : `${baseUrl}/${cleanPath}`;
+  
+  let clean = path.trim();
+  if (clean.startsWith('/')) {
+    clean = clean.slice(1);
+  }
+  // Strip any accidental repeated base URL subpaths
+  while (clean.startsWith('sri-rama-seva-committee/')) {
+    clean = clean.slice('sri-rama-seva-committee/'.length);
+  }
+
+  if (baseUrl === './' || baseUrl === '') {
+    return `./${clean}`;
+  }
+
+  const prefix = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${prefix}${clean}`;
 };
 
 // 🌟 Full 16 Authentic Donors List from V1 Classic Site
