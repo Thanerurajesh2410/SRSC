@@ -279,8 +279,12 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 <div className="relative group">
                   <div className="absolute -inset-6 bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-500 rounded-full blur-2xl opacity-85 group-hover:opacity-100 transition duration-1000 animate-pulse" />
                   <img
-                    src="/assets/logo.jpg"
+                    src={getActiveLogo()}
                     alt="Lord Rama Portrait"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                    }}
                     className="relative w-40 h-40 md:w-52 md:h-52 rounded-full border-4 border-[#FFD700] shadow-[0_0_60px_rgba(255,215,0,0.8)] object-cover"
                   />
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] px-4 py-1 rounded-full text-xs font-black shadow-2xl flex items-center gap-1.5 whitespace-nowrap">

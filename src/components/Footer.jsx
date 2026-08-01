@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUp, Heart, Lock } from 'lucide-react';
+import { getAssetUrl, getActiveLogo } from '../v2/data/v2Database';
 
 export default function Footer({ t, onOpenAdmin }) {
   const scrollToTop = () => {
@@ -23,8 +24,12 @@ export default function Footer({ t, onOpenAdmin }) {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <img
-                src="/assets/logo.jpg"
+                src={getActiveLogo()}
                 alt="Sri Rama Seva Committee Logo"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                }}
                 className="w-12 h-12 rounded-full border-2 border-[var(--primary-gold)] object-cover shadow-lg"
               />
               <div>
