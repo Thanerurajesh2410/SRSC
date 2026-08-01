@@ -30,6 +30,10 @@ export default function Navbar({ lang, setLang, t }) {
               <img
                 src={getActiveLogo()}
                 alt="Sri Rama Seva Committee Logo"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                }}
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-[var(--primary-gold)] shadow-xl object-cover transform group-hover:scale-105 transition-transform"
               />
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white" title="Official Verified Committee" />

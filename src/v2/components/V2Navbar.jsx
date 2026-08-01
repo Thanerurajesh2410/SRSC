@@ -51,6 +51,10 @@ export default function V2Navbar({ activeModule, setActiveModule, lang, setLang,
               <img
                 src={getActiveLogo()}
                 alt="Sri Rama Seva Committee Logo"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                }}
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-[#FFD700] shadow-xl object-cover bg-[#1A0306] p-0.5 ring-2 ring-[#FFD700]/60 transform group-hover:scale-105 transition-transform"
               />
               <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow" title="Official Verified ERP Active" />

@@ -641,6 +641,10 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                   <img
                     src={getActiveQrCode()}
                     alt="Sri Rama Seva Committee PhonePe Standee QR"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getAssetUrl('assets/phonepe_qr.png');
+                    }}
                     className="w-64 h-64 sm:w-80 sm:h-80 object-contain mx-auto"
                   />
                   <span className="text-xs font-black text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-400 inline-block mt-3">

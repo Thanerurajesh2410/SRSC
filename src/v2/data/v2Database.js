@@ -259,34 +259,34 @@ export const resetToInitialDB = () => {
 
 // Dynamic Media Assets Resolvers (Fixed vs Temporary Expiry Check)
 export const getActiveLogo = () => {
-  const db = getDB();
-  const logo = db.mediaAssets?.logo;
-  if (!logo) return getAssetUrl('assets/logo.jpg');
-
-  if (logo.type === 'temporary' && logo.tempUrl && logo.expiresAt) {
-    if (Date.now() < logo.expiresAt) {
-      return logo.tempUrl;
+  try {
+    const db = getDB();
+    const logo = db.mediaAssets?.logo;
+    if (logo && logo.type === 'temporary' && logo.tempUrl && logo.expiresAt) {
+      if (Date.now() < logo.expiresAt) {
+        return getAssetUrl(logo.tempUrl);
+      }
     }
-  }
-  if (logo.fixedUrl) {
-    return logo.fixedUrl;
-  }
+    if (logo && logo.fixedUrl) {
+      return getAssetUrl(logo.fixedUrl);
+    }
+  } catch (e) {}
   return getAssetUrl('assets/logo.jpg');
 };
 
 export const getActiveQrCode = () => {
-  const db = getDB();
-  const qr = db.mediaAssets?.qrCode;
-  if (!qr) return getAssetUrl('assets/phonepe_qr.png');
-
-  if (qr.type === 'temporary' && qr.tempUrl && qr.expiresAt) {
-    if (Date.now() < qr.expiresAt) {
-      return qr.tempUrl;
+  try {
+    const db = getDB();
+    const qr = db.mediaAssets?.qrCode;
+    if (qr && qr.type === 'temporary' && qr.tempUrl && qr.expiresAt) {
+      if (Date.now() < qr.expiresAt) {
+        return getAssetUrl(qr.tempUrl);
+      }
     }
-  }
-  if (qr.fixedUrl) {
-    return qr.fixedUrl;
-  }
+    if (qr && qr.fixedUrl) {
+      return getAssetUrl(qr.fixedUrl);
+    }
+  } catch (e) {}
   return getAssetUrl('assets/phonepe_qr.png');
 };
 

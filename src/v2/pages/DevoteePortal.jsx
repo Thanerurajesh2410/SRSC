@@ -569,7 +569,15 @@ export default function DevoteePortal({ t, showToast }) {
               {/* Watermark Background Layer - Official Temple Logo */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
                 <div className="text-center">
-                  <img src={getActiveLogo()} alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
+                  <img
+                    src={getActiveLogo()}
+                    alt="Sri Rama Seva Committee Logo Watermark"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                    }}
+                    className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl"
+                  />
                   <span className="text-3xl sm:text-4xl font-black uppercase text-[#5C121E] tracking-widest block mt-2">SRI RAMA SEVA COMMITTEE</span>
                   <span className="text-xl font-black text-amber-900 block mt-0.5">పామినివాండ్లవూరు</span>
                 </div>
@@ -578,7 +586,15 @@ export default function DevoteePortal({ t, showToast }) {
               {/* Header Section */}
               <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <img src={getActiveLogo()} alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
+                  <img
+                    src={getActiveLogo()}
+                    alt="Logo"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getAssetUrl('assets/logo.jpg');
+                    }}
+                    className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md"
+                  />
                   <div>
                     <h3 className="text-lg sm:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ (SRI RAMA SEVA COMMITTEE)</h3>
                     <p className="text-xs font-bold text-gray-700">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
