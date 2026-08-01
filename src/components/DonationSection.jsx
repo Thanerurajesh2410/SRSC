@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { QrCode, Copy, Check, Sparkles, Building, ShieldCheck, Wallet } from 'lucide-react';
-import { getAssetUrl } from '../v2/data/v2Database';
+import { getAssetUrl, getActiveQrCode } from '../v2/data/v2Database';
 
 export default function DonationSection({ t, showToast }) {
   const [copiedAccount, setCopiedAccount] = useState(false);
@@ -219,7 +219,7 @@ export default function DonationSection({ t, showToast }) {
 
             <div className="bg-white p-3 rounded-2xl border-4 border-[#FFD700] shadow-2xl my-4 inline-block">
               <img
-                src={getAssetUrl('assets/phonepe_qr.png')}
+                src={getActiveQrCode()}
                 alt="PhonePe QR Standee Scanner Full View"
                 className="w-64 h-64 object-contain mx-auto"
               />

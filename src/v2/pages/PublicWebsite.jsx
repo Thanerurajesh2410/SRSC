@@ -3,7 +3,7 @@ import { Building2, Heart, Calendar, FileText, Camera, ShieldCheck, MapPin, Mail
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getDB, saveDB, addAuditLog, getAssetUrl } from '../data/v2Database';
+import { getDB, saveDB, addAuditLog, getAssetUrl, getActiveLogo, getActiveQrCode } from '../data/v2Database';
 
 const slideshowImages = [
   { id: 1, src: getAssetUrl('assets/temple_photo_1.png'), title: 'శ్రీ రామాలయ శంకుస్థాపన పవిత్ర రాతి స్తంభాల పూజ', tag: 'పామినివాండ్లవూరు శంకుస్థాపన' },
@@ -639,7 +639,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
                 {/* QR Display Container */}
                 <div className="bg-white p-6 rounded-3xl border-4 border-[#FFD700] shadow-2xl inline-block my-2 cursor-pointer hover:scale-105 transition-transform" onClick={() => setShowQrModal(true)}>
                   <img
-                    src={getAssetUrl('assets/phonepe_qr.png')}
+                    src={getActiveQrCode()}
                     alt="Sri Rama Seva Committee PhonePe Standee QR"
                     className="w-64 h-64 sm:w-80 sm:h-80 object-contain mx-auto"
                   />
@@ -1232,7 +1232,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               {/* Watermark Background Layer - Official Temple Logo */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.14] z-0">
                 <div className="text-center">
-                  <img src={getAssetUrl('assets/logo.jpg')} alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
+                  <img src={getActiveLogo()} alt="Sri Rama Seva Committee Logo Watermark" className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full object-cover border-4 border-amber-600/40 shadow-2xl" />
                   <span className="text-3xl sm:text-4xl font-black uppercase text-[#5C121E] tracking-widest block mt-2">SRI RAMA SEVA COMMITTEE</span>
                   <span className="text-xl font-black text-amber-900 block mt-0.5">పామినివాండ్లవూరు</span>
                 </div>
@@ -1241,7 +1241,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
               {/* Header Section */}
               <div className="flex justify-between items-start border-b-2 border-gray-800 pb-4 mb-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <img src={getAssetUrl('assets/logo.jpg')} alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
+                  <img src={getActiveLogo()} alt="Logo" className="w-16 h-16 rounded-full border-2 border-amber-600 shadow-md" />
                   <div>
                     <h3 className="text-lg sm:text-xl font-black text-[#5C121E] heading-telugu">శ్రీ రామా సేవా కమిటీ (SRI RAMA SEVA COMMITTEE)</h3>
                     <p className="text-xs font-bold text-gray-700">పామినివాండ్లవూరు • మంగళపల్లె పంచాయతీ • బంగారుపాళెం మండలం</p>
@@ -1367,7 +1367,7 @@ export default function PublicWebsite({ t, v2T, showToast, subSection, setSubSec
             {/* High-Resolution Large QR Code Display Container */}
             <div className="bg-white p-5 sm:p-6 rounded-3xl border-4 border-[#FFD700] shadow-2xl inline-block my-2">
               <img
-                src={getAssetUrl('assets/phonepe_qr.png')}
+                src={getActiveQrCode()}
                 alt="PhonePe QR Standee Scanner Large View"
                 className="w-72 h-72 sm:w-96 sm:h-96 object-contain mx-auto"
               />

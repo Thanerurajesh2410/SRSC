@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X, Globe, Wallet } from 'lucide-react';
-import { getAssetUrl } from '../v2/data/v2Database';
+import { getAssetUrl, getActiveLogo } from '../v2/data/v2Database';
 
 export default function Navbar({ lang, setLang, t }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function Navbar({ lang, setLang, t }) {
           <a href="#hero" className="flex items-center gap-3 group">
             <div className="relative">
               <img
-                src={getAssetUrl('assets/logo.jpg')}
+                src={getActiveLogo()}
                 alt="Sri Rama Seva Committee Logo"
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-[var(--primary-gold)] shadow-xl object-cover transform group-hover:scale-105 transition-transform"
               />

@@ -3,7 +3,7 @@ import { LayoutDashboard, Users, Heart, DollarSign, Building2, Package, Award, S
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getDB, saveDB, validateUniqueDevotee, addAuditLog, defaultWebsiteSettings, defaultGalleryImages, generateSqlDump, resetToInitialDB, getAssetUrl } from '../data/v2Database';
+import { getDB, saveDB, validateUniqueDevotee, addAuditLog, defaultWebsiteSettings, defaultGalleryImages, generateSqlDump, resetToInitialDB, getAssetUrl, getActiveLogo, getActiveQrCode, updateMediaAsset, resetMediaAsset } from '../data/v2Database';
 
 export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [db, setDbState] = useState(getDB());
@@ -123,6 +123,63 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
   const [pamphletQrImg, setPamphletQrImg] = useState(getAssetUrl('assets/phonepe_qr.png'));
   const [pamphletBgOpacity, setPamphletBgOpacity] = useState(85); // 85% opacity overlay
   const [directCanvasEditMode, setDirectCanvasEditMode] = useState(true); // Direct inline editing on canvas preview
+
+  // Logo & QR Manager State
+  const [logoMode, setLogoMode] = useState('fixed'); // 'fixed' | 'temporary'
+  const [logoTempDuration, setLogoTempDuration] = useState('24'); // Hours
+  const [logoNewFile, setLogoNewFile] = useState('');
+
+  const [qrMode, setQrMode] = useState('fixed');
+  const [qrTempDuration, setQrTempDuration] = useState('24');
+  const [qrNewFile, setQrNewFile] = useState('');
+
+  // Handle Logo Upload
+  const handleSaveLogoAsset = (e) => {
+    e.preventDefault();
+    if (!logoNewFile) {
+      showToast("దయచేసి కొత్త లోగో చిత్రాన్ని ఎంచుకోండి.");
+      return;
+    }
+    const updated = updateMediaAsset('logo', logoMode, logoNewFile, logoTempDuration);
+    setDbState(updated);
+    setLogoNewFile('');
+    addAuditLog(userRole, `Updated Temple Logo (${logoMode.toUpperCase()} Mode - ${logoMode === 'temporary' ? logoTempDuration + ' Hours' : 'Permanent'})`);
+    showToast(`లోగో విజయవంతంగా అప్‌డేట్ కాబడింది! (${logoMode === 'fixed' ? 'శాశ్వతం / Permanent' : 'తాత్కాలికం / Temporary ' + logoTempDuration + ' గంటలు'})`);
+  };
+
+  // Handle QR Code Upload
+  const handleSaveQrAsset = (e) => {
+    e.preventDefault();
+    if (!qrNewFile) {
+      showToast("దయచేసి కొత్త QR కోడ్ చిత్రాన్ని ఎంచుకోండి.");
+      return;
+    }
+    const updated = updateMediaAsset('qrCode', qrMode, qrNewFile, qrTempDuration);
+    setDbState(updated);
+    setQrNewFile('');
+    addAuditLog(userRole, `Updated PhonePe QR Code (${qrMode.toUpperCase()} Mode - ${qrMode === 'temporary' ? qrTempDuration + ' Hours' : 'Permanent'})`);
+    showToast(`PhonePe QR కోడ్ స్కేనర్ విజయవంతంగా అప్‌డేట్ కాబడింది! (${qrMode === 'fixed' ? 'శాశ్వతం / Permanent' : 'తాత్కాలికం / Temporary ' + qrTempDuration + ' గంటలు'})`);
+  };
+
+  // Handle Logo Reset
+  const handleResetLogoAsset = () => {
+    if (window.confirm("మీరు ఖచ్చితంగా లోగోను ఒరిజినల్ డిఫాల్ట్ ఇమేజ్‌కు రీసెట్ చేయాలనుకుంటున్నారా?")) {
+      const updated = resetMediaAsset('logo');
+      setDbState(updated);
+      addAuditLog(userRole, "Reset Temple Logo to Original Default Asset");
+      showToast("లోగో ఒరిజినల్ డిఫాల్ట్‌కు రీసెట్ చేయబడింది!");
+    }
+  };
+
+  // Handle QR Reset
+  const handleResetQrAsset = () => {
+    if (window.confirm("మీరు ఖచ్చితంగా PhonePe QR కోడ్‌ను ఒరిజినల్ డిఫాల్ట్ ఇమేజ్‌కు రీసెట్ చేయాలనుకుంటున్నారా?")) {
+      const updated = resetMediaAsset('qrCode');
+      setDbState(updated);
+      addAuditLog(userRole, "Reset PhonePe QR Code to Original Default Asset");
+      showToast("PhonePe QR కోడ్ ఒరిజినల్ డిఫాల్ట్‌కు రీసెట్ చేయబడింది!");
+    }
+  };
 
   // Helper for uploading custom images
   const handleCustomImageUpload = (setterFunction) => (e) => {
@@ -804,20 +861,21 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
               </div>
             </div>
 
-            {/* Navigation Tabs Bar - Perfectly Aligned */}
-            <div className="flex flex-wrap items-center justify-start md:justify-center gap-2 md:gap-3 border-b border-white/10 pb-4 text-base md:text-lg xl:text-[19px] font-black">
-              {[
-                { id: 'dashboard', label: '📊 డ్యాష్‌బోర్డ్' },
-                { id: 'donations', label: '🧾 రశీదుల జారీ' },
-                { id: 'donors', label: '👤 దాతల CRM' },
-                { id: 'expenses', label: '💸 ఖర్చులు & బిల్లులు' },
-                { id: 'reports', label: '📥 నివేదికలు & షేరింగ్' },
-                { id: 'materials', label: '🏗️ సామగ్రి విరాళాలు' },
-                { id: 'volunteers', label: '🤝 వాలంటీర్లు' },
-                { id: 'website-settings', label: '⚙️ వెబ్‌సైట్ విభాగాలు' },
-                { id: 'gallery-manager', label: '🖼️ గ్యాలరీ & స్లైడ్‌షో ఫోటోలు' },
-                { id: 'poster-designer', label: '🎨 పోస్టర్లు, పాంప్లెట్లు & రశీదు పుస్తకం' },
-                { id: 'audit', label: '📋 ఆడిట్ & డేటాబేస్' }
+                {/* Navigation Tabs Bar - Perfectly Aligned */}
+                <div className="flex flex-wrap items-center justify-start md:justify-center gap-2 md:gap-3 border-b border-white/10 pb-4 text-base md:text-lg xl:text-[19px] font-black">
+                  {[
+                    { id: 'dashboard', label: '📊 డ్యాష్‌బోర్డ్' },
+                    { id: 'donations', label: '🧾 రశీదుల జారీ' },
+                    { id: 'donors', label: '👤 దాతల CRM' },
+                    { id: 'expenses', label: '💸 ఖర్చులు & బిల్లులు' },
+                    { id: 'reports', label: '📥 నివేదికలు & షేరింగ్' },
+                    { id: 'materials', label: '🏗️ సామగ్రి విరాళాలు' },
+                    { id: 'volunteers', label: '🤝 వాలంటీర్లు' },
+                    { id: 'website-settings', label: '⚙️ వెబ్‌సైట్ విభాగాలు' },
+                    { id: 'media-manager', label: '🏷️ లోగో & QR మేనేజర్' },
+                    { id: 'gallery-manager', label: '🖼️ గ్యాలరీ & స్లైడ్‌షో ఫోటోలు' },
+                    { id: 'poster-designer', label: '🎨 పోస్టర్లు, పాంప్లెట్లు & రశీదు పుస్తకం' },
+                    { id: 'audit', label: '📋 ఆడిట్ & డేటాబేస్' }
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -1727,6 +1785,225 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
                 </div>
               );
             })()}
+
+            {/* TAB: LOGO & PHONEPE QR CODE MEDIA MANAGER */}
+            {activeTab === 'media-manager' && (
+              <div className="space-y-6 animate-fadeIn">
+                
+                <div className="gold-card border-3 border-[#FFD700] p-6 rounded-3xl space-y-2 bg-gradient-to-r from-[#5C121E] via-[#3A0A11] to-[#5C121E]">
+                  <h3 className="text-xl sm:text-2xl font-black text-[#FFD700] heading-telugu flex items-center gap-2">
+                    <Camera className="w-7 h-7 text-amber-300" />
+                    <span>ఆలయ లోగో & PhonePe QR కోడ్ మేనేజర్ (Fixed & Temporary Mode)</span>
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-200">
+                    ఇక్కడ లోగో మరియు QR కోడ్ స్కేనర్‌ను <strong className="text-[#FFD700]">శాశ్వతంగా (Fixed Permanent)</strong> లేదా <strong className="text-[#FFD700]">తాత్కాలికంగా (Temporary Time-bound)</strong> అప్‌లోడ్ చేయవచ్చు. అప్‌లోడ్ చేసిన ఇమేజ్ వెబ్‌సైట్‌లోని అన్ని విభాగాలు, రశీదులు మరియు పోస్టర్లలో ఆటోమేటిక్‌గా ప్రదర్శించబడుతుంది.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* 1. LOGO MANAGER CARD */}
+                  <div className="gold-card border-2 border-amber-500/70 p-6 rounded-3xl space-y-5 bg-[#3A0A11]/90">
+                    <div className="flex justify-between items-center border-b border-white/15 pb-3">
+                      <h4 className="text-lg font-black text-[#FFD700] flex items-center gap-2">
+                        <ImageIcon className="w-5 h-5 text-amber-300" />
+                        <span>1. ఆలయ లోగో మేనేజ్‌మెంట్</span>
+                      </h4>
+                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${
+                        db.mediaAssets?.logo?.type === 'temporary' && Date.now() < (db.mediaAssets?.logo?.expiresAt || 0)
+                          ? 'bg-amber-400 text-amber-950 animate-pulse'
+                          : 'bg-emerald-600 text-white'
+                      }`}>
+                        {db.mediaAssets?.logo?.type === 'temporary' && Date.now() < (db.mediaAssets?.logo?.expiresAt || 0)
+                          ? '🟡 తాత్కాలిక మోడ్ యాక్టివ్'
+                          : '🟢 శాశ్వత (Fixed) మోడ్ యాక్టివ్'}
+                      </span>
+                    </div>
+
+                    {/* Current Active Logo Preview */}
+                    <div className="text-center space-y-2 bg-black/50 p-4 rounded-2xl border border-white/10">
+                      <span className="text-xs text-gray-300 font-bold block uppercase">ప్రస్తుతం ప్రదర్శించబడుతున్న లోగో:</span>
+                      <img src={getActiveLogo()} alt="Active Logo Preview" className="w-28 h-28 mx-auto rounded-full object-cover border-4 border-[#FFD700] shadow-xl" />
+                      {db.mediaAssets?.logo?.type === 'temporary' && Date.now() < (db.mediaAssets?.logo?.expiresAt || 0) && (
+                        <p className="text-xs text-amber-300 font-mono font-bold pt-1">
+                          ⏳ గడువు ముగిసే సమయం: {new Date(db.mediaAssets.logo.expiresAt).toLocaleString('te-IN')}
+                        </p>
+                      )}
+                    </div>
+
+                    <form onSubmit={handleSaveLogoAsset} className="space-y-4 pt-2">
+                      <div>
+                        <label className="block text-xs font-black text-amber-200 mb-1">కొత్త లోగో ఇమేజ్ ఎంచుకోండి (Select Image File):</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleCustomImageUpload(setLogoNewFile)}
+                          className="w-full text-xs text-gray-200 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-[#FFD700] file:text-black hover:file:bg-amber-300 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Mode Selection: Fixed vs Temporary */}
+                      <div className="space-y-2 bg-black/40 p-3.5 rounded-xl border border-white/10">
+                        <span className="text-xs font-bold text-amber-300 block mb-1">సేవింగ్ రకం ఎంచుకోండి (Persistence Option):</span>
+                        
+                        <label className="flex items-center gap-2 text-xs font-bold text-white cursor-pointer">
+                          <input
+                            type="radio"
+                            name="logoMode"
+                            value="fixed"
+                            checked={logoMode === 'fixed'}
+                            onChange={() => setLogoMode('fixed')}
+                            className="w-4 h-4 text-amber-500"
+                          />
+                          <span>🔴 శాశ్వతం (Fixed) - డేటాబేస్‌లో పర్మనెంట్‌గా సేవ్ అవుతుంది</span>
+                        </label>
+
+                        <label className="flex items-center gap-2 text-xs font-bold text-white cursor-pointer">
+                          <input
+                            type="radio"
+                            name="logoMode"
+                            value="temporary"
+                            checked={logoMode === 'temporary'}
+                            onChange={() => setLogoMode('temporary')}
+                            className="w-4 h-4 text-amber-500"
+                          />
+                          <span>🟡 తాత్కాలికం (Temporary) - నిర్ణీత కాలం తర్వాత పాత డిఫాల్ట్‌కు మారుతుంది</span>
+                        </label>
+
+                        {logoMode === 'temporary' && (
+                          <div className="pt-2">
+                            <label className="block text-[11px] font-bold text-amber-200 mb-1">తాత్కాలిక గడువు సమయం (Expiry Duration):</label>
+                            <select
+                              value={logoTempDuration}
+                              onChange={(e) => setLogoTempDuration(e.target.value)}
+                              className="w-full bg-[#1A0306] border border-[#FFD700] rounded-lg p-2 text-xs text-white font-bold"
+                            >
+                              <option value="1">1 గంట (1 Hour)</option>
+                              <option value="6">6 గంటలు (6 Hours)</option>
+                              <option value="12">12 గంటలు (12 Hours)</option>
+                              <option value="24">24 గంటలు / 1 రోజు (24 Hours / 1 Day)</option>
+                              <option value="72">3 రోజులు (3 Days)</option>
+                              <option value="168">7 రోజులు (7 Days)</option>
+                            </select>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button type="submit" className="btn-gold text-xs py-2.5 px-4 font-black flex-1 flex items-center justify-center gap-1.5 shadow-lg">
+                          <Upload className="w-4 h-4" />
+                          <span>లోగో సేవ్ చేయి</span>
+                        </button>
+                        <button type="button" onClick={handleResetLogoAsset} className="px-3 py-2.5 rounded-xl font-black text-xs bg-gray-800 text-gray-200 hover:bg-gray-700 transition-all border border-gray-600">
+                          రీసెట్
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                  {/* 2. QR CODE SCANNER MANAGER CARD */}
+                  <div className="gold-card border-2 border-amber-500/70 p-6 rounded-3xl space-y-5 bg-[#3A0A11]/90">
+                    <div className="flex justify-between items-center border-b border-white/15 pb-3">
+                      <h4 className="text-lg font-black text-[#FFD700] flex items-center gap-2">
+                        <QrCode className="w-5 h-5 text-amber-300" />
+                        <span>2. PhonePe QR కోడ్ స్కేనర్ మేనేజ్‌మెంట్</span>
+                      </h4>
+                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${
+                        db.mediaAssets?.qrCode?.type === 'temporary' && Date.now() < (db.mediaAssets?.qrCode?.expiresAt || 0)
+                          ? 'bg-amber-400 text-amber-950 animate-pulse'
+                          : 'bg-emerald-600 text-white'
+                      }`}>
+                        {db.mediaAssets?.qrCode?.type === 'temporary' && Date.now() < (db.mediaAssets?.qrCode?.expiresAt || 0)
+                          ? '🟡 తాత్కాలిక మోడ్ యాక్టివ్'
+                          : '🟢 శాశ్వత (Fixed) మోడ్ యాక్టివ్'}
+                      </span>
+                    </div>
+
+                    {/* Current Active QR Preview */}
+                    <div className="text-center space-y-2 bg-black/50 p-4 rounded-2xl border border-white/10">
+                      <span className="text-xs text-gray-300 font-bold block uppercase">ప్రస్తుతం ప్రదర్శించబడుతున్న PhonePe QR:</span>
+                      <img src={getActiveQrCode()} alt="Active QR Code Preview" className="w-28 h-28 mx-auto rounded-xl object-contain bg-white p-1 border-4 border-[#FFD700] shadow-xl" />
+                      {db.mediaAssets?.qrCode?.type === 'temporary' && Date.now() < (db.mediaAssets?.qrCode?.expiresAt || 0) && (
+                        <p className="text-xs text-amber-300 font-mono font-bold pt-1">
+                          ⏳ గడువు ముగిసే సమయం: {new Date(db.mediaAssets.qrCode.expiresAt).toLocaleString('te-IN')}
+                        </p>
+                      )}
+                    </div>
+
+                    <form onSubmit={handleSaveQrAsset} className="space-y-4 pt-2">
+                      <div>
+                        <label className="block text-xs font-black text-amber-200 mb-1">కొత్త PhonePe QR కోడ్ ఇమేజ్ ఎంచుకోండి (Select Image File):</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleCustomImageUpload(setQrNewFile)}
+                          className="w-full text-xs text-gray-200 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-[#FFD700] file:text-black hover:file:bg-amber-300 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Mode Selection: Fixed vs Temporary */}
+                      <div className="space-y-2 bg-black/40 p-3.5 rounded-xl border border-white/10">
+                        <span className="text-xs font-bold text-amber-300 block mb-1">సేవింగ్ రకం ఎంచుకోండి (Persistence Option):</span>
+                        
+                        <label className="flex items-center gap-2 text-xs font-bold text-white cursor-pointer">
+                          <input
+                            type="radio"
+                            name="qrMode"
+                            value="fixed"
+                            checked={qrMode === 'fixed'}
+                            onChange={() => setQrMode('fixed')}
+                            className="w-4 h-4 text-amber-500"
+                          />
+                          <span>🔴 శాశ్వతం (Fixed) - డేటాబేస్‌లో పర్మనెంట్‌గా సేవ్ అవుతుంది</span>
+                        </label>
+
+                        <label className="flex items-center gap-2 text-xs font-bold text-white cursor-pointer">
+                          <input
+                            type="radio"
+                            name="qrMode"
+                            value="temporary"
+                            checked={qrMode === 'temporary'}
+                            onChange={() => setQrMode('temporary')}
+                            className="w-4 h-4 text-amber-500"
+                          />
+                          <span>🟡 తాత్కాలికం (Temporary) - నిర్ణీత కాలం తర్వాత పాత డిఫాల్ట్‌కు మారుతుంది</span>
+                        </label>
+
+                        {qrMode === 'temporary' && (
+                          <div className="pt-2">
+                            <label className="block text-[11px] font-bold text-amber-200 mb-1">తాత్కాలిక గడువు సమయం (Expiry Duration):</label>
+                            <select
+                              value={qrTempDuration}
+                              onChange={(e) => setQrTempDuration(e.target.value)}
+                              className="w-full bg-[#1A0306] border border-[#FFD700] rounded-lg p-2 text-xs text-white font-bold"
+                            >
+                              <option value="1">1 గంట (1 Hour)</option>
+                              <option value="6">6 గంటలు (6 Hours)</option>
+                              <option value="12">12 గంటలు (12 Hours)</option>
+                              <option value="24">24 గంటలు / 1 రోజు (24 Hours / 1 Day)</option>
+                              <option value="72">3 రోజులు (3 Days)</option>
+                              <option value="168">7 రోజులు (7 Days)</option>
+                            </select>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button type="submit" className="btn-gold text-xs py-2.5 px-4 font-black flex-1 flex items-center justify-center gap-1.5 shadow-lg">
+                          <Upload className="w-4 h-4" />
+                          <span>QR కోడ్ సేవ్ చేయి</span>
+                        </button>
+                        <button type="button" onClick={handleResetQrAsset} className="px-3 py-2.5 rounded-xl font-black text-xs bg-gray-800 text-gray-200 hover:bg-gray-700 transition-all border border-gray-600">
+                          రీసెట్
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                </div>
+
+              </div>
+            )}
 
             {/* TAB 11: POSTER, PAMPHLET & DONATION BOOK DESIGN STUDIO */}
             {activeTab === 'poster-designer' && (

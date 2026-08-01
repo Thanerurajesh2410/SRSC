@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LayoutDashboard, Users, Heart, Globe, Menu, X, Building2, Calendar, FileText, Camera, ShieldCheck, Sparkles, Phone, Lock, Zap, Bell, Palette, Sun, Moon } from 'lucide-react';
-import { getAssetUrl } from '../data/v2Database';
+import { getAssetUrl, getActiveLogo } from '../data/v2Database';
 
 export default function V2Navbar({ activeModule, setActiveModule, lang, setLang, theme, setTheme, t, v2T, onToggleVersion }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +49,7 @@ export default function V2Navbar({ activeModule, setActiveModule, lang, setLang,
           <div className="flex items-center gap-3 shrink-0 select-none cursor-pointer group" onClick={() => setActiveModule('public-home')}>
             <div className="relative shrink-0">
               <img
-                src={getAssetUrl('assets/logo.jpg')}
+                src={getActiveLogo()}
                 alt="Sri Rama Seva Committee Logo"
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-[#FFD700] shadow-xl object-cover bg-[#1A0306] p-0.5 ring-2 ring-[#FFD700]/60 transform group-hover:scale-105 transition-transform"
               />

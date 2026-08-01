@@ -58,6 +58,21 @@ export const defaultGalleryImages = [
   { id: 'IMG-10', src: getAssetUrl('assets/temple_photo_10.png'), title: 'శ్రీ రామాలయ పవిత్ర రాతి నిర్మాణం పూర్తయిన దృశ్యం', tag: 'ఆలయ రాతి నిర్మాణం' }
 ];
 
+const defaultMediaAssets = {
+  logo: {
+    type: 'fixed',
+    fixedUrl: '',
+    tempUrl: '',
+    expiresAt: null
+  },
+  qrCode: {
+    type: 'fixed',
+    fixedUrl: '',
+    tempUrl: '',
+    expiresAt: null
+  }
+};
+
 const initialDB = {
   devotees: [
     { id: 'DEV-1001', name: 'Thaneru Rajesh', phone: '9866125609', email: 'sriramasevacommitteepvv@gmail.com', city: 'పామినివాండ్లవూరు', registeredAt: '12-05-2026' },
@@ -77,6 +92,7 @@ const initialDB = {
     { id: 'VOL-2', name: 'Siva K', phone: '8431806098', email: 'siva@gmail.com', task: 'నిర్మాణ పర్యవేక్షణ', status: 'Active' }
   ],
   websiteSettings: { ...defaultWebsiteSettings },
+  mediaAssets: { ...defaultMediaAssets },
   galleryImages: [...defaultGalleryImages],
   auditLogs: [
     { id: 'LOG-1', timestamp: '2026-07-26 09:30:00', user: 'Admin', action: 'System Database Initialized with V1 Classic Donors' }
@@ -89,6 +105,9 @@ export const getDB = () => {
     if (!data) return initialDB;
 
     const parsed = JSON.parse(data);
+    if (!parsed.mediaAssets) {
+      parsed.mediaAssets = { ...defaultMediaAssets };
+    }
     // Filter out initial development mock expenses if present
     if (parsed.expenses && parsed.expenses.some(e => e.id === 'EXP-101' || e.id === 'EXP-102')) {
       parsed.expenses = parsed.expenses.filter(e => e.id !== 'EXP-101' && e.id !== 'EXP-102');
@@ -236,4 +255,74 @@ export const generateSqlDump = (db) => {
 export const resetToInitialDB = () => {
   saveDB(initialDB);
   return initialDB;
+};
+
+// Dynamic Media Assets Resolvers (Fixed vs Temporary Expiry Check)
+export const getActiveLogo = () => {
+  const db = getDB();
+  const logo = db.mediaAssets?.logo;
+  if (!logo) return getAssetUrl('assets/logo.jpg');
+
+  if (logo.type === 'temporary' && logo.tempUrl && logo.expiresAt) {
+    if (Date.now() < logo.expiresAt) {
+      return logo.tempUrl;
+    }
+  }
+  if (logo.fixedUrl) {
+    return logo.fixedUrl;
+  }
+  return getAssetUrl('assets/logo.jpg');
+};
+
+export const getActiveQrCode = () => {
+  const db = getDB();
+  const qr = db.mediaAssets?.qrCode;
+  if (!qr) return getAssetUrl('assets/phonepe_qr.png');
+
+  if (qr.type === 'temporary' && qr.tempUrl && qr.expiresAt) {
+    if (Date.now() < qr.expiresAt) {
+      return qr.tempUrl;
+    }
+  }
+  if (qr.fixedUrl) {
+    return qr.fixedUrl;
+  }
+  return getAssetUrl('assets/phonepe_qr.png');
+};
+
+// Set Fixed or Temporary Media Asset
+export const updateMediaAsset = (assetKey, type, imageUrl, durationHours = 24) => {
+  const db = getDB();
+  if (!db.mediaAssets) db.mediaAssets = { logo: { type: 'fixed' }, qrCode: { type: 'fixed' } };
+  if (!db.mediaAssets[assetKey]) db.mediaAssets[assetKey] = { type: 'fixed' };
+
+  if (type === 'fixed') {
+    db.mediaAssets[assetKey].type = 'fixed';
+    db.mediaAssets[assetKey].fixedUrl = imageUrl;
+    db.mediaAssets[assetKey].tempUrl = '';
+    db.mediaAssets[assetKey].expiresAt = null;
+  } else {
+    const expiresAt = Date.now() + (Number(durationHours) || 24) * 60 * 60 * 1000;
+    db.mediaAssets[assetKey].type = 'temporary';
+    db.mediaAssets[assetKey].tempUrl = imageUrl;
+    db.mediaAssets[assetKey].expiresAt = expiresAt;
+  }
+
+  saveDB(db);
+  return db;
+};
+
+// Reset Media Asset to Default
+export const resetMediaAsset = (assetKey) => {
+  const db = getDB();
+  if (db.mediaAssets && db.mediaAssets[assetKey]) {
+    db.mediaAssets[assetKey] = {
+      type: 'fixed',
+      fixedUrl: '',
+      tempUrl: '',
+      expiresAt: null
+    };
+    saveDB(db);
+  }
+  return db;
 };

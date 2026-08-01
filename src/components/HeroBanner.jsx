@@ -1,6 +1,6 @@
 import React from 'react';
 import { Wallet, Image as ImageIcon, ChevronDown, Sparkles } from 'lucide-react';
-import { getAssetUrl } from '../v2/data/v2Database';
+import { getAssetUrl, getActiveLogo } from '../v2/data/v2Database';
 
 export default function HeroBanner({ t }) {
   return (
@@ -26,7 +26,7 @@ export default function HeroBanner({ t }) {
             
             {/* Fixed Lord Rama Emblem Image */}
             <img
-              src={getAssetUrl('assets/logo.jpg')}
+              src={getActiveLogo()}
               alt="Lord Sri Rama Divine Portrait"
               className="relative w-56 h-56 sm:w-72 sm:h-72 md:w-88 md:h-88 lg:w-96 lg:h-96 rounded-full border-4 md:border-6 border-[#FFD700] shadow-[0_0_80px_rgba(255,215,0,0.85)] object-cover transform group-hover:scale-105 transition-transform duration-500"
             />
