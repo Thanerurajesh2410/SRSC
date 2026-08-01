@@ -99,6 +99,18 @@ const initialDB = {
   ]
 };
 
+const isValidImageSrc = (src) => {
+  if (!src || typeof src !== 'string') return false;
+  const trimmed = src.trim();
+  if (!trimmed) return false;
+  if (trimmed.startsWith('data:image/')) {
+    if (trimmed.length < 100 || !trimmed.includes(';base64,')) return false;
+    const base64Data = trimmed.split(';base64,')[1];
+    if (!base64Data || base64Data.length < 50) return false;
+  }
+  return true;
+};
+
 export const getDB = () => {
   try {
     const data = localStorage.getItem(DB_STORAGE_KEY);
@@ -107,6 +119,19 @@ export const getDB = () => {
     const parsed = JSON.parse(data);
     if (!parsed.mediaAssets) {
       parsed.mediaAssets = { ...defaultMediaAssets };
+    } else {
+      if (parsed.mediaAssets.logo && !isValidImageSrc(parsed.mediaAssets.logo.fixedUrl)) {
+        parsed.mediaAssets.logo.fixedUrl = '';
+      }
+      if (parsed.mediaAssets.logo && !isValidImageSrc(parsed.mediaAssets.logo.tempUrl)) {
+        parsed.mediaAssets.logo.tempUrl = '';
+      }
+      if (parsed.mediaAssets.qrCode && !isValidImageSrc(parsed.mediaAssets.qrCode.fixedUrl)) {
+        parsed.mediaAssets.qrCode.fixedUrl = '';
+      }
+      if (parsed.mediaAssets.qrCode && !isValidImageSrc(parsed.mediaAssets.qrCode.tempUrl)) {
+        parsed.mediaAssets.qrCode.tempUrl = '';
+      }
     }
     // Filter out initial development mock expenses if present
     if (parsed.expenses && parsed.expenses.some(e => e.id === 'EXP-101' || e.id === 'EXP-102')) {
@@ -263,11 +288,11 @@ export const getActiveLogo = () => {
     const db = getDB();
     const logo = db.mediaAssets?.logo;
     if (logo && logo.type === 'temporary' && logo.tempUrl && logo.expiresAt) {
-      if (Date.now() < logo.expiresAt) {
+      if (Date.now() < logo.expiresAt && isValidImageSrc(logo.tempUrl)) {
         return getAssetUrl(logo.tempUrl);
       }
     }
-    if (logo && logo.fixedUrl) {
+    if (logo && logo.fixedUrl && isValidImageSrc(logo.fixedUrl)) {
       return getAssetUrl(logo.fixedUrl);
     }
   } catch (e) {}
@@ -279,11 +304,11 @@ export const getActiveQrCode = () => {
     const db = getDB();
     const qr = db.mediaAssets?.qrCode;
     if (qr && qr.type === 'temporary' && qr.tempUrl && qr.expiresAt) {
-      if (Date.now() < qr.expiresAt) {
+      if (Date.now() < qr.expiresAt && isValidImageSrc(qr.tempUrl)) {
         return getAssetUrl(qr.tempUrl);
       }
     }
-    if (qr && qr.fixedUrl) {
+    if (qr && qr.fixedUrl && isValidImageSrc(qr.fixedUrl)) {
       return getAssetUrl(qr.fixedUrl);
     }
   } catch (e) {}

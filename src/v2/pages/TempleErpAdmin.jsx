@@ -181,14 +181,41 @@ export default function TempleErpAdmin({ t, v2T, showToast }) {
     }
   };
 
-  // Helper for uploading custom images
+  // Helper for uploading and compressing custom images
   const handleCustomImageUpload = (setterFunction) => (e) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setterFunction(event.target.result);
-        showToast("కస్టమ్ చిత్రం విజయవంతంగా లోడ్ చేయబడింది!");
+        const rawUrl = event.target.result;
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 550;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+          setterFunction(compressedDataUrl);
+          showToast("కస్టమ్ చిత్రం కాంప్రెస్ చేయబడి విజయవంతంగా లోడ్ చేయబడింది!");
+        };
+        img.onerror = () => {
+          setterFunction(rawUrl);
+          showToast("కస్టమ్ చిత్రం లోడ్ చేయబడింది!");
+        };
+        img.src = rawUrl;
       };
       reader.readAsDataURL(file);
     }
