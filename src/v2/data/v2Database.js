@@ -17,8 +17,11 @@ export const getAssetUrl = (path) => {
   while (clean.startsWith('sri-rama-seva-committee/')) {
     clean = clean.slice('sri-rama-seva-committee/'.length);
   }
+  while (clean.startsWith('SRSC/')) {
+    clean = clean.slice('SRSC/'.length);
+  }
 
-  if (baseUrl === './' || baseUrl === '') {
+  if (baseUrl === './' || baseUrl === '' || baseUrl === '.') {
     return `./${clean}`;
   }
 

@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://Thanerurajesh2410.github.io/sri-rama-seva-committee",
+  "homepage": "https://Thanerurajesh2410.github.io/SRSC",
   "scripts": {
     "dev": "vite",
     "server": "node server/server.js",
