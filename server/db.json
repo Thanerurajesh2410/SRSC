@@ -195,6 +195,65 @@
       "city": "పామినివాండ్లవూరు"
     }
   ],
+  "poojas": [
+    {
+      "id": "BK-2026-001",
+      "devoteeName": "K. Venkatramaiah",
+      "phone": "9440123456",
+      "gothram": "Bharadwaja",
+      "poojaName": "శ్రీ సీతా రామ కళ్యాణం (Sita Rama Kalyanam)",
+      "bookingDate": "2026-08-25",
+      "timeSlot": "09:00 AM - 11:30 AM",
+      "amount": 1116,
+      "status": "Confirmed"
+    },
+    {
+      "id": "BK-2026-002",
+      "devoteeName": "S. Ramanamma",
+      "phone": "9848011223",
+      "gothram": "Kashyapa",
+      "poojaName": "నిత్య అర్చన & రుద్రాభిషేకం",
+      "bookingDate": "2026-08-20",
+      "timeSlot": "07:00 AM - 08:30 AM",
+      "amount": 516,
+      "status": "Confirmed"
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "titleEn": "Sri Rama Navami Grand Festival & Sita Rama Kalyanam",
+      "titleTe": "శ్రీరామ నవమి మహోత్సవం & సీతా రామ కళ్యాణం",
+      "eventDate": "2026-04-12",
+      "eventTime": "08:00 AM onwards",
+      "location": "Sri Rama Temple, Paminivandla Vooru",
+      "description": "Grand Sita Rama Kalyanam, Mahaprasadam Annadanam, and procession.",
+      "category": "Festival",
+      "rsvpCount": 480
+    },
+    {
+      "id": 2,
+      "titleEn": "Hanuman Jayanti Special Abhishekam & Parayanam",
+      "titleTe": "హనుమాన్ జయంతి విశేష అభిషేకం & పారాయణం",
+      "eventDate": "2026-05-18",
+      "eventTime": "06:00 AM - 12:00 PM",
+      "location": "Sri Rama Temple Premises",
+      "description": "Sundarakanda parayanam, special butter decoration to Anjaneya Swamy.",
+      "category": "Pooja",
+      "rsvpCount": 210
+    },
+    {
+      "id": 3,
+      "titleEn": "Temple Garbhalaya Bhoomi Pooja & Foundation Ceremony",
+      "titleTe": "ఆలయ గర్భాలయ భూమి పూజా కార్యక్రమం",
+      "eventDate": "2026-09-05",
+      "eventTime": "07:30 AM Muhurtham",
+      "location": "Main Construction Site, Paminivandla Vooru",
+      "description": "Sacred brick laying and foundation ceremony with Veda Chanting.",
+      "category": "Construction",
+      "rsvpCount": 650
+    }
+  ],
   "sevaBookings": [
     {
       "id": "SEVA-101",

@@ -1,0 +1,457 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sri Rama Seva Committee (SRSC) REST API",
+    "description": "Official REST API and Database Engine for Sri Rama Seva Committee, Paminivandla Vooru, Bangarupalem Mandal, Chittoor District, Andhra Pradesh. Regd No: 125 of 2026. Manages Devotee Profiles, Temple Construction Fund Donations, Seva & Pooja Bookings, Event Schedules, Volunteer Registrations, and Contact Inquiries.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Sri Rama Seva Committee Paminivandla Vooru",
+      "url": "https://thanerurajesh2410.github.io/SRSC/",
+      "email": "contact@srirama-paminivandlavooru.org"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local ERP & Express Backend Database API"
+    },
+    {
+      "url": "https://thanerurajesh2410.github.io/SRSC/api",
+      "description": "Production Web API Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "System & Health",
+      "description": "Database health monitoring and engine metadata"
+    },
+    {
+      "name": "Donations",
+      "description": "Temple construction fund and seva donation management"
+    },
+    {
+      "name": "Pooja & Seva Bookings",
+      "description": "Special archana, Sita Rama Kalyanam, and daily pooja bookings"
+    },
+    {
+      "name": "Events & Schedules",
+      "description": "Temple festivals, Ekadashi, and spiritual event schedules"
+    },
+    {
+      "name": "Devotees",
+      "description": "Devotee registration and profile management"
+    },
+    {
+      "name": "Volunteers",
+      "description": "Volunteer service applications and committee membership"
+    },
+    {
+      "name": "Contact & Inquiries",
+      "description": "Devotee inquiries, feedback, and support messages"
+    },
+    {
+      "name": "Database Management",
+      "description": "Full database export, backup, and state synchronization"
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": ["System & Health"],
+        "summary": "Check Database & REST API Health",
+        "description": "Returns status ONLINE, connected database details, total collected funds, donor counts, and timestamp.",
+        "responses": {
+          "200": {
+            "description": "Database and API are healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "ONLINE" },
+                    "database": { "type": "string", "example": "SQLite / JSON Database Engine" },
+                    "devotees": { "type": "integer", "example": 154 },
+                    "donations": { "type": "integer", "example": 320 },
+                    "totalCollected": { "type": "number", "example": 450000 },
+                    "timestamp": { "type": "string", "example": "2026-08-15T18:50:00.000Z" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/donations": {
+      "get": {
+        "tags": ["Donations"],
+        "summary": "Get List of All Donations",
+        "description": "Returns a chronological list of recorded donations for the Sri Rama Temple.",
+        "responses": {
+          "200": {
+            "description": "List of donations retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Donation" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Donations"],
+        "summary": "Record a New Donation",
+        "description": "Saves a new donation record into the database and generates a unique receipt ID.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NewDonationRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Donation recorded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "Donation recorded successfully" },
+                    "donation": { "$ref": "#/components/schemas/Donation" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input payload"
+          }
+        }
+      }
+    },
+    "/api/donations/stats": {
+      "get": {
+        "tags": ["Donations"],
+        "summary": "Get Donation Progress & Statistics",
+        "description": "Returns total collected funds, target goal, total donors count, and percentage achieved.",
+        "responses": {
+          "200": {
+            "description": "Donation stats retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalCollected": { "type": "number", "example": 450000 },
+                    "targetGoal": { "type": "number", "example": 1500000 },
+                    "totalDonors": { "type": "integer", "example": 128 },
+                    "percentCompleted": { "type": "number", "example": 30.0 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/poojas/bookings": {
+      "get": {
+        "tags": ["Pooja & Seva Bookings"],
+        "summary": "Get All Pooja & Seva Bookings",
+        "description": "Returns list of reserved slots and devotee bookings for temple poojas.",
+        "responses": {
+          "200": {
+            "description": "Bookings list retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PoojaBooking" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Pooja & Seva Bookings"],
+        "summary": "Book a Seva or Pooja",
+        "description": "Reserves a slot for Sita Rama Kalyanam, Archana, Abhishekam, or Parayanam.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NewPoojaBookingRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pooja booked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "Pooja booked successfully" },
+                    "booking": { "$ref": "#/components/schemas/PoojaBooking" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events": {
+      "get": {
+        "tags": ["Events & Schedules"],
+        "summary": "Get Temple Festival & Event Schedules",
+        "description": "Returns upcoming temple events, Sri Rama Navami schedules, and Ekadashi dates.",
+        "responses": {
+          "200": {
+            "description": "Events retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Event" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Events & Schedules"],
+        "summary": "Add New Temple Event",
+        "description": "Registers a new event or spiritual celebration in the temple calendar.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Event" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event added successfully"
+          }
+        }
+      }
+    },
+    "/api/devotees": {
+      "get": {
+        "tags": ["Devotees"],
+        "summary": "Get List of Registered Devotees",
+        "responses": {
+          "200": {
+            "description": "Devotee list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Devotee" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Devotees"],
+        "summary": "Register a Devotee",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Devotee" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Devotee registered"
+          }
+        }
+      }
+    },
+    "/api/volunteers": {
+      "get": {
+        "tags": ["Volunteers"],
+        "summary": "List Volunteer Applicants",
+        "responses": {
+          "200": {
+            "description": "List of volunteers"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Volunteers"],
+        "summary": "Apply as Volunteer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Volunteer" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Volunteer registered successfully"
+          }
+        }
+      }
+    },
+    "/api/contact": {
+      "post": {
+        "tags": ["Contact & Inquiries"],
+        "summary": "Submit Contact Inquiry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ContactQuery" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message received"
+          }
+        }
+      }
+    },
+    "/api/database": {
+      "get": {
+        "tags": ["Database Management"],
+        "summary": "Export Complete Database JSON Dump",
+        "responses": {
+          "200": {
+            "description": "Full database JSON payload"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Database Management"],
+        "summary": "Synchronize Database State",
+        "responses": {
+          "200": {
+            "description": "Database saved successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Donation": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "SRS-2026-001" },
+          "donorName": { "type": "string", "example": "Thaneru Rajesh" },
+          "phone": { "type": "string", "example": "9866125609" },
+          "email": { "type": "string", "example": "rajesh@example.com" },
+          "amount": { "type": "number", "example": 10016 },
+          "date": { "type": "string", "example": "15/08/2026" },
+          "seva": { "type": "string", "example": "ఆలయ నిర్మాణ విరాళం (Temple Construction)" },
+          "mode": { "type": "string", "example": "Online (UPI / PhonePe)" },
+          "city": { "type": "string", "example": "పామినివాండ్లవూరు" }
+        }
+      },
+      "NewDonationRequest": {
+        "type": "object",
+        "required": ["donorName", "amount", "phone"],
+        "properties": {
+          "donorName": { "type": "string", "example": "K. Venkatramaiah" },
+          "phone": { "type": "string", "example": "9440123456" },
+          "email": { "type": "string", "example": "venkat@gmail.com" },
+          "amount": { "type": "number", "example": 5000 },
+          "seva": { "type": "string", "example": "అన్నదాన సేవా" },
+          "mode": { "type": "string", "example": "Online (UPI)" },
+          "city": { "type": "string", "example": "బాంగారుపాలెం" }
+        }
+      },
+      "PoojaBooking": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "BK-2026-012" },
+          "devoteeName": { "type": "string", "example": "S. Ramanamma" },
+          "phone": { "type": "string", "example": "9848011223" },
+          "gothram": { "type": "string", "example": "Bharadwaja" },
+          "poojaName": { "type": "string", "example": "శ్రీ సీతా రామ కళ్యాణం" },
+          "bookingDate": { "type": "string", "example": "2026-08-25" },
+          "timeSlot": { "type": "string", "example": "09:00 AM - 11:30 AM" },
+          "amount": { "type": "number", "example": 1116 },
+          "status": { "type": "string", "example": "Confirmed" }
+        }
+      },
+      "NewPoojaBookingRequest": {
+        "type": "object",
+        "required": ["devoteeName", "phone", "poojaName", "bookingDate"],
+        "properties": {
+          "devoteeName": { "type": "string", "example": "P. Srinivasulu" },
+          "phone": { "type": "string", "example": "9885098850" },
+          "gothram": { "type": "string", "example": "Kashyapa" },
+          "poojaName": { "type": "string", "example": "నిత్య అర్చన & అభిషేకం" },
+          "bookingDate": { "type": "string", "example": "2026-08-20" },
+          "timeSlot": { "type": "string", "example": "07:00 AM - 08:30 AM" },
+          "amount": { "type": "number", "example": 516 }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "titleEn": { "type": "string", "example": "Sri Rama Navami Divine Brahmotsavam" },
+          "titleTe": { "type": "string", "example": "శ్రీరామ నవమి బ్రహ్మోత్సవాలు" },
+          "eventDate": { "type": "string", "example": "2026-04-12" },
+          "eventTime": { "type": "string", "example": "08:00 AM onwards" },
+          "location": { "type": "string", "example": "Sri Rama Temple, Paminivandla Vooru" },
+          "description": { "type": "string", "example": "Grand Sita Rama Kalyanam, Annadanam, and procession." },
+          "category": { "type": "string", "example": "Festival" },
+          "rsvpCount": { "type": "integer", "example": 450 }
+        }
+      },
+      "Devotee": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "DEV-1005" },
+          "name": { "type": "string", "example": "Ramesh Kumar" },
+          "phone": { "type": "string", "example": "9123456789" },
+          "email": { "type": "string", "example": "ramesh@example.com" },
+          "city": { "type": "string", "example": "Chittoor" },
+          "gothram": { "type": "string", "example": "Srivatsa" }
+        }
+      },
+      "Volunteer": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 3 },
+          "fullName": { "type": "string", "example": "M. Suresh" },
+          "phone": { "type": "string", "example": "9988776655" },
+          "email": { "type": "string", "example": "suresh@example.com" },
+          "village": { "type": "string", "example": "Paminivandla Vooru" },
+          "serviceInterest": { "type": "string", "example": "Annadanam & Prasadam Distribution" }
+        }
+      },
+      "ContactQuery": {
+        "type": "object",
+        "required": ["name", "message"],
+        "properties": {
+          "name": { "type": "string", "example": "Anjaneyulu" },
+          "email": { "type": "string", "example": "anjani@example.com" },
+          "phone": { "type": "string", "example": "9700011223" },
+          "message": { "type": "string", "example": "Inquiry regarding temple bhoomi pooja schedule." }
+        }
+      }
+    }
+  }
+}

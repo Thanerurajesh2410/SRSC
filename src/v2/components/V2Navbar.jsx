@@ -73,43 +73,59 @@ export default function V2Navbar({ activeModule, setActiveModule, lang, setLang,
           {/* Left Aligned Module Navigation - Fits All Screen Widths */}
           <div className="flex items-center gap-2 md:gap-3 shrink-0">
             
-            {/* 1. Public Website Section Dropdown Button */}
+            {/* 1. Global View (Public Website) */}
             <button
               onClick={() => setActiveModule('public-home')}
-              className={`px-3.5 md:px-4.5 py-2 rounded-xl text-sm md:text-base lg:text-[17px] font-black transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`btn-autofit px-3.5 md:px-4 py-2 rounded-xl text-xs md:text-sm font-black transition-all flex items-center gap-1.5 shrink-0 ${
                 activeModule.startsWith('public')
                   ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg'
                   : 'text-gray-100 bg-white/5 border border-white/10 hover:bg-white/20 hover:text-white'
               }`}
+              title="Global Public View - Temple website, donation wall & events"
             >
-              <Building2 className="w-4 h-4 text-amber-400" />
-              <span>ప్రజా వెబ్‌సైట్ (Public Website)</span>
+              <Globe className="w-4 h-4 text-amber-400" />
+              <span>🌐 Global View (ప్రజా వెబ్‌సైట్)</span>
             </button>
 
-            {/* 2. Devotee Portal Button */}
+            {/* 2. Devotee View (Devotee Portal) */}
             <button
               onClick={() => setActiveModule('devotee-portal')}
-              className={`px-3.5 md:px-4.5 py-2 rounded-xl text-sm md:text-base lg:text-[17px] font-black transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`btn-autofit px-3.5 md:px-4 py-2 rounded-xl text-xs md:text-sm font-black transition-all flex items-center gap-1.5 shrink-0 ${
                 activeModule === 'devotee-portal'
                   ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg'
-                  : 'text-gray-100 bg-white/5 border border-white/10 hover:bg-white/20 hover:text-white'
+                  : 'text-sky-200 bg-sky-950/40 border border-sky-400/30 hover:bg-sky-900/60'
               }`}
+              title="Devotee View - My donations, pooja bookings & receipts"
             >
               <Users className="w-4 h-4 text-sky-400" />
-              <span>భక్తుల పోర్టల్ (Devotee Portal)</span>
+              <span>🛕 Devotee View (భక్తుల పోర్టల్)</span>
             </button>
 
-            {/* 3. Temple ERP Admin Suite Button */}
+            {/* 3. Admin View (Temple ERP Suite) */}
             <button
               onClick={() => setActiveModule('erp-admin')}
-              className={`px-3.5 md:px-4.5 py-2 rounded-xl text-sm md:text-base lg:text-[17px] font-black transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`btn-autofit px-3.5 md:px-4 py-2 rounded-xl text-xs md:text-sm font-black transition-all flex items-center gap-1.5 shrink-0 ${
                 activeModule === 'erp-admin'
                   ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg'
                   : 'bg-amber-500/20 text-[#FFD700] border border-amber-400/60 hover:bg-[#5C121E]'
               }`}
+              title="Admin View - Financial management, donor approvals & database"
             >
               <LayoutDashboard className="w-4 h-4 text-[#FFD700]" />
-              <span>టెంపుల్ ERP అడ్మిన్ (Temple ERP Suite)</span>
+              <span>⚙️ Admin View (టెంపుల్ ERP అడ్మిన్)</span>
+            </button>
+
+            {/* 4. Swagger API Explorer Button */}
+            <button
+              onClick={() => setActiveModule('api-explorer')}
+              className={`px-3.5 md:px-4.5 py-2 rounded-xl text-sm md:text-base lg:text-[17px] font-black transition-all flex items-center gap-1.5 shrink-0 ${
+                activeModule === 'api-explorer'
+                  ? 'bg-[#5C121E] text-[#FFD700] border-2 border-[#FFD700] shadow-lg'
+                  : 'text-emerald-300 bg-emerald-950/40 border border-emerald-500/40 hover:bg-emerald-900/60'
+              }`}
+            >
+              <FileText className="w-4 h-4 text-emerald-400" />
+              <span>Swagger REST API</span>
             </button>
 
             {/* Donate CTA */}

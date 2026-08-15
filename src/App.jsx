@@ -21,13 +21,14 @@ import V2Navbar from './v2/components/V2Navbar';
 import PublicWebsite from './v2/pages/PublicWebsite';
 import DevoteePortal from './v2/pages/DevoteePortal';
 import TempleErpAdmin from './v2/pages/TempleErpAdmin';
+import ApiExplorer from './components/ApiExplorer';
 
 import { CheckCircle, Palette, MessageSquare, Layers } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState('te');
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('sri_rama_theme') || 'theme-maroon';
+    return localStorage.getItem('sri_rama_theme') || 'theme-cream';
   });
   const [toastMessage, setToastMessage] = useState('');
   
@@ -169,6 +170,10 @@ export default function App() {
                 committeeList={committeeList}
                 setCommitteeList={setCommitteeList}
               />
+            )}
+
+            {v2Module === 'api-explorer' && (
+              <ApiExplorer showToast={showToast} />
             )}
           </main>
 
